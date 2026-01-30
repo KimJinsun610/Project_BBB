@@ -13,5 +13,6 @@ UCLASS()
 class PROJECT_BBB_API ABBBCharacterPlayer : public ABBBCharacterBase
 {
 	GENERATED_BODY()
+
 	
 };

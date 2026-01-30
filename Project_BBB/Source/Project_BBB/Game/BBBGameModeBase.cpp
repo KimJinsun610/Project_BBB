@@ -2,4 +2,13 @@
 
 
 #include "Game/BBBGameModeBase.h"
+#include "Player/BBBPlayerController.h"
 
+ABBBGameModeBase::ABBBGameModeBase()
+{
+	//DefaultPawnClass
+
+	//PlayerControllerClass
+	PlayerControllerClass = ABBBPlayerController::StaticClass();
+
+}

@@ -13,5 +13,9 @@ UCLASS()
 class PROJECT_BBB_API ABBBGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	ABBBGameModeBase();
+
 	
 };
