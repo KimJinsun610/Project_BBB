@@ -7,8 +7,18 @@
 ABBBGameModeBase::ABBBGameModeBase()
 {
 	//DefaultPawnClass
+	static ConstructorHelpers::FClassFinder<APawn> ThirdPersonClassRef(TEXT("/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C"));
+	if (ThirdPersonClassRef.Class) {
+		DefaultPawnClass = ThirdPersonClassRef.Class;
+	}
+
+
 
 	//PlayerControllerClass
-	PlayerControllerClass = ABBBPlayerController::StaticClass();
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerClassRef(TEXT("/Script/Project_BBB.BBBPlayerController"));
+
+	if (PlayerControllerClassRef.Class) {
+		PlayerControllerClass = PlayerControllerClassRef.Class;
+	}
 
 }

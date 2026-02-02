@@ -14,4 +14,7 @@ class PROJECT_BBB_API ABBBPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+
 };
