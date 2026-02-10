@@ -10,7 +10,8 @@ UENUM()
 enum class ECharacterControlType : uint8
 {
 	Shoulder,
-	Quater
+	Quater,
+	FirstPerson
 };
 
 UCLASS()

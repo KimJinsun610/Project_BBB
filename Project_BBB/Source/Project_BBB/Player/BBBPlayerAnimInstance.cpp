@@ -9,7 +9,7 @@
 UBBBPlayerAnimInstance::UBBBPlayerAnimInstance()
 {
 	MovingThreshold = 3.0f;
-	JumpingThreshold = 20.0f;
+	JumpingThreshold = 10.0f;
 }
 
 void UBBBPlayerAnimInstance::NativeInitializeAnimation()

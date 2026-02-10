@@ -56,14 +56,25 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 		QuaterMoveAction = InputActionQuaterMoveRef.Object;
 	}
 
+	//1인칭
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionFirstPersonMoveRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_FirstPersonMove.IA_FirstPersonMove'"));
+	if (nullptr != InputActionFirstPersonMoveRef.Object)
+	{
+		FirstPersonMoveAction = InputActionFirstPersonMoveRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionFirstPersonLookRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_FirstPersonLook.IA_FirstPersonLook'"));
+	if (nullptr != InputActionFirstPersonLookRef.Object)
+	{
+		FirstPersonLookAction = InputActionFirstPersonLookRef.Object;
+	}
+
+	// 현재 시점
 	CurrentCharacterControlType = ECharacterControlType::Quater;
-
-
 }
 
 void ABBBCharacterPlayer::BeginPlay()
 {
-
 	Super::BeginPlay();
 	SetCharacterControl(CurrentCharacterControlType);
 }
@@ -75,6 +86,10 @@ void ABBBCharacterPlayer::ChangeCharacterControl()
 		SetCharacterControl(ECharacterControlType::Shoulder);
 	}
 	else if (CurrentCharacterControlType == ECharacterControlType::Shoulder)
+	{
+		SetCharacterControl(ECharacterControlType::FirstPerson);
+	}
+	else if (CurrentCharacterControlType == ECharacterControlType::FirstPerson)
 	{
 		SetCharacterControl(ECharacterControlType::Quater);
 	}
@@ -123,11 +138,17 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(ChangeControlAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::ChangeCharacterControl);
+	
 	EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::ShoulderMove);
 	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::ShoulderLook);
+	
 	EnhancedInputComponent->BindAction(QuaterMoveAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::QuaterMove);
 
+	EnhancedInputComponent->BindAction(FirstPersonMoveAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::FirstPersonMove);
+	EnhancedInputComponent->BindAction(FirstPersonLookAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::FirstPersonLook);
+
 }
+
 
 
 void ABBBCharacterPlayer::ShoulderMove(const FInputActionValue& Value)
@@ -174,4 +195,30 @@ void ABBBCharacterPlayer::QuaterMove(const FInputActionValue& Value)
 	GetController()->SetControlRotation(FRotationMatrix::MakeFromX(MoveDirection).Rotator());
 	AddMovementInput(MoveDirection, MovementVectorSize);
 
+}
+
+void ABBBCharacterPlayer::FirstPersonMove(const FInputActionValue& Value)
+{
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	// 컨트롤러의 현재 회전값 가져오기
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// 전방/우측 방향 벡터 계산
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	// 이동 입력 적용
+	AddMovementInput(ForwardDirection, MovementVector.X);
+	AddMovementInput(RightDirection, MovementVector.Y);
+}
+
+void ABBBCharacterPlayer::FirstPersonLook(const FInputActionValue& Value)
+{
+	FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	// 마우스 입력으로 시점 회전
+	AddControllerYawInput(LookAxisVector.X);
+	AddControllerPitchInput(LookAxisVector.Y);
 }

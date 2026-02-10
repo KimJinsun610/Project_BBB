@@ -61,6 +61,13 @@ ABBBCharacterBase::ABBBCharacterBase()
 		CharacterControlManager.Add(ECharacterControlType::Quater, QuaterDataRef.Object);
 	}
 
+	// 1ÀÎÄª
+	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> FirstPersonDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/CharacterControl/ABC_FirstPerson.ABC_FirstPerson'"));
+	if (FirstPersonDataRef.Object)
+	{
+		CharacterControlManager.Add(ECharacterControlType::FirstPerson, FirstPersonDataRef.Object);
+	}
+
 }
 
 void ABBBCharacterBase::SetCharacterControlData(const UBBBCharacterControlData* CharacterControlData)
