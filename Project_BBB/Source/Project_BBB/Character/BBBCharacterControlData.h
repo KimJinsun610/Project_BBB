@@ -56,4 +56,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = SpringArm)
 	uint32 bDoCollisionTest : 1;
+
+	UPROPERTY(EditAnywhere, Category = SpringArm)
+	FVector SocketOffset;
+
 };

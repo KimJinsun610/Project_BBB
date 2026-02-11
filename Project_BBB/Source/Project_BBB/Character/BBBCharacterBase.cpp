@@ -34,6 +34,8 @@ ABBBCharacterBase::ABBBCharacterBase()
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+	
+	/*
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/BBB/Models/Player/playerCharacter.playerCharacter'"));
 	if (CharacterMeshRef.Object)
@@ -46,6 +48,7 @@ ABBBCharacterBase::ABBBCharacterBase()
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
+	*/
 
 	// ¼ñ´õ
 	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> ShoulderDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/CharacterControl/ABC_Shoulder.ABC_Shoulder'"));
@@ -79,5 +82,10 @@ void ABBBCharacterBase::SetCharacterControlData(const UBBBCharacterControlData* 
 	GetCharacterMovement()->bOrientRotationToMovement = CharacterControlData->bOrientRotationToMovement;
 	GetCharacterMovement()->bUseControllerDesiredRotation = CharacterControlData->bUserControllerDesiredRotation;
 	GetCharacterMovement()->RotationRate = CharacterControlData->RotationRate;
+}
+
+void ABBBCharacterBase::SetupCharacterMesh()
+{
+	
 }
 

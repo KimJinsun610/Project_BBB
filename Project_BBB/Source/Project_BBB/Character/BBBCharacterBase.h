@@ -32,4 +32,7 @@ public:
 	TMap<ECharacterControlType, class UBBBCharacterControlData*> CharacterControlManager;
 
 
+protected:
+	// 각 캐릭터 클래스에서 오버라이드할 메시 설정 함수
+	virtual void SetupCharacterMesh();
 };

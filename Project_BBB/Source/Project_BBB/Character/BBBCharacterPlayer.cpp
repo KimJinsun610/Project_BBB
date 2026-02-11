@@ -22,6 +22,12 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	//================================================
+	// setup
+	SetupCharacterMesh();
+
+
+	//================================================
 	// Input
 
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputChangeActionControlRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_ChangeControl.IA_ChangeControl'"));
@@ -79,6 +85,22 @@ void ABBBCharacterPlayer::BeginPlay()
 	SetCharacterControl(CurrentCharacterControlType);
 }
 
+void ABBBCharacterPlayer::SetupCharacterMesh()
+{
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/BBB/Models/Player/playerCharacter.playerCharacter'"));
+	if (CharacterMeshRef.Object)
+	{
+		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
+	}
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/BBB/Models/Player/Animation/ABP_Player.ABP_Player_C"));
+	if (AnimInstanceClassRef.Class)
+	{
+		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
+	}
+
+}
+
 void ABBBCharacterPlayer::ChangeCharacterControl()
 {
 	if (CurrentCharacterControlType == ECharacterControlType::Quater)
@@ -122,6 +144,7 @@ void ABBBCharacterPlayer::SetCharacterControlData(const UBBBCharacterControlData
 
 	CameraBoom->TargetArmLength = CharacterControlData->TargetArmLength;
 	CameraBoom->SetRelativeRotation(CharacterControlData->RelativeRotation);
+	CameraBoom->SocketOffset = CharacterControlData->SocketOffset;
 	CameraBoom->bUsePawnControlRotation = CharacterControlData->bUsePawnControlRotation;
 	CameraBoom->bInheritPitch = CharacterControlData->bInheritPitch;
 	CameraBoom->bInheritYaw = CharacterControlData->bInheritYaw;
