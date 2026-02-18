@@ -75,10 +75,12 @@ void UBBBDebuffComponent::ApplyDebuffEffect(const FDebuffData& DebuffData)
 
     case EDebuffType::Weaken:
         // 방어력 감소 (나중에 데미지 계산 시 사용)
+        // !!! 나중에 구현 !!!
         break;
 
     case EDebuffType::Blind:
         // AI 시야 감소 (AI 구현 시)
+        // !!! 나중에 구현 !!!
         break;
 
     default:

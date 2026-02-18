@@ -76,7 +76,7 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	}
 
 	// 현재 시점
-	CurrentCharacterControlType = ECharacterControlType::Quater;
+	CurrentCharacterControlType = ECharacterControlType::Shoulder;
 }
 
 void ABBBCharacterPlayer::BeginPlay()
