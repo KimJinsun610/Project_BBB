@@ -23,7 +23,7 @@ public:
 
 protected:
 	// 발사체
-	// !!! 발사체 구현 후 수정 !!!
+	// !!!! 발사체 구현 후 수정 !!!!
 	//UPROPERTY(EditAnywhere, Category = "Weapon")
 	//TSubclassOf<class ABBBProjectileDebuff> ProjectileClass;
 
