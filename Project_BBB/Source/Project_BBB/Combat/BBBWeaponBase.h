@@ -23,7 +23,7 @@ public:
 	ABBBWeaponBase();
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    USkeletalMeshComponent* WeaponMesh;
+    UStaticMeshComponent* WeaponMesh;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
     EWeaponType WeaponType;
@@ -48,8 +48,5 @@ protected:
 
 protected:
 	virtual void BeginPlay() override;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
 
 };

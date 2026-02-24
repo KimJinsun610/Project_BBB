@@ -92,5 +92,29 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> CameraZoomAction;
 
+
+//================================================
+// Combat Section
+protected:
+	// 무기 전환키 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> SwitchWeaponAction;
+
+	// 공격 (마우스 좌클릭)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> AttackAction;
+
+	// 입력 함수
+	void SwitchWeaponMode(const FInputActionValue& Value);
+	void PerformAttack(const FInputActionValue& Value);
+	void StopAttack(const FInputActionValue& Value);
+
+protected:
+	// 무기 블루프린트 클래스
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class ABBBWeaponBase> RangedWeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class ABBBWeaponBase> MeleeWeaponClass;
 	
 };

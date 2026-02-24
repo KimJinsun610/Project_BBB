@@ -5,16 +5,17 @@
 
 ABBBWeaponRanged::ABBBWeaponRanged()
 {
-    // !!!! 나중에 구현 !!!!
-
+		///!!!
 }
 
 void ABBBWeaponRanged::Attack()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Ranged Attack"));
 }
 
 void ABBBWeaponRanged::StopAttack()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Stop Ranged Attack"));
 }
 
 void ABBBWeaponRanged::FireProjectile()

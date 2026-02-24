@@ -6,9 +6,20 @@
 // Sets default values
 ABBBWeaponBase::ABBBWeaponBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
+	// 무기 메시 생성
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	RootComponent = WeaponMesh;
+
+	//충돌 비활성화
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	WeaponMesh->SetSimulatePhysics(false);
+
+	// 기본값
+	FireRate = 0.1f;  // 초당 10발
+	bCanAttack = true;
 }
 
 void ABBBWeaponBase::Equip(ACharacter* Character)
@@ -24,12 +35,5 @@ void ABBBWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void ABBBWeaponBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 

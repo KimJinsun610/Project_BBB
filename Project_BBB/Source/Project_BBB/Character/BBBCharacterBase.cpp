@@ -5,10 +5,14 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BBBCharacterControlData.h"
+#include "Combat/BBBDebuffComponent.h"
+#include "Combat/BBBWeaponBase.h"
 
 // Sets default values
 ABBBCharacterBase::ABBBCharacterBase()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	// Pawn 
 	// 회전에 대한 폰의 기본값 설정
 	bUseControllerRotationPitch = false;
@@ -35,21 +39,6 @@ ABBBCharacterBase::ABBBCharacterBase()
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 	
-	/*
-
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/BBB/Models/Player/playerCharacter.playerCharacter'"));
-	if (CharacterMeshRef.Object)
-	{
-		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
-	}
-
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/BBB/Models/Player/Animation/ABP_Player.ABP_Player_C"));
-	if (AnimInstanceClassRef.Class)
-	{
-		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
-	}
-	*/
-
 	// 숄더
 	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> ShoulderDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/CharacterControl/ABC_Shoulder.ABC_Shoulder'"));
 	if (ShoulderDataRef.Object)
@@ -71,6 +60,16 @@ ABBBCharacterBase::ABBBCharacterBase()
 		CharacterControlManager.Add(ECharacterControlType::FirstPerson, FirstPersonDataRef.Object);
 	}
 
+	// 디버프 컴포넌트 
+	DebuffComponent = CreateDefaultSubobject<UBBBDebuffComponent>(TEXT("DebuffComponent"));
+
+	// 무기 초기값
+	bIsRangedMode = true;  // 원거리 모드
+	WeaponSocketName = TEXT("hand_r");  // 오른손 소켓
+
+	RangedWeapon = nullptr;
+	MeleeWeapon = nullptr;
+	CurrentWeapon = nullptr;
 }
 
 void ABBBCharacterBase::SetCharacterControlData(const UBBBCharacterControlData* CharacterControlData)
@@ -87,5 +86,104 @@ void ABBBCharacterBase::SetCharacterControlData(const UBBBCharacterControlData* 
 void ABBBCharacterBase::SetupCharacterMesh()
 {
 	
+}
+
+
+//================================================
+// Wepone Section
+
+
+void ABBBCharacterBase::EquipWeapon(TSubclassOf<class ABBBWeaponBase> WeaponClass, bool bIsRanged)
+{
+	if (!WeaponClass) return;
+
+	// 무기 생성
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = GetInstigator();
+
+	ABBBWeaponBase* NewWeapon = GetWorld()->SpawnActor<ABBBWeaponBase>(
+		WeaponClass,
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		SpawnParams
+	);
+
+	if (NewWeapon)
+	{
+		// 손에 부착
+		NewWeapon->AttachToComponent(
+			GetMesh(),
+			FAttachmentTransformRules::SnapToTargetIncludingScale,
+			WeaponSocketName
+		);
+
+		// 해당 슬롯에 저장
+		if (bIsRanged)
+		{
+			RangedWeapon = NewWeapon;
+		}
+		else
+		{
+			MeleeWeapon = NewWeapon;
+		}
+
+		// 무기 주인
+		NewWeapon->SetOwner(this);
+
+		UE_LOG(LogTemp, Warning, TEXT("Weapon equipped: %s"), *NewWeapon->GetName());
+	}
+}
+
+void ABBBCharacterBase::UnequipWeapon()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+	}
+}
+
+void ABBBCharacterBase::SwitchWeapon()
+{
+	// 현재 무기 숨기기
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->SetActorHiddenInGame(true);
+	}
+
+	// 모드 전환
+	bIsRangedMode = !bIsRangedMode;
+
+	// 해당 무기 표시
+	if (bIsRangedMode)
+	{
+		EquipRangedWeapon();
+	}
+	else
+	{
+		EquipMeleeWeapon();
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Switched to %s mode"),
+		bIsRangedMode ? TEXT("Ranged") : TEXT("Melee"));
+}
+
+void ABBBCharacterBase::EquipRangedWeapon()
+{
+	if (RangedWeapon)
+	{
+		CurrentWeapon = RangedWeapon;
+		CurrentWeapon->SetActorHiddenInGame(false);
+	}
+}
+
+void ABBBCharacterBase::EquipMeleeWeapon()
+{
+	if (MeleeWeapon)
+	{
+		CurrentWeapon = MeleeWeapon;
+		CurrentWeapon->SetActorHiddenInGame(false);
+	}
 }
 

@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "BBBCharacterControlData.h"
+#include "Combat/BBBWeaponRanged.h"
+#include "Combat/BBBWeaponMelee.h"
 
 ABBBCharacterPlayer::ABBBCharacterPlayer()
 {
@@ -77,12 +79,59 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 
 	// 현재 시점
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
+
+	//================================================
+	// Attack
+	
+	//무기 전환
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputSwitchWeaponActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_SwitchWeapon.IA_SwitchWeapon'"));
+	if (InputSwitchWeaponActionRef.Object)
+	{
+		SwitchWeaponAction = InputSwitchWeaponActionRef.Object;
+	}
+	// 공격
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputAttackActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_Attack.IA_Attack'"));
+	if (InputAttackActionRef.Object)
+	{
+		AttackAction = InputAttackActionRef.Object;
+	}
+
+	// 원거리 
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/BP/BP_Gun.BP_Gun_C"));
+	if (RangedWeaponClassRef.Class)
+	{
+		RangedWeaponClass = RangedWeaponClassRef.Class;
+	}
+
+	//근거리
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/BP/BP_Sword.BP_Sword_C"));
+	if (MeleeWeaponClassRef.Class)
+	{
+		MeleeWeaponClass = MeleeWeaponClassRef.Class;
+	}
 }
 
 void ABBBCharacterPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	SetCharacterControl(CurrentCharacterControlType);
+
+	// 무기 생성시 오류가 있어서 일단 주석처리...
+	/*
+	// 무기 생성
+	if (RangedWeaponClass)
+	{
+		EquipWeapon(RangedWeaponClass, true);
+	}
+
+	if (MeleeWeaponClass)
+	{
+		EquipWeapon(MeleeWeaponClass, false);
+	}
+
+	// 원거리 모드로 시작
+	EquipRangedWeapon();
+	*/	
 }
 
 void ABBBCharacterPlayer::SetupCharacterMesh()
@@ -158,6 +207,7 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
+	// 이동
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(ChangeControlAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::ChangeCharacterControl);
@@ -170,6 +220,19 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	EnhancedInputComponent->BindAction(FirstPersonMoveAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::FirstPersonMove);
 	EnhancedInputComponent->BindAction(FirstPersonLookAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::FirstPersonLook);
 
+
+	// 무기
+	if (SwitchWeaponAction)
+	{
+		EnhancedInputComponent->BindAction(SwitchWeaponAction, ETriggerEvent::Triggered, this, &ABBBCharacterPlayer::SwitchWeaponMode);
+	}
+
+	// 공격
+	if (AttackAction)
+	{
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::PerformAttack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Completed, this, &ABBBCharacterPlayer::StopAttack);
+	}
 }
 
 
@@ -244,4 +307,26 @@ void ABBBCharacterPlayer::FirstPersonLook(const FInputActionValue& Value)
 	// 마우스 입력으로 시점 회전
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
+}
+
+void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
+{
+	SwitchWeapon();
+}
+
+void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Attack();
+		UE_LOG(LogTemp, Warning, TEXT("Attack"));
+	}
+}
+
+void ABBBCharacterPlayer::StopAttack(const FInputActionValue& Value)
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StopAttack();
+	}
 }
