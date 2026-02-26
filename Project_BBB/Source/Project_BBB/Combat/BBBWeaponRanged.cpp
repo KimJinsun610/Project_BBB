@@ -6,6 +6,7 @@
 ABBBWeaponRanged::ABBBWeaponRanged()
 {
 		///!!!
+		//충돌 비활성화
 }
 
 void ABBBWeaponRanged::Attack()

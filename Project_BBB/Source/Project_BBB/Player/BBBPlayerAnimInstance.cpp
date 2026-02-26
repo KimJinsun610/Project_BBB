@@ -35,5 +35,6 @@ void UBBBPlayerAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		bIsIdle = GroundSpeed < MovingThreshold;
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshold);
+		bIsGrounded = ~bIsFalling;
 	}
 }

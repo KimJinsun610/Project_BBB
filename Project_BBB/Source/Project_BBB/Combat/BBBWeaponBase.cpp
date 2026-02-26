@@ -12,11 +12,6 @@ ABBBWeaponBase::ABBBWeaponBase()
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	RootComponent = WeaponMesh;
 
-	//충돌 비활성화
-	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	WeaponMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	WeaponMesh->SetSimulatePhysics(false);
-
 	// 기본값
 	FireRate = 0.1f;  // 초당 10발
 	bCanAttack = true;

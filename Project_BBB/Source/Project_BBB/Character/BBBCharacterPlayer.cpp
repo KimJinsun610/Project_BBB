@@ -97,14 +97,14 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	}
 
 	// 원거리 
-	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/BP/BP_Gun.BP_Gun_C"));
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/BP/Wepones/BP_Gun.BP_Gun_C"));
 	if (RangedWeaponClassRef.Class)
 	{
 		RangedWeaponClass = RangedWeaponClassRef.Class;
 	}
 
 	//근거리
-	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/BP/BP_Sword.BP_Sword_C"));
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/BP/Wepones/BP_Sword.BP_Sword_C"));
 	if (MeleeWeaponClassRef.Class)
 	{
 		MeleeWeaponClass = MeleeWeaponClassRef.Class;
@@ -116,14 +116,12 @@ void ABBBCharacterPlayer::BeginPlay()
 	Super::BeginPlay();
 	SetCharacterControl(CurrentCharacterControlType);
 
-	// 무기 생성시 오류가 있어서 일단 주석처리...
-	/*
 	// 무기 생성
+	
 	if (RangedWeaponClass)
 	{
 		EquipWeapon(RangedWeaponClass, true);
 	}
-
 	if (MeleeWeaponClass)
 	{
 		EquipWeapon(MeleeWeaponClass, false);
@@ -131,7 +129,7 @@ void ABBBCharacterPlayer::BeginPlay()
 
 	// 원거리 모드로 시작
 	EquipRangedWeapon();
-	*/	
+	
 }
 
 void ABBBCharacterPlayer::SetupCharacterMesh()

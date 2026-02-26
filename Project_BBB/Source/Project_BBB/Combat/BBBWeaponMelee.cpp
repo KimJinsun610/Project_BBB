@@ -7,7 +7,7 @@
 ABBBWeaponMelee::ABBBWeaponMelee()
 {
     // !!!! 나중에 구현 !!!!
-
+        //충돌 비활성화
 }
 
 void ABBBWeaponMelee::Attack()
