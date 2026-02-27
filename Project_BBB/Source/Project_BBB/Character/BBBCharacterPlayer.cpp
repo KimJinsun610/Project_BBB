@@ -29,7 +29,6 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	// setup
 	SetupCharacterMesh();
 
-
 	//================================================
 	// Input
 
