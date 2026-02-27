@@ -21,7 +21,7 @@ ABBBCharacterBase::ABBBCharacterBase()
 
 	// Capsule
 	// Ãæµ¹ Ä¸½¶ ¼³Á¤
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(7.f, 10.0f);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	// Movement

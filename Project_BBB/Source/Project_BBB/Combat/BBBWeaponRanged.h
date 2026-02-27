@@ -23,9 +23,8 @@ public:
 
 protected:
 	// 발사체
-	// !!!! 발사체 구현 후 수정 !!!!
-	//UPROPERTY(EditAnywhere, Category = "Weapon")
-	//TSubclassOf<class ABBBProjectileDebuff> ProjectileClass;
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<class ABBBProjectileDebuff> ProjectileClass;
 
 	// 디버프
 	UPROPERTY(EditAnywhere, Category = "Weapon | Debuff")
@@ -37,4 +36,13 @@ protected:
 
 	// 투사체 발사
 	void FireProjectile();
+
+	// 발사 간격
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	float FireDelay;
+
+	bool bCanFire;
+	FTimerHandle FireTimerHandle;
+
+	void ResetFire();
 };

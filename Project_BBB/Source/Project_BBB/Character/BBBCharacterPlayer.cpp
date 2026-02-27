@@ -24,6 +24,7 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+
 	//================================================
 	// setup
 	SetupCharacterMesh();
