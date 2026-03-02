@@ -65,7 +65,7 @@ ABBBCharacterBase::ABBBCharacterBase()
 
 	// 무기 초기값
 	bIsRangedMode = true;  // 원거리 모드
-	WeaponSocketName = TEXT("hand_r");  // 오른손 소켓
+	WeaponSocketName = TEXT("hand_Gun");  // 총 소켓
 
 	RangedWeapon = nullptr;
 	MeleeWeapon = nullptr;
@@ -111,12 +111,16 @@ void ABBBCharacterBase::EquipWeapon(TSubclassOf<class ABBBWeaponBase> WeaponClas
 
 	if (NewWeapon)
 	{
+		if(bIsRanged) WeaponSocketName = TEXT("hand_Gun");  // 총 소켓
+		else WeaponSocketName = TEXT("hand_Sword");  // 총 소켓
 		// 손에 부착
 		NewWeapon->AttachToComponent(
 			GetMesh(),
 			FAttachmentTransformRules::SnapToTargetIncludingScale,
 			WeaponSocketName
 		);
+
+		NewWeapon->SetActorHiddenInGame(true);
 
 		// 해당 슬롯에 저장
 		if (bIsRanged)
