@@ -12,7 +12,7 @@ ABBBWeaponMelee::ABBBWeaponMelee()
 {
     WeaponType = EWeaponType::Melee;
     Damage = 50.0f;
-    AttackRange = 200.0f;  // 2m
+    AttackRange = 50.0f; 
 }
 
 void ABBBWeaponMelee::Attack()
@@ -39,7 +39,7 @@ void ABBBWeaponMelee::PerformMeleeAttack()
     FVector EndLocation = StartLocation + (ForwardVector * AttackRange);
 
     // Sphere Trace 파라미터
-    float SphereRadius = 50.0f;
+    float SphereRadius = 45.0f;
     FCollisionQueryParams QueryParams;
     QueryParams.AddIgnoredActor(GetOwner());
     QueryParams.AddIgnoredActor(this);
