@@ -31,10 +31,6 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	//================================================
 	// setup
 	GetCapsuleComponent()->InitCapsuleSize(20.f, 50.0f);
-	GetMesh()->SetRelativeLocationAndRotation(
-		FVector(0.0f, 0.0f, -50.0f),
-		FRotator(0.0f, -90.0f, 0.0f)
-	);
 	SetupCharacterMesh();
 
 	//================================================
