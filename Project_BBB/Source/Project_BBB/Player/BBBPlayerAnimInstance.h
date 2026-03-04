@@ -55,4 +55,34 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	uint8 bIsGrounded : 1;
+
+
+//==================================================
+// Attack
+protected:
+	// aim
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	uint8 bIsAiming : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	float AimPitch;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	float AimYaw;
+
+	//Shooting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
+	uint8 bIsShooting : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* ShootingMontage;
+
+public:
+	// Shooting 재생 함수
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void PlayShootingAnimation();
+
+	// Aim 설정 함수
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void SetAiming(bool bAiming);
 };

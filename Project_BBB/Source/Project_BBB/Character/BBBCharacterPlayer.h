@@ -116,5 +116,28 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ABBBWeaponBase> MeleeWeaponClass;
+
+//================================================
+// Animaiontion
+
+	//Shooting Montage 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	class UAnimMontage* ShootingMontage;
+
+	// Aim Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<class UInputAction> AimAction;
+
+	// Aim 상태
+	bool bIsAiming;
+
+	// Aim 입력 함수
+	void StartAim(const FInputActionValue& Value);
+	void StopAim(const FInputActionValue& Value);
+
+	// 애니메이션 재생 함수
+	void PlayShootingAnimation();
+
+
 	
 };

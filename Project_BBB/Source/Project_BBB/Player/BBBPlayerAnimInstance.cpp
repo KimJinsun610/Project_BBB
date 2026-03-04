@@ -10,6 +10,19 @@ UBBBPlayerAnimInstance::UBBBPlayerAnimInstance()
 {
 	MovingThreshold = 3.0f;
 	JumpingThreshold = 10.0f;
+
+	bIsAiming = false;
+	AimPitch = 0.0f;
+	AimYaw = 0.0f;
+	bIsShooting = false;
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShootingMontageRef(
+		TEXT("/Game/BBB/BP/Player/AM_Shooting.AM_Shooting")
+	);
+	if (ShootingMontageRef.Object)
+	{
+		ShootingMontage = ShootingMontageRef.Object;
+	}
 }
 
 void UBBBPlayerAnimInstance::NativeInitializeAnimation()
@@ -36,5 +49,55 @@ void UBBBPlayerAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling | (Velocity.Z > JumpingThreshold);
 		bIsGrounded = ~bIsFalling;
+	}
+
+	if (Owner && bIsAiming)
+	{
+		FRotator AimRotation = Owner->GetBaseAimRotation();
+		FRotator ActorRotation = Owner->GetActorRotation();
+
+		FRotator DeltaRotation = AimRotation - ActorRotation;
+		DeltaRotation.Normalize();
+
+		AimPitch = DeltaRotation.Pitch;
+		AimYaw = DeltaRotation.Yaw;
+	}
+}
+
+void UBBBPlayerAnimInstance::PlayShootingAnimation()
+{
+	if (ShootingMontage)
+	{
+		Montage_Play(ShootingMontage, 1.0f);
+		bIsShooting = true;
+
+		UE_LOG(LogTemp, Warning, TEXT("Shooting Animation Playing"));
+
+		FTimerHandle ShootingTimer;
+		float MontageLength = ShootingMontage->GetPlayLength();
+
+		GetWorld()->GetTimerManager().SetTimer(
+			ShootingTimer,
+			[this]()
+			{
+				bIsShooting = false;
+			},
+			MontageLength,
+			false
+		);
+	}
+}
+
+void UBBBPlayerAnimInstance::SetAiming(bool bAiming)
+{
+	bIsAiming = bAiming;
+
+	if (bAiming)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Started Aiming"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Stopped Aiming"));
 	}
 }

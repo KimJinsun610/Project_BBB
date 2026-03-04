@@ -11,6 +11,8 @@
 #include "Combat/BBBWeaponRanged.h"
 #include "Combat/BBBWeaponMelee.h"
 #include "Components/CapsuleComponent.h"
+#include "Player/BBBPlayerAnimInstance.h"
+
 
 
 
@@ -87,6 +89,8 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	//================================================
 	// Attack
 	
+	bIsAiming = false;
+
 	//무기 전환
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputSwitchWeaponActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_SwitchWeapon.IA_SwitchWeapon'"));
 	if (InputSwitchWeaponActionRef.Object)
@@ -98,6 +102,13 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	if (InputAttackActionRef.Object)
 	{
 		AttackAction = InputAttackActionRef.Object;
+	}
+
+	// 조준
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputAimActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_Aim.IA_Aim'"));
+	if (InputAimActionRef.Object)
+	{
+		AimAction = InputAimActionRef.Object;
 	}
 
 	// 원거리 
@@ -113,6 +124,8 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	{
 		MeleeWeaponClass = MeleeWeaponClassRef.Class;
 	}
+
+
 }
 
 void ABBBCharacterPlayer::BeginPlay()
@@ -235,6 +248,13 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::PerformAttack);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Completed, this, &ABBBCharacterPlayer::StopAttack);
 	}
+
+	// 조준
+	if (AimAction)
+	{
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::StartAim);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABBBCharacterPlayer::StopAim);
+	}
 }
 
 
@@ -320,8 +340,17 @@ void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 {
 	if (CurrentWeapon)
 	{
-		CurrentWeapon->Attack();
-		UE_LOG(LogTemp, Warning, TEXT("Attack"));
+		if (bIsRangedMode && bIsAiming)
+		{
+			CurrentWeapon->Attack();
+			PlayShootingAnimation();
+			UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+		}
+		// 근거리 모드는 바로 공격
+		else if (!bIsRangedMode)
+		{
+			CurrentWeapon->Attack();
+		}
 	}
 }
 
@@ -330,5 +359,58 @@ void ABBBCharacterPlayer::StopAttack(const FInputActionValue& Value)
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->StopAttack();
+	}
+}
+
+void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
+{
+	if (bIsRangedMode)
+	{
+		bIsAiming = true;
+
+		// AnimInstance에 전달
+		UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
+			GetMesh()->GetAnimInstance()
+		);
+
+		if (AnimInstance)
+		{
+			AnimInstance->SetAiming(true);
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("Start Aiming"));
+	}
+}
+
+void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
+{
+	bIsAiming = false;
+
+	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
+		GetMesh()->GetAnimInstance()
+	);
+
+	if (AnimInstance)
+	{
+		AnimInstance->SetAiming(false);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Stop Aiming"));
+}
+
+void ABBBCharacterPlayer::PlayShootingAnimation()
+{
+	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
+		GetMesh()->GetAnimInstance()
+	);
+
+	if (AnimInstance)
+	{
+		// PlayShootingAnimation 호출
+		AnimInstance->PlayShootingAnimation();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("AnimInstance is not UBBBPlayerAnimInstance!"));
 	}
 }
