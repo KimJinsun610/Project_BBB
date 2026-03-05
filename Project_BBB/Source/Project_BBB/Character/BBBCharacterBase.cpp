@@ -40,21 +40,21 @@ ABBBCharacterBase::ABBBCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 	
 	// ¼ñ´õ
-	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> ShoulderDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/CharacterControl/ABC_Shoulder.ABC_Shoulder'"));
+	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> ShoulderDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/DataAsset/CharacterControl/BBBA_Shoulder.BBBA_Shoulder'"));
 	if (ShoulderDataRef.Object)
 	{
 		CharacterControlManager.Add(ECharacterControlType::Shoulder, ShoulderDataRef.Object);
 	}
 
 	// ÄõÅÍ
-	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> QuaterDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/CharacterControl/ABC_Quater.ABC_Quater'"));
+	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> QuaterDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/DataAsset/CharacterControl/BBBA_Quater.BBBA_Quater'"));
 	if (QuaterDataRef.Object)
 	{
 		CharacterControlManager.Add(ECharacterControlType::Quater, QuaterDataRef.Object);
 	}
 
 	// 1ÀÎÄª
-	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> FirstPersonDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/CharacterControl/ABC_FirstPerson.ABC_FirstPerson'"));
+	static ConstructorHelpers::FObjectFinder<UBBBCharacterControlData> FirstPersonDataRef(TEXT("/Script/Project_BBB.BBBCharacterControlData'/Game/BBB/DataAsset/CharacterControl/BBBA_FirstPerson.BBBA_FirstPerson'"));
 	if (FirstPersonDataRef.Object)
 	{
 		CharacterControlManager.Add(ECharacterControlType::FirstPerson, FirstPersonDataRef.Object);

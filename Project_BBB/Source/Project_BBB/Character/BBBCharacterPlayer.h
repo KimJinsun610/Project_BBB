@@ -95,6 +95,7 @@ protected:
 
 //================================================
 // Combat Section
+
 protected:
 	// 무기 전환키 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
@@ -117,14 +118,32 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<class ABBBWeaponBase> MeleeWeaponClass;
 
-//================================================
-// Animaiontion
+protected: //근거리 공격
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<class UAnimMontage> MeleeAttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UBBBComboActionAsset> ComboActionData;
+
+	void ProcessComboCommand();
+
+	void ComboActionBegin();
+	void ComboActionEnd(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
+	void SetComboCheckTimer();
+	void ComboCheck();
+
+	int32 CurrentCombo = 0;
+	FTimerHandle ComboTimerHandle;
+	bool HasNextComboCommand = false;
+
+protected: // 원거리 조준 관련
 	//Shooting Montage 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	class UAnimMontage* ShootingMontage;
 
-	// Aim Input Action
+
+	// 조준
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<class UInputAction> AimAction;
 

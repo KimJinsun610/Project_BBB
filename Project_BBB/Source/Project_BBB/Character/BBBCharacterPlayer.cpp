@@ -4,15 +4,17 @@
 #include "Character/BBBCharacterPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "BBBCharacterControlData.h"
 #include "Combat/BBBWeaponRanged.h"
 #include "Combat/BBBWeaponMelee.h"
-#include "Components/CapsuleComponent.h"
 #include "Player/BBBPlayerAnimInstance.h"
-
+#include "Animation/AnimMontage.h"
+#include "Combat/Projectile/BBBComboActionAsset.h"
 
 
 
@@ -349,7 +351,9 @@ void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 		// 근거리 모드는 바로 공격
 		else if (!bIsRangedMode)
 		{
+			ProcessComboCommand();
 			CurrentWeapon->Attack();
+
 		}
 	}
 }
@@ -362,11 +366,74 @@ void ABBBCharacterPlayer::StopAttack(const FInputActionValue& Value)
 	}
 }
 
+void ABBBCharacterPlayer::ProcessComboCommand()
+{
+	if (CurrentCombo == 0)
+	{
+		ComboActionBegin();
+		return;
+	}
+
+	if (!ComboTimerHandle.IsValid())
+	{
+		HasNextComboCommand = false;
+	}
+	else
+	{
+		HasNextComboCommand = true;
+	}
+}
+
+void ABBBCharacterPlayer::ComboActionBegin()
+{
+	CurrentCombo = 1;
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+	//Animation Setting
+	const float AttackSpeedRate = 1.0f;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(MeleeAttackMontage, AttackSpeedRate);
+
+	FOnMontageEnded EndDelegate;
+	EndDelegate.BindUObject(this, &ABBBCharacterPlayer::ComboActionEnd);
+	AnimInstance->Montage_SetEndDelegate(EndDelegate, MeleeAttackMontage);
+
+	ComboTimerHandle.Invalidate();
+	SetComboCheckTimer();
+}
+
+void ABBBCharacterPlayer::ComboActionEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded)
+{
+	ensure(CurrentCombo != 0);
+	CurrentCombo = 0;
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+}
+
+void ABBBCharacterPlayer::SetComboCheckTimer()
+{
+	int32 ComboIndex = CurrentCombo - 1;
+	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));
+
+	const float AttackSpeedRate = 1.0f;
+	float ComboEffectiveTime = (ComboActionData->EffectiveFrameCount[ComboIndex] / ComboActionData->FrameRate) / AttackSpeedRate;
+	if (ComboEffectiveTime > 0.0f)
+	{
+		GetWorld()->GetTimerManager().SetTimer(ComboTimerHandle, this, &ABBBCharacterPlayer::ComboCheck, ComboEffectiveTime, false);
+	}
+}
+
+void ABBBCharacterPlayer::ComboCheck()
+{
+}
+
 void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 {
 	if (bIsRangedMode)
 	{
 		bIsAiming = true;
+
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
 
 		// AnimInstance에 전달
 		UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
@@ -385,6 +452,8 @@ void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
 {
 	bIsAiming = false;
+
+	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 
 	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
 		GetMesh()->GetAnimInstance()

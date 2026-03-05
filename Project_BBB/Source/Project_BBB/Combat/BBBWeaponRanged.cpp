@@ -56,11 +56,14 @@ void ABBBWeaponRanged::FireProjectile()
     FVector MuzzleLocation;
     FRotator MuzzleRotation;
 
-    // Muzzle 소켓이 있으면 소켓 위치 사용
+     //Muzzle 소켓이 있으면 소켓 위치 사용
     if (WeaponMesh && WeaponMesh->DoesSocketExist(MuzzleSocketName))
     {
         MuzzleLocation = WeaponMesh->GetSocketLocation(MuzzleSocketName);
         MuzzleRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+
+        MuzzleRotation.Pitch = 0.f;
+        MuzzleRotation.Roll = 0.f;
     }
     else
     {
