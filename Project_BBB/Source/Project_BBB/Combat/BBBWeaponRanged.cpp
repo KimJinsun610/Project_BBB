@@ -93,8 +93,7 @@ void ABBBWeaponRanged::FireProjectile()
         // 디버프 정보 전달
         Projectile->Initialize(DebuffToApply);
 
-        UE_LOG(LogTemp, Warning, TEXT("Projectile Fired! Debuff Type: %d"),
-            (int32)DebuffToApply.DebuffType);
+        UE_LOG(LogTemp, Warning, TEXT("Projectile Fired! Debuff Type: %d"), (int32)DebuffToApply.DebuffType);
     }
     else
     {

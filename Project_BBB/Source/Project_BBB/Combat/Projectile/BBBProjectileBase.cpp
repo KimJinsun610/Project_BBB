@@ -37,6 +37,7 @@ ABBBProjectileBase::ABBBProjectileBase()
     ProjectileMovement->bRotationFollowsVelocity = true;
     ProjectileMovement->bShouldBounce = false;
     ProjectileMovement->ProjectileGravityScale = 0.0f;  // 중력 영향 X
+    UE_LOG(LogTemp, Warning, TEXT("PostInit - Speed: %f"), Speed);
 
     // 수명 설정
     InitialLifeSpan = LifeSpan;
@@ -56,7 +57,6 @@ void ABBBProjectileBase::PostInitializeComponents()
 void ABBBProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-
     // !!!! 궤적 이펙트 (추후 확인) !!!!
     if (TrailEffect)
     {

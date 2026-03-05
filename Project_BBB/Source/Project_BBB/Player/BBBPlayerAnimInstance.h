@@ -64,12 +64,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	uint8 bIsAiming : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
-	float AimPitch;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
-	float AimYaw;
-
 	//Shooting
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character)
 	uint8 bIsShooting : 1;

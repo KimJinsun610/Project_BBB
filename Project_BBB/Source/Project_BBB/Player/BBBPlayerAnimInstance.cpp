@@ -12,8 +12,6 @@ UBBBPlayerAnimInstance::UBBBPlayerAnimInstance()
 	JumpingThreshold = 10.0f;
 
 	bIsAiming = false;
-	AimPitch = 0.0f;
-	AimYaw = 0.0f;
 	bIsShooting = false;
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShootingMontageRef(
@@ -59,8 +57,6 @@ void UBBBPlayerAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		FRotator DeltaRotation = AimRotation - ActorRotation;
 		DeltaRotation.Normalize();
 
-		AimPitch = DeltaRotation.Pitch;
-		AimYaw = DeltaRotation.Yaw;
 	}
 }
 

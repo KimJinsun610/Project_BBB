@@ -406,7 +406,6 @@ void ABBBCharacterPlayer::PlayShootingAnimation()
 
 	if (AnimInstance)
 	{
-		// PlayShootingAnimation È£Ãâ
 		AnimInstance->PlayShootingAnimation();
 	}
 	else
