@@ -57,15 +57,15 @@ void ABBBWeaponMelee::PerformMeleeAttack()
     );
 
     // 디버그 드로우 (테스트용)
-    DrawDebugSphere(
-        GetWorld(),
-        EndLocation,
-        SphereRadius,
-        12,
-        bHit ? FColor::Red : FColor::Green,
-        false,
-        1.0f
-    );
+    //DrawDebugSphere(
+    //    GetWorld(),
+    //    EndLocation,
+    //    SphereRadius,
+    //    12,
+    //    bHit ? FColor::Red : FColor::Green,
+    //    false,
+    //    1.0f
+    //);
 
     if (bHit)
     {

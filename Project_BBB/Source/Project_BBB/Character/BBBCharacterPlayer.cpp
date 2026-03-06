@@ -368,6 +368,18 @@ void ABBBCharacterPlayer::StopAttack(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::ProcessComboCommand()
 {
+	if (!ComboActionData)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ComboActionData is NULL - Skipping combo"));
+		return;
+	}
+	if (!MeleeAttackMontage)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MeleeAttackMontage is NULL - Skipping combo"));
+		return;
+	}
+
+
 	if (CurrentCombo == 0)
 	{
 		ComboActionBegin();
@@ -386,12 +398,31 @@ void ABBBCharacterPlayer::ProcessComboCommand()
 
 void ABBBCharacterPlayer::ComboActionBegin()
 {
+	if (!ComboActionData || !MeleeAttackMontage)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Missing data!"));
+		return;
+	}
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (!AnimInstance)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AnimInstance is NULL!"));
+		return;
+	}
+
+
+	if (AnimInstance->Montage_IsPlaying(MeleeAttackMontage))
+	{
+		AnimInstance->Montage_Stop(0.1f, MeleeAttackMontage);
+	}
+
 	CurrentCombo = 1;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
 	//Animation Setting
 	const float AttackSpeedRate = 1.0f;
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	//UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(MeleeAttackMontage, AttackSpeedRate);
 
 	FOnMontageEnded EndDelegate;
@@ -411,7 +442,22 @@ void ABBBCharacterPlayer::ComboActionEnd(UAnimMontage* TargetMontage, bool IsPro
 
 void ABBBCharacterPlayer::SetComboCheckTimer()
 {
+	if (!ComboActionData)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ComboActionData is NULL in SetComboCheckTimer"));
+		return;
+	}
+
+
 	int32 ComboIndex = CurrentCombo - 1;
+
+	if (!ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid ComboIndex: %d, Array Size: %d"),
+			ComboIndex, ComboActionData->EffectiveFrameCount.Num());
+		return;
+	}
+
 	ensure(ComboActionData->EffectiveFrameCount.IsValidIndex(ComboIndex));
 
 	const float AttackSpeedRate = 1.0f;
@@ -424,6 +470,17 @@ void ABBBCharacterPlayer::SetComboCheckTimer()
 
 void ABBBCharacterPlayer::ComboCheck()
 {
+	ComboTimerHandle.Invalidate();
+	if (HasNextComboCommand)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
+		FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
+		AnimInstance->Montage_JumpToSection(NextSection, MeleeAttackMontage);
+		SetComboCheckTimer();
+		HasNextComboCommand = false;
+	}
 }
 
 void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
