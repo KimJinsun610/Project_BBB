@@ -39,6 +39,9 @@ public:
     void Equip(ACharacter* Character);
     void Unequip();
 
+    // 원거리용 발사 확인
+    bool bCanFire = false;
+
 protected:
     UPROPERTY()
     ACharacter* OwnerCharacter;

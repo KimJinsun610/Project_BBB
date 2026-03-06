@@ -344,9 +344,8 @@ void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 	{
 		if (bIsRangedMode && bIsAiming)
 		{
+			if (CurrentWeapon->bCanFire)PlayShootingAnimation();
 			CurrentWeapon->Attack();
-			PlayShootingAnimation();
-			UE_LOG(LogTemp, Warning, TEXT("Fire!"));
 		}
 		// 근거리 모드는 바로 공격
 		else if (!bIsRangedMode)

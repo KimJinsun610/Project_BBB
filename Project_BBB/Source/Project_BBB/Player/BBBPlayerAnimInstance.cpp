@@ -67,8 +67,6 @@ void UBBBPlayerAnimInstance::PlayShootingAnimation()
 		Montage_Play(ShootingMontage, 1.0f);
 		bIsShooting = true;
 
-		UE_LOG(LogTemp, Warning, TEXT("Shooting Animation Playing"));
-
 		FTimerHandle ShootingTimer;
 		float MontageLength = ShootingMontage->GetPlayLength();
 

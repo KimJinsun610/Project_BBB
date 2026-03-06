@@ -41,7 +41,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	float FireDelay;
 
-	bool bCanFire;
 	FTimerHandle FireTimerHandle;
 
 	void ResetFire();
