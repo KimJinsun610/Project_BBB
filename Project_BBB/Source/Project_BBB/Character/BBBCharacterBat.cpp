@@ -3,9 +3,11 @@
 
 #include "Character/BBBCharacterBat.h"
 #include "Components/CapsuleComponent.h"
+#include "BBBHealthComponent.h"
 
 
 ABBBCharacterBat::ABBBCharacterBat()
+	:Super()
 {
 	// Àû Àü¿ë CapsuleConponent
 	GetCapsuleComponent()->InitCapsuleSize(4.f, 9.0f);
@@ -16,6 +18,11 @@ ABBBCharacterBat::ABBBCharacterBat()
 
 	// Mesh
 	SetupCharacterMesh();
+
+	if (HPComponent)
+	{
+		HPComponent->MaxHP = 50.0f;
+	}
 }
 
 void ABBBCharacterBat::SetupCharacterMesh()

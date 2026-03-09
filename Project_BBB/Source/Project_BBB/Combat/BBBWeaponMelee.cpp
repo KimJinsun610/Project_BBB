@@ -3,6 +3,7 @@
 
 #include "Combat/BBBWeaponMelee.h"
 #include "Combat/BBBDebuffComponent.h"
+#include "Character/BBBHealthComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
@@ -74,8 +75,25 @@ void ABBBWeaponMelee::PerformMeleeAttack()
             AActor* HitActor = Hit.GetActor();
             if (!HitActor || HitActor == GetOwner()) continue;
 
-            // 데미지 적용 (나중에 HealthComponent로 교체)
-            UE_LOG(LogTemp, Warning, TEXT("Melee Hit: %s, Damage: %.1f"), *HitActor->GetName(), Damage);
+            UBBBDebuffComponent* DebuffComp = HitActor->FindComponentByClass<UBBBDebuffComponent>();
+            if (!DebuffComp || !DebuffComp->HasAnyDebuff())
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Hit %s but NO DEBUFF - No damage!"),*HitActor->GetName());
+                continue;  // 다음 적으로
+            }
+
+            UBBBHealthComponent* HealthComp = HitActor->FindComponentByClass<UBBBHealthComponent>();
+            if (HealthComp)
+            {
+                //데미지 적용
+                HealthComp->TakeDamage(Damage, GetOwner());
+
+                UE_LOG(LogTemp, Warning, TEXT("Melee Hit: %s, Damage: %.1f"), *HitActor->GetName(), Damage);
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Hit %s but no HealthComponent"), *HitActor->GetName());
+            }
         }
     }
 }

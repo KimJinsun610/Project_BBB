@@ -35,20 +35,51 @@ void UBBBHealthComponent::TakeDamage(float DamageAmount, AActor* DamageCauser)
 
 	OnHPChanged.Broadcast(CurrentHP, MaxHP, DamageCauser);
 
+	if (CurrentHP <= 0.0f)
+	{
+		bIsDead = true;
+		OnDeath.Broadcast(GetOwner(), DamageCauser);
+
+		UE_LOG(LogTemp, Warning, TEXT("%s is dead!"), *GetOwner()->GetName());
+	}
 }
 
 void UBBBHealthComponent::Heal(float HealAmount)
 {
+	if (bIsDead)
+	{
+		return;
+	}
+
+	CurrentHP = FMath::Clamp(CurrentHP + HealAmount, 0.0f, MaxHP);
+	OnHPChanged.Broadcast(CurrentHP, MaxHP, nullptr);
+
+	UE_LOG(LogTemp, Log, TEXT("%s healed %.1f HP (%.1f/%.1f)"), *GetOwner()->GetName(), HealAmount, CurrentHP, MaxHP);
 }
 
 float UBBBHealthComponent::CalculateFinalDamage(float BaseDamage)
 {
-	return 0.0f;
+	float FinalDamage = BaseDamage;
+
+	UBBBDebuffComponent* DebuffComp = GetOwner()->FindComponentByClass<UBBBDebuffComponent>();
+	if (DebuffComp && DebuffComp->HasDebuff(EDebuffType::Weaken))
+	{
+		FinalDamage *= 1.5f;  // 50% 추가 데미지
+		UE_LOG(LogTemp, Warning, TEXT("Weaken bonus damage: +50%%"));
+	}
+
+
+	return FinalDamage;
 }
 
 float UBBBHealthComponent::GetHPPercent() const
 {
-	return 0.0f;
+	if (MaxHP <= 0.0f)
+	{
+		return 0.0f;
+	}
+
+	return CurrentHP / MaxHP;
 }
 
 

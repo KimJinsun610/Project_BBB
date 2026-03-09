@@ -30,6 +30,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "Debuff")
     bool HasDebuff(EDebuffType DebuffType) const;
 
+    UFUNCTION(BlueprintPure, Category = "Debuff")
+    bool HasAnyDebuff() const;
+
     // 현재 활성화된 디버프들
     UFUNCTION(BlueprintPure, Category = "Debuff")
     TArray<FDebuffData> GetActiveDebuffs() const;

@@ -132,6 +132,11 @@ bool UBBBDebuffComponent::HasDebuff(EDebuffType DebuffType) const
     return ActiveDebuffs.Contains(DebuffType);
 }
 
+bool UBBBDebuffComponent::HasAnyDebuff() const
+{
+    return ActiveDebuffs.Num() > 0;
+}
+
 TArray<FDebuffData> UBBBDebuffComponent::GetActiveDebuffs() const
 {
     TArray<FDebuffData> Result;

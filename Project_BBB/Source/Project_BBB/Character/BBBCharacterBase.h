@@ -36,9 +36,24 @@ public:
 
 
 protected:
+	virtual void BeginPlay() override;
+
 	// 각 캐릭터 클래스에서 오버라이드할 메시 설정 함수
 	virtual void SetupCharacterMesh();
 
+//================================================
+// HP System Section
+
+	// HP 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	TObjectPtr<class UBBBHealthComponent> HPComponent;
+
+	// 디버프 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<class UBBBDebuffComponent> DebuffComponent;
+
+	UFUNCTION()
+	void OnDeath(AActor* Killed, AActor* Killer);
 //================================================
 // Wepone Section
 
@@ -51,9 +66,6 @@ public:
 	void SwitchWeapon();
 
 protected:
-	// 디버프 컴포넌트
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<class UBBBDebuffComponent> DebuffComponent;
 
 	// 무기 슬롯
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")

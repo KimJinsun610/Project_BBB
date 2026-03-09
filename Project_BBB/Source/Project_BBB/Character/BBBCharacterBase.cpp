@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BBBCharacterControlData.h"
+#include "BBBHealthComponent.h"
 #include "Combat/BBBDebuffComponent.h"
 #include "Combat/BBBWeaponBase.h"
 
@@ -63,6 +64,9 @@ ABBBCharacterBase::ABBBCharacterBase()
 	// 디버프 컴포넌트 
 	DebuffComponent = CreateDefaultSubobject<UBBBDebuffComponent>(TEXT("DebuffComponent"));
 
+	// HP 컴포넌트
+	HPComponent = CreateDefaultSubobject<UBBBHealthComponent>(TEXT("HPComponent"));
+
 	// 무기 초기값
 	bIsRangedMode = true;  // 원거리 모드
 	WeaponSocketName = TEXT("hand_Gun");  // 총 소켓
@@ -83,15 +87,40 @@ void ABBBCharacterBase::SetCharacterControlData(const UBBBCharacterControlData* 
 	GetCharacterMovement()->RotationRate = CharacterControlData->RotationRate;
 }
 
+void ABBBCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// 사망 이벤트 바인딩
+	if (HPComponent)
+	{
+		HPComponent->OnDeath.AddDynamic(this, &ABBBCharacterBase::OnDeath);
+	}
+}
+
 void ABBBCharacterBase::SetupCharacterMesh()
 {
 	
 }
 
+void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s killed by %s"), *GetName(), Killer ? *Killer->GetName() : TEXT("Unknown"));
+
+	// 임시: 5초 후 제거
+	SetLifeSpan(5.0f);
+
+	// 충돌 비활성화
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+	// 입력 비활성화
+	DisableInput(Cast<APlayerController>(GetController()));
+}
+
 
 //================================================
 // Wepone Section
-
 
 void ABBBCharacterBase::EquipWeapon(TSubclassOf<class ABBBWeaponBase> WeaponClass, bool bIsRanged)
 {
