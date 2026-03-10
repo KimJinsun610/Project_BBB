@@ -54,6 +54,17 @@ protected:
 
 	UFUNCTION()
 	void OnDeath(AActor* Killed, AActor* Killer);
+
+// HP Animation Section
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<class UAnimMontage> DeathMontage;
+
+	void EnableRagdoll();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	bool bIsDead;
+
+
 //================================================
 // Wepone Section
 
