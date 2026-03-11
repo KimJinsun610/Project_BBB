@@ -110,6 +110,10 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 
 	UE_LOG(LogTemp, Warning, TEXT("%s died"), *GetName());
 
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->DisableMovement();
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	if (DeathMontage)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -118,12 +122,28 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 			UE_LOG(LogTemp, Warning, TEXT("AnimInstance exists - Playing montage"));
 			AnimInstance->Montage_Play(DeathMontage, 1.0f);
 
+			FOnMontageEnded MontageEndDelegate;
+			MontageEndDelegate.BindLambda([this](UAnimMontage* Montage, bool bInterrupted)
+				{
+					UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
+					if (AnimInst)
+					{
+						AnimInst->Montage_Stop(0.0f);
+						GetMesh()->bPauseAnims = true;
+					}
+
+					UE_LOG(LogTemp, Warning, TEXT("Death animation finished"));
+					SetLifeSpan(3.0f);
+				});
+			AnimInstance->Montage_SetEndDelegate(MontageEndDelegate, DeathMontage);
 		}
 	}
 	else
 	{
 		//사망 애니메이션이 없으면 Ragdoll
 		EnableRagdoll();
+		SetLifeSpan(3.0f);
+
 	}
 
 
@@ -131,7 +151,6 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 
 	// 충돌 비활성화
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	// 입력 비활성화
 	APlayerController* PC = Cast<APlayerController>(GetController());
@@ -140,13 +159,11 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 		DisableInput(PC);
 	}
 
-	// 제거
-	SetLifeSpan(1.0f);
-
 }	
 
 void ABBBCharacterBase::EnableRagdoll()
 {
+	
 	// Mesh를 Ragdoll로 전환
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
