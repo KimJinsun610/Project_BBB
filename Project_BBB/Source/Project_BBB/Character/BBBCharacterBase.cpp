@@ -120,22 +120,12 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 		if (AnimInstance)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("AnimInstance exists - Playing montage"));
+
+
 			AnimInstance->Montage_Play(DeathMontage, 1.0f);
+			
+			SetLifeSpan(3.0f);
 
-			FOnMontageEnded MontageEndDelegate;
-			MontageEndDelegate.BindLambda([this](UAnimMontage* Montage, bool bInterrupted)
-				{
-					UAnimInstance* AnimInst = GetMesh()->GetAnimInstance();
-					if (AnimInst)
-					{
-						AnimInst->Montage_Stop(0.0f);
-						GetMesh()->bPauseAnims = true;
-					}
-
-					UE_LOG(LogTemp, Warning, TEXT("Death animation finished"));
-					SetLifeSpan(3.0f);
-				});
-			AnimInstance->Montage_SetEndDelegate(MontageEndDelegate, DeathMontage);
 		}
 	}
 	else
@@ -145,9 +135,6 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 		SetLifeSpan(3.0f);
 
 	}
-
-
-	GetCharacterMovement()->DisableMovement();
 
 	// 충돌 비활성화
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -163,7 +150,9 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 
 void ABBBCharacterBase::EnableRagdoll()
 {
-	
+	FRotator MeshRotation = GetMesh()->GetRelativeRotation();
+	MeshRotation.Pitch = -90.0f;
+
 	// Mesh를 Ragdoll로 전환
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
