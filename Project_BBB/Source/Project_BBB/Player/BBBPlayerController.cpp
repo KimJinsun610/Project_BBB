@@ -1,16 +1,60 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Player/BBBPlayerController.h"
+#include "Blueprint/UserWidget.h"
 
 void ABBBPlayerController::BeginPlay()
 {
-
 	Super::BeginPlay();
 
-
-	// ½ÃÀÛÇÏÀÚ ¸¶ÀÚ Æ÷Ä¿½º°¡ ºäÆ÷Æ® ¾È¿¡ µé¾î°¡°Ô ¼³Á¤
+	// ê²Œì„ ì „ìš© ì…ë ¥ ëª¨ë“œ
 	FInputModeGameOnly GameOnlyInputMode;
 	SetInputMode(GameOnlyInputMode);
 
+	// HUD ìœ„ì ¯ ìƒì„±
+    if (HUDWidgetClass)
+    {
+        HUDWidget = CreateWidget<UUserWidget>(this, HUDWidgetClass);
+        if (HUDWidget)
+        {
+            HUDWidget->AddToViewport();
+
+            //ì´ˆê¸°ì— í¬ë¡œìŠ¤í—¤ì–´ ìˆ¨ê¹€
+            ShowCrosshair(false);
+
+            UE_LOG(LogTemp, Warning, TEXT("HUD Widget Created and Added to Viewport"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to create HUD Widget!"));
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("HUDWidgetClass is NULL!"));
+    }
+}
+
+void ABBBPlayerController::ShowCrosshair(bool bShow)
+{
+    if (HUDWidget)
+    {
+        // ë¸”ë£¨í”„ë¦°íŠ¸ í•¨ìˆ˜ í˜¸ì¶œ
+        UFunction* ShowCrosshairFunc = HUDWidget->FindFunction(FName("ShowCrosshair"));
+        if (ShowCrosshairFunc)
+        {
+            struct FShowCrosshairParams
+            {
+                bool bShow;
+            };
+
+            FShowCrosshairParams Params;
+            Params.bShow = bShow;
+
+            HUDWidget->ProcessEvent(ShowCrosshairFunc, &Params);
+
+        }
+ 
+    }
+  
 }

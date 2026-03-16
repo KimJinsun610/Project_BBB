@@ -7,9 +7,9 @@
 #include "BBBDebuffTypes.h"
 #include "BBBWeaponRanged.generated.h"
 
-/**
- * 
- */
+
+class ABBBCharacterPlayer;
+
 UCLASS()
 class PROJECT_BBB_API ABBBWeaponRanged : public ABBBWeaponBase
 {

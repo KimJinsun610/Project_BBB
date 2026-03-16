@@ -15,7 +15,7 @@ UBBBPlayerAnimInstance::UBBBPlayerAnimInstance()
 	bIsShooting = false;
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ShootingMontageRef(
-		TEXT("/Game/BBB/BP/Player/AM_Shooting.AM_Shooting")
+		TEXT("/Game/BBB/Characters/Player/AM_Shooting.AM_Shooting")
 	);
 	if (ShootingMontageRef.Object)
 	{

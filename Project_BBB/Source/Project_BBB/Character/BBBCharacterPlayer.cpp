@@ -9,12 +9,17 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "BBBCharacterControlData.h"
+
 #include "Combat/BBBWeaponRanged.h"
 #include "Combat/BBBWeaponMelee.h"
-#include "Player/BBBPlayerAnimInstance.h"
-#include "Animation/AnimMontage.h"
 #include "Combat/Projectile/BBBComboActionAsset.h"
+
+#include "BBBCharacterControlData.h"
+#include "Player/BBBPlayerAnimInstance.h"
+#include "Player/BBBPlayerController.h"
+
+#include "Animation/AnimMontage.h"
+
 
 
 
@@ -24,13 +29,16 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	// Camera
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f;
+
+	// 3인칭
+	CameraBoom->TargetArmLength = 450.0f;
 	CameraBoom->bUsePawnControlRotation = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	bIsFirstPersonView = false;
 
 	//================================================
 	// setup
@@ -92,6 +100,7 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	// Attack
 	
 	bIsAiming = false;
+	bShowCrosshair = false;
 
 	//무기 전환
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputSwitchWeaponActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/BBB/Input/Actions/IA_SwitchWeapon.IA_SwitchWeapon'"));
@@ -114,14 +123,14 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	}
 
 	// 원거리 
-	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/BP/Wepones/BP_Gun.BP_Gun_C"));
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/Characters/Wepones/BP_Gun.BP_Gun_C"));
 	if (RangedWeaponClassRef.Class)
 	{
 		RangedWeaponClass = RangedWeaponClassRef.Class;
 	}
 
 	//근거리
-	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/BP/Wepones/BP_Sword.BP_Sword_C"));
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/Characters/Wepones/BP_Sword.BP_Sword_C"));
 	if (MeleeWeaponClassRef.Class)
 	{
 		MeleeWeaponClass = MeleeWeaponClassRef.Class;
@@ -159,12 +168,39 @@ void ABBBCharacterPlayer::SetupCharacterMesh()
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/BBB/BP/Player/ABP_Player2.ABP_Player2_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/BBB/Characters/Player/ABP_Player2.ABP_Player2_C"));
 	if (AnimInstanceClassRef.Class)
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
 
+}
+
+void ABBBCharacterPlayer::SwitchToFirstPersonView()
+{
+	bIsFirstPersonView = true;
+
+	CameraBoom->TargetArmLength = 0.0f;
+	CameraBoom->SocketOffset = FVector(10.0f, 0.0f, 70.0f);  // 눈높이
+
+	bUseControllerRotationYaw = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+
+	UE_LOG(LogTemp, Warning, TEXT("Switched to First Person View"));
+}
+
+void ABBBCharacterPlayer::SwitchToThirdPersonView()
+{
+	bIsFirstPersonView = false;
+
+	// 3인칭: 솔더뷰
+	CameraBoom->TargetArmLength = 450.0f;
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("Switched to Third Person View"));
 }
 
 void ABBBCharacterPlayer::ChangeCharacterControl()
@@ -484,32 +520,61 @@ void ABBBCharacterPlayer::ComboCheck()
 
 void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 {
-	if (bIsRangedMode)
+
+	if (!bIsRangedMode)
 	{
-		bIsAiming = true;
-
-		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-
-
-		// AnimInstance에 전달
-		UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
-			GetMesh()->GetAnimInstance()
-		);
-
-		if (AnimInstance)
-		{
-			AnimInstance->SetAiming(true);
-		}
-
-		UE_LOG(LogTemp, Warning, TEXT("Start Aiming"));
+		return;
 	}
+
+	bIsAiming = true;
+	bShowCrosshair = true;
+
+	// 시점 변경
+	SwitchToFirstPersonView();
+
+	// 이동 비활성화
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+	// 크로스헤어 활성화
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		PC->ShowCrosshair(true);
+	}
+	
+	
+	// AnimInstance에 전달
+	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
+		GetMesh()->GetAnimInstance()
+	);
+
+	if (AnimInstance)
+	{
+		AnimInstance->SetAiming(true);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Start Aiming - First Person View"));
+	
 }
 
 void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
 {
 	bIsAiming = false;
+	bShowCrosshair = false;
 
+	// 시점 변경
+	SwitchToThirdPersonView();
+
+	// 움직임 활성화
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+
+	//크로스헤어 비활성화
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		PC->ShowCrosshair(false);
+	}
+
 
 	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
 		GetMesh()->GetAnimInstance()
@@ -520,7 +585,7 @@ void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
 		AnimInstance->SetAiming(false);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Stop Aiming"));
+	UE_LOG(LogTemp, Warning, TEXT("Stop Aiming - Third Person View"));
 }
 
 void ABBBCharacterPlayer::PlayShootingAnimation()
@@ -537,4 +602,55 @@ void ABBBCharacterPlayer::PlayShootingAnimation()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is not UBBBPlayerAnimInstance!"));
 	}
+}
+
+FVector ABBBCharacterPlayer::GetCrosshairWorldLocation() const
+{
+	if (!FollowCamera)
+	{
+		return FVector::ZeroVector;
+	}
+
+	// 크로스헤어 위치
+	FVector CameraLocation = FollowCamera->GetComponentLocation();
+	FVector CameraForward = FollowCamera->GetForwardVector();
+
+	// 카메라에서 앞쪽으로 Line Trace
+	float TraceDistance = 10000.0f;
+	FVector TraceEnd = CameraLocation + (CameraForward * TraceDistance);
+
+	// Line Trace
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		CameraLocation,
+		TraceEnd,
+		ECC_Visibility,
+		QueryParams))
+	{
+		return HitResult.Location;  // 맞은 위치
+	}
+
+	return TraceEnd;  // 아무것도 안 맞으면 끝점
+
+}
+
+FVector ABBBCharacterPlayer::GetCrosshairDirection() const
+{
+	if (!CurrentWeapon || !CurrentWeapon->WeaponMesh)
+	{
+		return GetActorForwardVector();
+	}
+
+	// 총구 위치
+	FVector MuzzleLocation = CurrentWeapon->WeaponMesh->GetSocketLocation(FName("Muzzle"));
+
+	// 크로스헤어 타겟 위치
+	FVector CrosshairTarget = GetCrosshairWorldLocation();
+
+	// 총구 → 크로스헤어 방향
+	return (CrosshairTarget - MuzzleLocation).GetSafeNormal();
 }

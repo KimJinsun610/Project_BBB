@@ -51,12 +51,21 @@ void ABBBProjectileBase::PostInitializeComponents()
     {
         ProjectileMovement->InitialSpeed = Speed;
         ProjectileMovement->MaxSpeed = Speed;
+
+        ProjectileMovement->Velocity = GetActorForwardVector() * Speed;
     }
 }
 
 void ABBBProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+    // 플레이어 충돌 무시
+    if (CollisionComponent && GetOwner())
+    {
+        CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
+    }
+
     // !!!! 궤적 이펙트 (추후 확인) !!!!
     if (TrailEffect)
     {

@@ -34,6 +34,13 @@ protected: // Camera Section
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> FollowCamera;
 
+	// 카메라 뷰 타입
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	bool bIsFirstPersonView;  // true: 1인칭, false: 3인칭
+
+	// 카메라 전환 함수
+	void SwitchToFirstPersonView();
+	void SwitchToThirdPersonView();
 
 //================================================
 // Character Control Section
@@ -141,13 +148,14 @@ protected: // 원거리 조준 관련
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	class UAnimMontage* ShootingMontage;
 
-
 	// 조준
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<class UInputAction> AimAction;
 
-	// Aim 상태
-	bool bIsAiming;
+	// 크로스 헤어
+	UPROPERTY(BlueprintReadOnly, Category = UI)
+	bool bShowCrosshair;
+
 
 	// Aim 입력 함수
 	void StartAim(const FInputActionValue& Value);
@@ -155,7 +163,13 @@ protected: // 원거리 조준 관련
 
 	// 애니메이션 재생 함수
 	void PlayShootingAnimation();
-
-
 	
+
+public:
+	// Aim 상태
+	bool bIsAiming;
+
+	// 화면 중앙 계산용
+	FVector GetCrosshairWorldLocation() const;
+	FVector GetCrosshairDirection() const;
 };

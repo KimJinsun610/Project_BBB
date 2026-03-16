@@ -8,7 +8,7 @@
 ABBBProjectileDebuff::ABBBProjectileDebuff()
     :Super()
 {
-    Speed = 2000.0f; // 발사체 속도 변경
+    Speed = 3000.0f; // 발사체 속도 변경
 }
 
 void ABBBProjectileDebuff::Initialize(const FDebuffData& InDebuffData)
