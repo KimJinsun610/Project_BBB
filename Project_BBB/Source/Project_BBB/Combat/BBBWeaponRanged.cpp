@@ -62,13 +62,14 @@ void ABBBWeaponRanged::FireProjectile()
     if (PlayerCharacter->bIsAiming)
     {
         // 조준 중: 크로스헤어 방향
-        FVector CrosshairLocation = PlayerCharacter->GetCrosshairWorldLocation();
         LaunchDirection = PlayerCharacter->GetCrosshairDirection();
+        
     }
     else
     {
         // 조준 안 함: 캐릭터 정면
         LaunchDirection = PlayerCharacter->GetActorForwardVector();
+    
     }
 
     // 발사체 생성

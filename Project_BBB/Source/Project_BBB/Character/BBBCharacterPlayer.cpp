@@ -376,6 +376,11 @@ void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 {
+	if (GetCharacterMovement()->IsFalling())
+	{
+		return;
+	}
+
 	if (CurrentWeapon)
 	{
 		if (bIsRangedMode && bIsAiming)
@@ -526,6 +531,12 @@ void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 		return;
 	}
 
+	if (GetCharacterMovement()->IsFalling())
+	{
+		return;
+	}
+
+
 	bIsAiming = true;
 	bShowCrosshair = true;
 
@@ -559,6 +570,12 @@ void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
 {
+	if (!bIsAiming)
+	{
+		return;
+	}
+
+
 	bIsAiming = false;
 	bShowCrosshair = false;
 
