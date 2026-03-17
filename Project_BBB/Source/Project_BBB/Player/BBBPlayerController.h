@@ -17,8 +17,10 @@ class PROJECT_BBB_API ABBBPlayerController : public APlayerController
 protected:
 	virtual void BeginPlay() override;
 
+//================================================
+// UI Section
+
 protected:
-    
     //HUD 위젯
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<class UUserWidget> HUDWidgetClass;
@@ -27,7 +29,9 @@ protected:
     class UUserWidget* HUDWidget;
 
 public:
-    // C++에서 구현, 블루프린트에서 호출 가능
     UFUNCTION(BlueprintCallable, Category = "UI")
     void ShowCrosshair(bool bShow);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void ShowInfo(bool bIsRange);
 };

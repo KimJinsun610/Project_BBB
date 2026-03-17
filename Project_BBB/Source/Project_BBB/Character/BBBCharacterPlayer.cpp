@@ -372,6 +372,12 @@ void ABBBCharacterPlayer::FirstPersonLook(const FInputActionValue& Value)
 void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
 {
 	SwitchWeapon();
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		PC->ShowInfo(bIsRangedMode);
+	}
+
 }
 
 void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
@@ -550,7 +556,7 @@ void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
-		PC->ShowCrosshair(true);
+		PC->ShowCrosshair(bShowCrosshair);
 	}
 	
 	
@@ -589,7 +595,7 @@ void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
-		PC->ShowCrosshair(false);
+		PC->ShowCrosshair(bShowCrosshair);
 	}
 
 

@@ -22,6 +22,9 @@ void ABBBPlayerController::BeginPlay()
             //초기에 크로스헤어 숨김
             ShowCrosshair(false);
 
+            //원거리로 시작
+            ShowInfo(true);
+
             UE_LOG(LogTemp, Warning, TEXT("HUD Widget Created and Added to Viewport"));
         }
         else
@@ -57,4 +60,27 @@ void ABBBPlayerController::ShowCrosshair(bool bShow)
  
     }
   
+}
+
+void ABBBPlayerController::ShowInfo(bool bIsRange)
+{
+    if (HUDWidget)
+    {
+        // 블루프린트 함수 호출
+        UFunction* ShowCrosshairFunc = HUDWidget->FindFunction(FName("ShowInfo"));
+        if (ShowCrosshairFunc)
+        {
+            struct FShowCrosshairParams
+            {
+                bool bShow;
+            };
+
+            FShowCrosshairParams Params;
+            Params.bShow = bIsRange;
+
+            HUDWidget->ProcessEvent(ShowCrosshairFunc, &Params);
+
+        }
+
+    }
 }

@@ -143,7 +143,7 @@ protected: //근거리 공격
 	FTimerHandle ComboTimerHandle;
 	bool HasNextComboCommand = false;
 
-protected: // 원거리 조준 관련
+protected: // 원거리 공격
 	//Shooting Montage 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
 	class UAnimMontage* ShootingMontage;
@@ -151,11 +151,6 @@ protected: // 원거리 조준 관련
 	// 조준
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<class UInputAction> AimAction;
-
-	// 크로스 헤어
-	UPROPERTY(BlueprintReadOnly, Category = UI)
-	bool bShowCrosshair;
-
 
 	// Aim 입력 함수
 	void StartAim(const FInputActionValue& Value);
@@ -169,7 +164,17 @@ public:
 	// Aim 상태
 	bool bIsAiming;
 
+//================================================
+// UI Section
+protected:
+
+	// 크로스 헤어
+	UPROPERTY(BlueprintReadOnly, Category = UI)
+	bool bShowCrosshair;
+
+public:
 	// 화면 중앙 계산용
 	FVector GetCrosshairWorldLocation() const;
 	FVector GetCrosshairDirection() const;
+
 };
