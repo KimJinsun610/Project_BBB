@@ -33,6 +33,7 @@ ABBBCharacterBase::ABBBCharacterBase()
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
+	GetCharacterMovement()->GravityScale = 1.0f;
 
 	// Mesh
 	// 애니메이션에 맞춰 상대 위치와 회전 지정 필요
