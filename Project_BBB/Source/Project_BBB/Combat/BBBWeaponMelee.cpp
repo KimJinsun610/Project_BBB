@@ -12,7 +12,7 @@
 ABBBWeaponMelee::ABBBWeaponMelee()
 {
     WeaponType = EWeaponType::Melee;
-    Damage = 50.0f;
+    Damage = 20.0f;
     AttackRange = 50.0f; 
 }
 
@@ -56,17 +56,6 @@ void ABBBWeaponMelee::PerformMeleeAttack()
         FCollisionShape::MakeSphere(SphereRadius),
         QueryParams
     );
-
-    // 디버그 드로우 (테스트용)
-    //DrawDebugSphere(
-    //    GetWorld(),
-    //    EndLocation,
-    //    SphereRadius,
-    //    12,
-    //    bHit ? FColor::Red : FColor::Green,
-    //    false,
-    //    1.0f
-    //);
 
     if (bHit)
     {
