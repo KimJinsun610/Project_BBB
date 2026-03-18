@@ -19,3 +19,15 @@ Saved/
 # OS
 .DS_Store
 Thumbs.db
+
+# Server - 빌드 결과물 및 대용량 라이브러리
+Project_BBB/Server/boost_1_85_0/
+Project_BBB/Server/Libraries/
+Project_BBB/Server/GameServer/x64/
+Project_BBB/Server/ServerCore/x64/
+Project_BBB/Server/Binaries/GameServer/*.exe
+Project_BBB/Server/Binaries/GameServer/*.pdb
+
+# Server - 위에서 전체 무시된 항목 중 추적할 것
+!Project_BBB/Server/Server.sln
+!Project_BBB/Server/Binaries/
