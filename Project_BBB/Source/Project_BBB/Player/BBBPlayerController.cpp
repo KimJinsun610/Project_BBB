@@ -23,7 +23,7 @@ void ABBBPlayerController::BeginPlay()
             ShowCrosshair(false);
 
             //원거리로 시작
-            ShowInfo(true);
+            ShowWeaponInfo(true);
 
             UE_LOG(LogTemp, Warning, TEXT("HUD Widget Created and Added to Viewport"));
         }
@@ -62,12 +62,12 @@ void ABBBPlayerController::ShowCrosshair(bool bShow)
   
 }
 
-void ABBBPlayerController::ShowInfo(bool bIsRange)
+void ABBBPlayerController::ShowWeaponInfo(bool bIsRange)
 {
     if (HUDWidget)
     {
         // 블루프린트 함수 호출
-        UFunction* ShowCrosshairFunc = HUDWidget->FindFunction(FName("ShowInfo"));
+        UFunction* ShowCrosshairFunc = HUDWidget->FindFunction(FName("ShowWeaponInfo"));
         if (ShowCrosshairFunc)
         {
             struct FShowCrosshairParams

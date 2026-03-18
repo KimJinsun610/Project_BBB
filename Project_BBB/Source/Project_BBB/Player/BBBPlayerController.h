@@ -33,5 +33,5 @@ public:
     void ShowCrosshair(bool bShow);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void ShowInfo(bool bIsRange);
+    void ShowWeaponInfo(bool bIsRange);
 };

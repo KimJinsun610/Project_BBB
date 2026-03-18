@@ -124,13 +124,15 @@ void ABBBCharacterBase::OnDeath(AActor* Killed, AActor* Killer)
 
 			AnimInstance->Montage_Play(DeathMontage, 1.0f);
 			
-			SetLifeSpan(3.0f);
+			SetLifeSpan(1.8f);
 
 		}
 	}
 	else
 	{
 		//사망 애니메이션이 없으면 Ragdoll
+		UE_LOG(LogTemp, Warning, TEXT("AnimInstance exists - "));
+
 		EnableRagdoll();
 		SetLifeSpan(3.0f);
 

@@ -375,7 +375,7 @@ void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
-		PC->ShowInfo(bIsRangedMode);
+		PC->ShowWeaponInfo(bIsRangedMode);
 	}
 
 }
