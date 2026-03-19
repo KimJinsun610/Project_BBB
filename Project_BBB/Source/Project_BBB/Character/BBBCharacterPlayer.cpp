@@ -166,10 +166,10 @@ void ABBBCharacterPlayer::BeginPlay()
 	// 원거리 모드로 시작
 	EquipRangedWeapon();
 	
-
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
+		// HP 20 == 1 Heart
 		int MaxHP = (HPComponent->MaxHP / 20);
 		int CurrentHP = (HPComponent->CurrentHP / 20);
 
@@ -418,17 +418,6 @@ void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 			CurrentWeapon->Attack();
 
 		}
-	}
-
-	//!!! test
-	HPComponent->TakeDamage(20.f, GetOwner());
-	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
-	if (PC)
-	{
-		int MaxHP = (HPComponent->MaxHP / 20);
-		int CurrentHP = (HPComponent->CurrentHP / 20);
-
-		PC->SetHP(MaxHP, CurrentHP);
 	}
 
 }
