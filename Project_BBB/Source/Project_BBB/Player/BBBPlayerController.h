@@ -34,4 +34,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     void ShowWeaponInfo(bool bIsRange);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void SetHP(int iMaxHP, int iCurrentHP);
 };

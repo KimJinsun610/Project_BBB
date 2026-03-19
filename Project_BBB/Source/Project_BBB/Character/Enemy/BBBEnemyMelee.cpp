@@ -20,7 +20,7 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 
 	if (HPComponent)
 	{
-		HPComponent->MaxHP = 50.0f;
+		HPComponent->MaxHP = 100.0f;
 	}
 
 }

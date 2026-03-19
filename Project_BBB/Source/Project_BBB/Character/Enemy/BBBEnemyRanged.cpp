@@ -21,7 +21,7 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 
 	if (HPComponent)
 	{
-		HPComponent->MaxHP = 50.0f;
+		HPComponent->MaxHP = 200.0f;
 	}
 }
 

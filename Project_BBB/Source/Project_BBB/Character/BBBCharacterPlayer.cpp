@@ -15,8 +15,10 @@
 #include "Combat/Projectile/BBBComboActionAsset.h"
 
 #include "BBBCharacterControlData.h"
+#include "Character/BBBHealthComponent.h"
 #include "Player/BBBPlayerAnimInstance.h"
 #include "Player/BBBPlayerController.h"
+
 
 #include "Animation/AnimMontage.h"
 
@@ -44,6 +46,12 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	// setup
 	GetCapsuleComponent()->InitCapsuleSize(20.f, 50.0f);
 	SetupCharacterMesh();
+
+	// HP
+	if (HPComponent)
+	{
+		HPComponent->MaxHP = 100.0f;
+	}
 
 	//================================================
 	// Input
@@ -133,9 +141,9 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/Characters/Wepones/BP_Sword.BP_Sword_C"));
 	if (MeleeWeaponClassRef.Class)
 	{
+
 		MeleeWeaponClass = MeleeWeaponClassRef.Class;
 	}
-
 
 }
 
@@ -158,6 +166,15 @@ void ABBBCharacterPlayer::BeginPlay()
 	// 원거리 모드로 시작
 	EquipRangedWeapon();
 	
+
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		int MaxHP = (HPComponent->MaxHP / 20);
+		int CurrentHP = (HPComponent->CurrentHP / 20);
+
+		PC->SetHP(MaxHP, CurrentHP);
+	}
 }
 
 void ABBBCharacterPlayer::SetupCharacterMesh()
@@ -372,12 +389,12 @@ void ABBBCharacterPlayer::FirstPersonLook(const FInputActionValue& Value)
 void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
 {
 	SwitchWeapon();
+
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
 		PC->ShowWeaponInfo(bIsRangedMode);
 	}
-
 }
 
 void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
@@ -402,6 +419,18 @@ void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 
 		}
 	}
+
+	//!!! test
+	HPComponent->TakeDamage(20.f, GetOwner());
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		int MaxHP = (HPComponent->MaxHP / 20);
+		int CurrentHP = (HPComponent->CurrentHP / 20);
+
+		PC->SetHP(MaxHP, CurrentHP);
+	}
+
 }
 
 void ABBBCharacterPlayer::StopAttack(const FInputActionValue& Value)

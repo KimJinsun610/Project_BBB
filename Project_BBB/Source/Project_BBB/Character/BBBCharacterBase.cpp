@@ -2,10 +2,13 @@
 
 
 #include "Character/BBBCharacterBase.h"
+
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
 #include "BBBCharacterControlData.h"
 #include "BBBHealthComponent.h"
+
 #include "Combat/BBBDebuffComponent.h"
 #include "Combat/BBBWeaponBase.h"
 
@@ -241,6 +244,7 @@ void ABBBCharacterBase::SwitchWeapon()
 	if (bIsRangedMode)
 	{
 		EquipRangedWeapon();
+		
 	}
 	else
 	{
