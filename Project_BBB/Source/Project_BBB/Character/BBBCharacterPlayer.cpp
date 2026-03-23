@@ -388,12 +388,14 @@ void ABBBCharacterPlayer::FirstPersonLook(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
 {
-	SwitchWeapon();
-
-	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
-	if (PC)
+	if (!bIsAiming)
 	{
-		PC->ShowWeaponInfo(bIsRangedMode);
+		SwitchWeapon();
+		ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+		if (PC)
+		{
+			PC->ShowWeaponInfo(bIsRangedMode);
+		}
 	}
 }
 
