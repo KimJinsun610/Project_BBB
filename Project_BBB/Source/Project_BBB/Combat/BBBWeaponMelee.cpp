@@ -63,22 +63,26 @@ void ABBBWeaponMelee::PerformMeleeAttack()
 
     if (bHit)
     {
+        TSet<AActor*> HitActors;
+
         for (const FHitResult& Hit : HitResults)
         {
             AActor* HitActor = Hit.GetActor();
             if (!HitActor || HitActor == GetOwner()) continue;
 
+            if (HitActors.Contains(HitActor)) continue;
+            HitActors.Add(HitActor);
+
             UBBBDebuffComponent* DebuffComp = HitActor->FindComponentByClass<UBBBDebuffComponent>();
             if (!DebuffComp || !DebuffComp->HasAnyDebuff())
             {
                 UE_LOG(LogTemp, Warning, TEXT("Hit %s but NO DEBUFF - No damage!"),*HitActor->GetName());
-                continue;  // 다음 적으로
+                continue;
             }
 
             UBBBHealthComponent* HealthComp = HitActor->FindComponentByClass<UBBBHealthComponent>();
             if (HealthComp)
             {
-                //데미지 적용
                 HealthComp->TakeDamage(Damage, GetOwner());
 
                 UE_LOG(LogTemp, Warning, TEXT("Melee Hit: %s, Damage: %.1f"), *HitActor->GetName(), Damage);
