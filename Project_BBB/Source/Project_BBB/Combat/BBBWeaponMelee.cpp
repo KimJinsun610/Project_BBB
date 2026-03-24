@@ -60,6 +60,7 @@ void ABBBWeaponMelee::PerformMeleeAttack()
         QueryParams
     );
 
+
     if (bHit)
     {
         for (const FHitResult& Hit : HitResults)

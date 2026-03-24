@@ -35,6 +35,7 @@ void ABBBEnemyBase::BeginPlay()
         DebuffComponent->OnDebuffApplied.AddDynamic(this, &ABBBEnemyBase::OnDebuffAppliedCallback);
         DebuffComponent->OnDebuffRemoved.AddDynamic(this, &ABBBEnemyBase::OnDebuffRemovedCallback);
     }
+
 }
 
 void ABBBEnemyBase::SetupCharacterMesh()
@@ -55,17 +56,24 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
     {
         struct FParams
         {
-            int CurrentHP;
-            int MaxHP;
-            int DebuffCount;
+            float CurrentHP;
+            float MaxHP;
+            float DebuffCount;
         };
         FParams Params;
         Params.CurrentHP = HPComponent->CurrentHP;
         Params.MaxHP = HPComponent->MaxHP;
-        Params.DebuffCount = DebuffComponent->GetActiveDebuffs().Num();
+        Params.DebuffCount = 0; //DebuffComponent->GetActiveDebuffs().Num();
+
+
+        UE_LOG(LogTemp, Warning, TEXT("SetEnemyInfo called - CurrentHP: %.1f, MaxHP: %.1f, DebuffCount: %d"),
+            HPComponent->CurrentHP, HPComponent->MaxHP, DebuffComponent->GetActiveDebuffs().Num());
+
         W->ProcessEvent(Func, &Params);
+
     }
 }
+
 
 void ABBBEnemyBase::OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser)
 {

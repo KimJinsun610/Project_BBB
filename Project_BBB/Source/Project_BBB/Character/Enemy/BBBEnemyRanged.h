@@ -18,6 +18,7 @@ public:
 	ABBBEnemyRanged();
 
 protected:
+	virtual void BeginPlay() override;
 	virtual void SetupCharacterMesh() override;
 	
 };

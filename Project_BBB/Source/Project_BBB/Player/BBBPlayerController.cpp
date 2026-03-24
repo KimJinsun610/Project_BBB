@@ -66,7 +66,6 @@ void ABBBPlayerController::ShowWeaponInfo(bool bIsRange)
     {
         // 블루프린트 함수 호출
         UFunction* ShowCrosshairFunc = HUDWidget->FindFunction(FName("ShowWeaponInfo"));
-        UE_LOG(LogTemp, Warning, TEXT("Show UI"));
         if (ShowCrosshairFunc)
         {
             struct FShowWeaponInfoParams
@@ -89,9 +88,8 @@ void ABBBPlayerController::SetHP(int iMaxHP, int iCurrentHP)
     if (HUDWidget)
     {
         // 블루프린트 함수 호출
-        UFunction* ShowCrosshairFunc = HUDWidget->FindFunction(FName("SetHP"));
-        UE_LOG(LogTemp, Warning, TEXT("Show UI"));
-        if (ShowCrosshairFunc)
+        UFunction* SetHPFunc = HUDWidget->FindFunction(FName("SetHP"));
+        if (SetHPFunc)
         {
             struct FSetHPParams
             {
@@ -103,7 +101,7 @@ void ABBBPlayerController::SetHP(int iMaxHP, int iCurrentHP)
             Params.CurrentHP = iCurrentHP;
             Params.MaxHP = iMaxHP;
 
-            HUDWidget->ProcessEvent(ShowCrosshairFunc, &Params);
+            HUDWidget->ProcessEvent(SetHPFunc, &Params);
 
         }
 
