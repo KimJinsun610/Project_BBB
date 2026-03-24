@@ -56,18 +56,12 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
     {
         struct FParams
         {
-            float CurrentHP;
-            float MaxHP;
-            float DebuffCount;
+            int CurrentHP;
+            int MaxHP;
         };
         FParams Params;
         Params.CurrentHP = HPComponent->CurrentHP;
         Params.MaxHP = HPComponent->MaxHP;
-        Params.DebuffCount = 0; //DebuffComponent->GetActiveDebuffs().Num();
-
-
-        UE_LOG(LogTemp, Warning, TEXT("SetEnemyInfo called - CurrentHP: %.1f, MaxHP: %.1f, DebuffCount: %d"),
-            HPComponent->CurrentHP, HPComponent->MaxHP, DebuffComponent->GetActiveDebuffs().Num());
 
         W->ProcessEvent(Func, &Params);
 
