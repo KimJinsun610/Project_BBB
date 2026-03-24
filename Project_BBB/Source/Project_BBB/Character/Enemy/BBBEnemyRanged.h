@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/BBBCharacterBase.h"
+#include "BBBEnemyBase.h"
 #include "BBBEnemyRanged.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_BBB_API ABBBEnemyRanged : public ABBBCharacterBase
+class PROJECT_BBB_API ABBBEnemyRanged : public ABBBEnemyBase
 {
 	GENERATED_BODY()
 	

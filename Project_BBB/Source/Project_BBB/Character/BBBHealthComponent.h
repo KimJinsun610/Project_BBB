@@ -25,10 +25,10 @@ protected:
 
 public:
     //Ã¼·Â
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+    UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Health")
     float MaxHP;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+    UPROPERTY(Transient, BlueprintReadOnly, Category = "Health")
     float CurrentHP;
 
     // »ç¸Á
