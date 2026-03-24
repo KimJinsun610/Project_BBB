@@ -24,8 +24,6 @@ void ABBBPlayerController::BeginPlay()
 
             //원거리로 시작
             ShowWeaponInfo(true);
-
-            UE_LOG(LogTemp, Warning, TEXT("HUD Widget Created and Added to Viewport"));
         }
         else
         {

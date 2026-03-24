@@ -11,6 +11,11 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 	// Mesh
 	SetupCharacterMesh();
 
+	EnemyInfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyInfoWidget"));
+	EnemyInfoWidgetComponent->SetupAttachment(GetMesh(), FName("HeadUI")); // 머리 소켓에 붙이기
+	EnemyInfoWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 항상 카메라를 바라봄
+	EnemyInfoWidgetComponent->SetDrawSize(FVector2D(200.f, 50.f));
+
 	if (HPComponent)
 	{
 		HPComponent->MaxHP = 20.0f;
