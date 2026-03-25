@@ -4,9 +4,11 @@
 #include "Character/Enemy/BBBEnemyMelee.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/BBBHealthComponent.h"
+#include "AI/BBBMeleeAIController.h"
 
 ABBBEnemyMelee::ABBBEnemyMelee()
 {
+
 	// Mesh
 	SetupCharacterMesh();
 
@@ -21,6 +23,10 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 	EnemyInfoWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 항상 카메라를 바라봄
 	EnemyInfoWidgetComponent->SetDrawSize(FVector2D(200.f, 50.f));
 
+
+	// AI 컨트롤러 자동 생성
+	AIControllerClass = ABBBMeleeAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void ABBBEnemyMelee::BeginPlay()

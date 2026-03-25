@@ -25,6 +25,9 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 	EnemyInfoWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 항상 카메라를 바라봄
 	EnemyInfoWidgetComponent->SetDrawSize(FVector2D(200.f, 50.f));
 
+	// AI 컨트롤러 자동 생성 (나중에 AI 추가 시)
+	AIControllerClass = nullptr; // 나중에 AI Controller 클래스 지정
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 }
 
