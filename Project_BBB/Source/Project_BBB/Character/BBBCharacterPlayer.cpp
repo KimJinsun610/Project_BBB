@@ -155,6 +155,12 @@ void ABBBCharacterPlayer::BeginPlay()
 	Super::BeginPlay();
 	SetCharacterControl(CurrentCharacterControlType);
 
+	// HP가 바뀔 때마다 UI 업데이트
+	if (StatComponent)
+	{
+		StatComponent->OnHPChanged.AddDynamic(this, &ABBBCharacterPlayer::OnHPChangedCallback);
+	}
+
 	// 무기 생성
 	
 	if (RangedWeaponClass)
@@ -491,7 +497,7 @@ void ABBBCharacterPlayer::ComboActionBegin()
 
 	//Animation Setting
 	const float AttackSpeedRate = 1.0f;
-	//UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
 	AnimInstance->Montage_Play(MeleeAttackMontage, AttackSpeedRate);
 
 	FOnMontageEnded EndDelegate;
@@ -699,4 +705,22 @@ FVector ABBBCharacterPlayer::GetCrosshairDirection() const
 
 	// 총구 → 크로스헤어 방향
 	return (CrosshairTarget - MuzzleLocation).GetSafeNormal();
+}
+
+void ABBBCharacterPlayer::UpdatePlayerWidget()
+{
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		// HP 20 == 1 Heart
+		int MaxHP = (StatComponent->MaxHP / 20);
+		int CurrentHP = (StatComponent->CurrentHP / 20);
+
+		PC->SetHP(MaxHP, CurrentHP);
+	}
+}
+
+void ABBBCharacterPlayer::OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser)
+{
+	UpdatePlayerWidget();
 }

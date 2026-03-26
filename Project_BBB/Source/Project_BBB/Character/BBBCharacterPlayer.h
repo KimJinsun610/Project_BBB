@@ -177,4 +177,12 @@ public:
 	FVector GetCrosshairWorldLocation() const;
 	FVector GetCrosshairDirection() const;
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void UpdatePlayerWidget();
+
+private:
+	// HP 변경 콜백
+	UFUNCTION()
+	void OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser);
 };

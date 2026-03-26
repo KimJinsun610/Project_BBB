@@ -23,10 +23,10 @@ public:
 	ABBBEnemyBase();
 
 protected:
+	bool RangedEnemy = 0; //true == 원거리
+
 	virtual void BeginPlay() override;
 	virtual void SetupCharacterMesh() override;
-	
-
 //======================================================
 //UI section
 protected:
@@ -49,6 +49,24 @@ private:
 	// 디버프 제거 콜백
 	UFUNCTION()
 	void OnDebuffRemovedCallback(EDebuffType DebuffType);
+
+//======================================================
+// Attack Section
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<class UAnimMontage> MeleeAttackMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Stats")
+	float Damage;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Stats")
+	float AttackRange;
+
+	void PerformAttack();
+
+	void PerformMeleeAttack();
+	void MeleeAttackBegin();
+	void MeleeAttackEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
 
 //======================================================
 //AI section

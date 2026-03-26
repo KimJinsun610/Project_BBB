@@ -11,6 +11,10 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 	// Mesh
 	SetupCharacterMesh();
 
+	RangedEnemy = false;
+	Damage = 20.f;
+	AttackRange = 50.f;
+
 	if (StatComponent)
 	{
 		StatComponent->MaxHP = 20.0f;
@@ -31,6 +35,8 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 void ABBBEnemyMelee::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	EquipMeleeWeapon();
 
 	UpdateEnemyInfoWidget();
 }

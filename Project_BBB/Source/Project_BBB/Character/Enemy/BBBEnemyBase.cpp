@@ -5,14 +5,21 @@
 
 #include "Character/BBBStatComponent.h"
 #include "Combat/BBBDebuffComponent.h"
+#include "Combat/BBBWeaponRanged.h"
+#include "Combat/BBBWeaponMelee.h"
+#include "Physics/BBBCollision.h"
 
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 ABBBEnemyBase::ABBBEnemyBase()
 {
 	// 적 전용 CapsuleConponent
 	GetCapsuleComponent()->InitCapsuleSize(4.f, 9.0f);
+
+    Damage = 20.f;
+    AttackRange = 50.f;
 
 }
 
@@ -81,6 +88,131 @@ void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
     UpdateEnemyInfoWidget();
 }
 
+//Attack
+
+void ABBBEnemyBase::PerformAttack()
+{
+    if (RangedEnemy) {
+
+
+    }
+    else {
+        PerformMeleeAttack();
+        MeleeAttackBegin();
+    }
+}
+
+void ABBBEnemyBase::PerformMeleeAttack() {
+
+    if (!GetOwner()) return;
+
+    UE_LOG(LogTemp, Warning, TEXT("Melee Enemy Hit"));
+
+    //캐릭터 앞 방향으로 Sphere Trace
+    FVector StartLocation = GetActorLocation();
+    FVector ForwardVector = GetActorForwardVector();
+    FVector EndLocation = StartLocation + (ForwardVector * AttackRange);
+
+    // Sphere Trace 파라미터
+    float SphereRadius = 150.0f;
+    FCollisionQueryParams QueryParams;
+    QueryParams.AddIgnoredActor(GetOwner());
+    QueryParams.AddIgnoredActor(this);
+
+    // Multi Sphere Trace (여러 적 동시 공격 가능)
+    TArray<FHitResult> HitResults;
+    bool bHit = GetWorld()->SweepMultiByChannel(
+        HitResults,
+        StartLocation,
+        EndLocation,
+        FQuat::Identity,
+        CCHANNEL_BBBACTION,  
+        FCollisionShape::MakeSphere(SphereRadius),
+        QueryParams
+    );
+
+   DrawDebugSphere(
+      GetWorld(),
+      EndLocation,
+      SphereRadius,
+      12,
+      bHit ? FColor::Red : FColor::Green,
+      false,
+      1.0f
+   );
+
+
+    if (bHit)
+    {
+        TSet<AActor*> HitActors;
+
+        for (const FHitResult& Hit : HitResults)
+        {
+            AActor* HitActor = Hit.GetActor();
+            if (!HitActor || HitActor == GetOwner()) continue;
+
+            if (HitActors.Contains(HitActor)) continue;
+            HitActors.Add(HitActor);
+
+            UBBBStatComponent* HealthComp = HitActor->FindComponentByClass<UBBBStatComponent>();
+            if (HealthComp)
+            {
+                HealthComp->TakeDamage(Damage, GetOwner());
+
+                UE_LOG(LogTemp, Warning, TEXT("Melee Hit: %s, Damage: %.1f"), *HitActor->GetName(), Damage);
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Hit %s but no HealthComponent"), *HitActor->GetName());
+            }
+        }
+    }
+}
+
+void ABBBEnemyBase::MeleeAttackBegin()
+{
+    if (!MeleeAttackMontage)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Missing data! - Enemy Melee Attack Mongtage Is Missing"));
+        return;
+    }
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    if (!AnimInstance)
+    {
+        UE_LOG(LogTemp, Error, TEXT("AnimInstance is NULL!"));
+        return;
+    }
+
+
+    if (AnimInstance->Montage_IsPlaying(MeleeAttackMontage))
+    {
+        AnimInstance->Montage_Stop(0.1f, MeleeAttackMontage);
+    }
+
+    GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+
+    //Animation Setting
+    const float AttackSpeedRate = 1.0f;
+
+    AnimInstance->Montage_Play(MeleeAttackMontage, AttackSpeedRate);
+
+    FOnMontageEnded EndDelegate;
+    EndDelegate.BindUObject(this, &ABBBEnemyBase::MeleeAttackEnd);
+    AnimInstance->Montage_SetEndDelegate(EndDelegate, MeleeAttackMontage);
+
+}
+
+void ABBBEnemyBase::MeleeAttackEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded)
+{
+    GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+    OnAttackFinished.ExecuteIfBound();
+}
+
+
+
+
+
+// AI
 float ABBBEnemyBase::GetAIPatrolRadius()
 {
     return 800.0f;
@@ -93,8 +225,12 @@ float ABBBEnemyBase::GetAIDetectRange()
 
 float ABBBEnemyBase::GetAIAttackRange()
 {
-    if (!StatComponent) return 0.0f;
-    return StatComponent->GetAttackRadius()*2;
+    if (!StatComponent) {
+        UE_LOG(LogTemp, Error, TEXT("No StatsComponent"));
+        return 0.0f;
+    }
+
+    return StatComponent->GetAttackRadius()*3;
 }
 
 float ABBBEnemyBase::GetAITurnSpeed()
@@ -109,4 +245,5 @@ void ABBBEnemyBase::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAt
 
 void ABBBEnemyBase::AttackByAI()
 {
+    PerformAttack();
 }
