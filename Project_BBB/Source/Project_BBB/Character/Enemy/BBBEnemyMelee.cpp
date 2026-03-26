@@ -3,19 +3,18 @@
 
 #include "Character/Enemy/BBBEnemyMelee.h"
 #include "Components/CapsuleComponent.h"
-#include "Character/BBBHealthComponent.h"
+#include "Character/BBBStatComponent.h"
 #include "AI/BBBMeleeAIController.h"
 
 ABBBEnemyMelee::ABBBEnemyMelee()
 {
-
 	// Mesh
 	SetupCharacterMesh();
 
-	if (HPComponent)
+	if (StatComponent)
 	{
-		HPComponent->MaxHP = 20.0f;
-		HPComponent->CurrentHP = HPComponent->MaxHP;
+		StatComponent->MaxHP = 20.0f;
+		StatComponent->CurrentHP = StatComponent->MaxHP;
 	}
 
 	EnemyInfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyInfoWidget"));

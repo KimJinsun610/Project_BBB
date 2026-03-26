@@ -7,7 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "BBBCharacterControlData.h"
-#include "BBBHealthComponent.h"
+#include "BBBStatComponent.h"
 
 #include "Combat/BBBDebuffComponent.h"
 #include "Combat/BBBWeaponBase.h"
@@ -26,7 +26,6 @@ ABBBCharacterBase::ABBBCharacterBase()
 	// Capsule
 	// 충돌 캡슐 설정
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	// Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -69,7 +68,7 @@ ABBBCharacterBase::ABBBCharacterBase()
 	DebuffComponent = CreateDefaultSubobject<UBBBDebuffComponent>(TEXT("DebuffComponent"));
 
 	// HP 컴포넌트
-	HPComponent = CreateDefaultSubobject<UBBBHealthComponent>(TEXT("HPComponent"));
+	StatComponent = CreateDefaultSubobject<UBBBStatComponent>(TEXT("HPComponent"));
 
 	// 무기 초기값
 	bIsRangedMode = true;  // 원거리 모드
@@ -96,9 +95,9 @@ void ABBBCharacterBase::BeginPlay()
 	Super::BeginPlay();
 
 	// 사망 이벤트 바인딩
-	if (HPComponent)
+	if (StatComponent)
 	{
-		HPComponent->OnDeath.AddDynamic(this, &ABBBCharacterBase::OnDeath);
+		StatComponent->OnDeath.AddDynamic(this, &ABBBCharacterBase::OnDeath);
 	}
 }
 

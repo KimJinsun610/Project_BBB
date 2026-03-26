@@ -15,13 +15,13 @@
 #include "Combat/Projectile/BBBComboActionAsset.h"
 
 #include "BBBCharacterControlData.h"
-#include "Character/BBBHealthComponent.h"
+#include "Character/BBBStatComponent.h"
 #include "Player/BBBPlayerAnimInstance.h"
 #include "Player/BBBPlayerController.h"
 
 
 #include "Animation/AnimMontage.h"
-
+#include "Physics/BBBCollision.h"
 
 
 
@@ -45,12 +45,15 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	//================================================
 	// setup
 	GetCapsuleComponent()->InitCapsuleSize(20.f, 50.0f);
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_BBPLAYERCAPSULE);
+
+
 	SetupCharacterMesh();
 
 	// HP
-	if (HPComponent)
+	if (StatComponent)
 	{
-		HPComponent->MaxHP = 100.0f;
+		StatComponent->MaxHP = 100.0f;
 	}
 
 	//================================================
@@ -170,8 +173,8 @@ void ABBBCharacterPlayer::BeginPlay()
 	if (PC)
 	{
 		// HP 20 == 1 Heart
-		int MaxHP = (HPComponent->MaxHP / 20);
-		int CurrentHP = (HPComponent->CurrentHP / 20);
+		int MaxHP = (StatComponent->MaxHP / 20);
+		int CurrentHP = (StatComponent->CurrentHP / 20);
 
 		PC->SetHP(MaxHP, CurrentHP);
 	}

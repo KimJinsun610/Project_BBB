@@ -44,9 +44,9 @@ protected:
 //================================================
 // HP System Section
 
-	// HP 컴포넌트
+	// Stat 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
-	TObjectPtr<class UBBBHealthComponent> HPComponent;
+	TObjectPtr<class UBBBStatComponent> StatComponent;
 
 	// 디버프 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")

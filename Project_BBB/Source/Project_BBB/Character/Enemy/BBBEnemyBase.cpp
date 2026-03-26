@@ -3,7 +3,7 @@
 
 #include "Character/Enemy/BBBEnemyBase.h"
 
-#include "Character/BBBHealthComponent.h"
+#include "Character/BBBStatComponent.h"
 #include "Combat/BBBDebuffComponent.h"
 
 #include "Components/CapsuleComponent.h"
@@ -21,9 +21,9 @@ void ABBBEnemyBase::BeginPlay()
     Super::BeginPlay();
 
     // HP가 바뀔 때마다 UI 업데이트
-    if (HPComponent)
+    if (StatComponent)
     {
-        HPComponent->OnHPChanged.AddDynamic(this, &ABBBEnemyBase::OnHPChangedCallback);
+        StatComponent->OnHPChanged.AddDynamic(this, &ABBBEnemyBase::OnHPChangedCallback);
     }
 
     // 디버프가 추가/제거될 때마다 UI 업데이트
@@ -57,8 +57,8 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
             int MaxHP;
         };
         FParams Params;
-        Params.CurrentHP = HPComponent->CurrentHP;
-        Params.MaxHP = HPComponent->MaxHP;
+        Params.CurrentHP = StatComponent->CurrentHP;
+        Params.MaxHP = StatComponent->MaxHP;
 
         W->ProcessEvent(Func, &Params);
 
@@ -79,4 +79,34 @@ void ABBBEnemyBase::OnDebuffAppliedCallback(EDebuffType DebuffType, float Durati
 void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
 {
     UpdateEnemyInfoWidget();
+}
+
+float ABBBEnemyBase::GetAIPatrolRadius()
+{
+    return 800.0f;
+}
+
+float ABBBEnemyBase::GetAIDetectRange()
+{
+    return 400.0f;
+}
+
+float ABBBEnemyBase::GetAIAttackRange()
+{
+    if (!StatComponent) return 0.0f;
+    return StatComponent->GetAttackRadius()*2;
+}
+
+float ABBBEnemyBase::GetAITurnSpeed()
+{
+    return 0.0f;
+}
+
+void ABBBEnemyBase::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
+{
+    OnAttackFinished = InOnAttackFinished;
+}
+
+void ABBBEnemyBase::AttackByAI()
+{
 }

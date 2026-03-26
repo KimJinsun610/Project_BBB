@@ -4,7 +4,7 @@
 #include "Combat/BBBWeaponMelee.h"
 #include "Combat/BBBDebuffComponent.h"
 
-#include "Character/BBBHealthComponent.h"
+#include "Character/BBBStatComponent.h"
 
 #include "GameFramework/Character.h"
 
@@ -80,7 +80,7 @@ void ABBBWeaponMelee::PerformMeleeAttack()
                 continue;
             }
 
-            UBBBHealthComponent* HealthComp = HitActor->FindComponentByClass<UBBBHealthComponent>();
+            UBBBStatComponent* HealthComp = HitActor->FindComponentByClass<UBBBStatComponent>();
             if (HealthComp)
             {
                 HealthComp->TakeDamage(Damage, GetOwner());

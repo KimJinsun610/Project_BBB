@@ -7,6 +7,7 @@
 #include "Character/BBBCharacterBase.h"
 #include "Components/WidgetComponent.h"
 #include "Combat/BBBDebuffTypes.h"     
+#include "AI/BBBCharacterAIInterface.h"
 
 #include "BBBEnemyBase.generated.h"
 
@@ -14,7 +15,7 @@
  * 
  */
 UCLASS()
-class PROJECT_BBB_API ABBBEnemyBase : public ABBBCharacterBase
+class PROJECT_BBB_API ABBBEnemyBase : public ABBBCharacterBase, public IBBBCharacterAIInterface
 {
 	GENERATED_BODY()
 
@@ -48,4 +49,17 @@ private:
 	// 디버프 제거 콜백
 	UFUNCTION()
 	void OnDebuffRemovedCallback(EDebuffType DebuffType);
+
+//======================================================
+//AI section
+protected:
+	virtual float GetAIPatrolRadius() override;
+	virtual float GetAIDetectRange() override;
+	virtual float GetAIAttackRange() override;
+	virtual float GetAITurnSpeed() override;
+
+	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
+	virtual void AttackByAI() override;
+
+	FAICharacterAttackFinished OnAttackFinished;
 };

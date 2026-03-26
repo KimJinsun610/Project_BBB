@@ -3,7 +3,7 @@
 
 #include "Character/Enemy/BBBEnemyRanged.h"
 #include "Components/CapsuleComponent.h"
-#include "Character/BBBHealthComponent.h"
+#include "Character/BBBStatComponent.h"
 
 
 ABBBEnemyRanged::ABBBEnemyRanged()
@@ -13,10 +13,10 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 	SetupCharacterMesh();
 
 	//HP
-	if (HPComponent)
+	if (StatComponent)
 	{
-		HPComponent->MaxHP = 100.0f;
-		HPComponent->CurrentHP = HPComponent->MaxHP;
+		StatComponent->MaxHP = 100.0f;
+		StatComponent->CurrentHP = StatComponent->MaxHP;
 	}
 
 
