@@ -88,10 +88,13 @@ void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
     UpdateEnemyInfoWidget();
 }
 
+
 //Attack
 
 void ABBBEnemyBase::PerformAttack()
 {
+    if (DebuffComponent->HasAnyDebuff()) return;
+
     if (RangedEnemy) {
 
 

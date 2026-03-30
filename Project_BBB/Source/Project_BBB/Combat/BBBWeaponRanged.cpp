@@ -89,8 +89,7 @@ void ABBBWeaponRanged::FireProjectile()
         // 디버프 설정
         Projectile->Initialize(DebuffToApply);
 
-        UE_LOG(LogTemp, Warning, TEXT("Projectile fired - Aiming: %d"),
-            PlayerCharacter->bIsAiming);
+        UE_LOG(LogTemp, Warning, TEXT("Projectile fired - Aiming: %d"), PlayerCharacter->bIsAiming);
     }
 }
 
