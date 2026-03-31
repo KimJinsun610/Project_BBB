@@ -29,9 +29,10 @@ void ABBBProjectileDebuff::OnProjectileHit(AActor* HitActor, const FHitResult& H
     UBBBDebuffComponent* DebuffComp = HitActor->FindComponentByClass<UBBBDebuffComponent>();
 
     if (DebuffComp)
-    {
+    {        
         // 디버프 적용
         DebuffComp->ApplyDebuff(DebuffData);
+
 
         UE_LOG(LogTemp, Warning, TEXT("Debuff projectile hit %s! Applied: %d"), *HitActor->GetName(), (int32)DebuffData.DebuffType);
     }

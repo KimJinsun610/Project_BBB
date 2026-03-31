@@ -2,8 +2,11 @@
 
 
 #include "Character/Enemy/BBBEnemyMelee.h"
-#include "Components/CapsuleComponent.h"
 #include "Character/BBBStatComponent.h"
+
+#include "Components/CapsuleComponent.h"
+#include "Combat/BBBDebuffComponent.h"
+
 #include "AI/BBBMeleeAIController.h"
 
 ABBBEnemyMelee::ABBBEnemyMelee()
@@ -14,9 +17,6 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 	RangedEnemy = false;
 	Damage = 20.f;
 	AttackRange = 50.f;
-
-	iDebuffMaxCnt = 3;
-	iDebuffCurrentCnt = iDebuffMaxCnt;
 
 	if (StatComponent)
 	{
@@ -38,7 +38,12 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 void ABBBEnemyMelee::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// 디버프 쉴드 초기화
+	DebuffComponent->SetCurrentDebuffCount(3);
+	DebuffComponent->SetMaxDebuffCount(3);
+
+
 	EquipMeleeWeapon();
 
 	UpdateEnemyInfoWidget();

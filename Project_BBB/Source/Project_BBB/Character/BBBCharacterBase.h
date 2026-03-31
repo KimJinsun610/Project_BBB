@@ -44,6 +44,7 @@ protected:
 //================================================
 // HP System Section
 
+protected:
 	// Stat ÄÄÆ÷³ÍÆ®
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	TObjectPtr<class UBBBStatComponent> StatComponent;
