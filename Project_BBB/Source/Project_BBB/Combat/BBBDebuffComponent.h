@@ -45,12 +45,14 @@ public:
     UPROPERTY(BlueprintAssignable)
     FOnDebuffRemoved OnDebuffRemoved;
 
-    // 디버프 카운트
-    UFUNCTION(BlueprintPure, Category = "Debuff")
-    int32 GetResistCount(EDebuffType DebuffType) const;
-
     UPROPERTY(BlueprintAssignable)
     FOnDebuffCountChanged OnDebuffCountChanged;
+
+    // 디버프 카운트
+    UFUNCTION(BlueprintPure, Category = "Debuff")
+    int32 GetResistCount() const;
+
+   
 
 
 protected:

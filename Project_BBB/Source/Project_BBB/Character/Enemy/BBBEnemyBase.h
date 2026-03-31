@@ -50,6 +50,10 @@ private:
 	UFUNCTION()
 	void OnDebuffRemovedCallback(EDebuffType DebuffType);
 
+	// 디버프 변화 콜백
+	UFUNCTION()
+	void OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count);
+
 //======================================================
 // Attack Section
 protected:

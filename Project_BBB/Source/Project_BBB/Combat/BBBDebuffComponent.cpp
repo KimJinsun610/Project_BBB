@@ -15,9 +15,15 @@ UBBBDebuffComponent::UBBBDebuffComponent()
 }
 
 
-int32 UBBBDebuffComponent::GetResistCount(EDebuffType DebuffType) const
+int32 UBBBDebuffComponent::GetResistCount() const
 {
-    return int32();
+    if (!ResistCounts.Contains(EDebuffType::Stun))
+    {
+        return int32();
+    }
+
+    return ResistCounts[EDebuffType::Stun];
+
 }
 
 // Called when the game starts

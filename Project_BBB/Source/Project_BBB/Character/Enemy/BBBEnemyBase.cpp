@@ -38,6 +38,7 @@ void ABBBEnemyBase::BeginPlay()
     {
         DebuffComponent->OnDebuffApplied.AddDynamic(this, &ABBBEnemyBase::OnDebuffAppliedCallback);
         DebuffComponent->OnDebuffRemoved.AddDynamic(this, &ABBBEnemyBase::OnDebuffRemovedCallback);
+        DebuffComponent->OnDebuffCountChanged.AddDynamic(this, &ABBBEnemyBase::OnDebuffChangeCallback);
     }
 
 }
@@ -70,6 +71,19 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
         W->ProcessEvent(Func, &Params);
 
     }
+
+    UFunction* Func2 = W->FindFunction(FName("SetDebuffCnt"));
+    if (Func2)
+    {
+        struct FParams
+        {
+            int Count;
+        };
+        FParams Params;
+        Params.Count = DebuffComponent->GetResistCount();
+        W->ProcessEvent(Func2, &Params);
+
+    }
 }
 
 
@@ -84,6 +98,11 @@ void ABBBEnemyBase::OnDebuffAppliedCallback(EDebuffType DebuffType, float Durati
 }
 
 void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
+{
+    UpdateEnemyInfoWidget();
+}
+
+void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count)
 {
     UpdateEnemyInfoWidget();
 }
