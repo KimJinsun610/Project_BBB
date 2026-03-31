@@ -2,6 +2,7 @@
 
 
 #include "Character/Enemy/BBBEnemyRanged.h"
+#include "Combat/BBBDebuffComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Character/BBBStatComponent.h"
 
@@ -11,10 +12,6 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 
 	// Mesh
 	SetupCharacterMesh();
-
-	//Debuff
-	iDebuffMaxCnt = 3;
-	iDebuffCurrentCnt = iDebuffMaxCnt;
 
 	//HP
 	if (StatComponent)
@@ -38,6 +35,11 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 void ABBBEnemyRanged::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 디버프 쉴드 초기화
+	DebuffComponent->SetCurrentDebuffCount(2);
+	DebuffComponent->SetMaxDebuffCount(2);
+
 	UpdateEnemyInfoWidget();
 }
 

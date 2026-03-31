@@ -48,11 +48,16 @@ public:
     UPROPERTY(BlueprintAssignable)
     FOnDebuffCountChanged OnDebuffCountChanged;
 
-    // 디버프 카운트
-    UFUNCTION(BlueprintPure, Category = "Debuff")
-    int32 GetResistCount() const;
+private:
+    int32 iCurrentCnt = 0;
+    int32 iMaxCnt = 3;
 
-   
+public:
+    FORCEINLINE int32 GetCurrentDebuffCount() const { return iCurrentCnt; }
+    FORCEINLINE int32 GetMaxDebuffCount() const { return iMaxCnt; }
+    FORCEINLINE void SetCurrentDebuffCount(int32 count) { iCurrentCnt = count; }
+    FORCEINLINE void SetMaxDebuffCount(int32 count) { iMaxCnt = count; }
+
 
 
 protected:
@@ -72,10 +77,6 @@ protected:
     // 원래 값 저장 (복원용)
     float OriginalMaxWalkSpeed;
     float OriginalDefenseMultiplier;
-
-    // 디버프 카운트 추적
-    UPROPERTY()
-    TMap<EDebuffType, int32> ResistCounts;
 
 public:	
 	// Called every frame

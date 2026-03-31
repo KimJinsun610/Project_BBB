@@ -21,14 +21,12 @@ ABBBEnemyBase::ABBBEnemyBase()
     Damage = 20.f;
     AttackRange = 50.f;
 
-    iDebuffMaxCnt = 3;
-    iDebuffCurrentCnt = iDebuffMaxCnt;
-
 }
 
 void ABBBEnemyBase::BeginPlay()
 {
     Super::BeginPlay();
+
 
     // HP가 바뀔 때마다 UI 업데이트
     if (StatComponent)
@@ -99,7 +97,7 @@ void ABBBEnemyBase::UpdateEnemyDebuff()
             int Count;
         };
         FParams Params;
-        Params.Count = iDebuffCurrentCnt;
+        Params.Count = DebuffComponent->GetCurrentDebuffCount();
 
         W->ProcessEvent(Func2, &Params);
 
@@ -120,15 +118,11 @@ void ABBBEnemyBase::OnDebuffAppliedCallback(EDebuffType DebuffType, float Durati
 void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
 {
     UpdateEnemyInfoWidget();
-
-    // 값 초기화
-    iDebuffCurrentCnt = iDebuffMaxCnt;
     UpdateEnemyDebuff();
 }
 
 void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count)
 {
-    iDebuffCurrentCnt = Count;
     UpdateEnemyDebuff();
 }
 

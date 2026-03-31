@@ -11,19 +11,7 @@ UBBBDebuffComponent::UBBBDebuffComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	OriginalMaxWalkSpeed = 500.0f;
-	OriginalDefenseMultiplier = 1.0f;// ...
-}
-
-
-int32 UBBBDebuffComponent::GetResistCount() const
-{
-    if (!ResistCounts.Contains(EDebuffType::Stun))
-    {
-        return int32();
-    }
-
-    return ResistCounts[EDebuffType::Stun];
-
+	OriginalDefenseMultiplier = 1.0f;
 }
 
 // Called when the game starts
@@ -36,6 +24,8 @@ void UBBBDebuffComponent::BeginPlay()
 	{
 		OriginalMaxWalkSpeed = Character->GetCharacterMovement()->MaxWalkSpeed;
 	}
+
+    iCurrentCnt = iMaxCnt;
 	
 }
 
@@ -43,22 +33,14 @@ void UBBBDebuffComponent::ApplyDebuff(const FDebuffData& DebuffData)
 {
     EDebuffType Type = DebuffData.DebuffType;
 
-    // 카운트가 없으면 초기화
-    if (!ResistCounts.Contains(Type))
-    {
-        ResistCounts.Add(Type, DebuffData.MaxResistCount);
-    }
-
     // 카운트 감소
-    ResistCounts[Type] = FMath::Max(0, ResistCounts[Type] - 1);
+    iCurrentCnt = FMath::Max(0, iCurrentCnt - 1);
 
     // 카운트 변경 브로드캐스트
-    OnDebuffCountChanged.Broadcast(Type, ResistCounts[Type]);
-
-    UE_LOG(LogTemp, Warning, TEXT("Debuff resist count: %d"), ResistCounts[Type]);
+    OnDebuffCountChanged.Broadcast(Type, iCurrentCnt);
 
     // 카운트가 0이 되면 디버프 적용
-    if (ResistCounts[Type] <= 0)
+    if (iCurrentCnt <= 0)
     {
         if (ActiveDebuffs.Contains(Type))
         {
@@ -76,6 +58,8 @@ void UBBBDebuffComponent::ApplyDebuff(const FDebuffData& DebuffData)
 
         UE_LOG(LogTemp, Warning, TEXT("Debuff Applied: %d"), (int32)Type);
     }
+    
+
 }
 
 void UBBBDebuffComponent::ApplyDebuffEffect(const FDebuffData& DebuffData)
@@ -146,12 +130,8 @@ void UBBBDebuffComponent::RemoveDebuff(EDebuffType DebuffType)
     // 델리게이트
     OnDebuffRemoved.Broadcast(DebuffType);
 
-    if (ResistCounts.Contains(DebuffType))
-    {
-        ResistCounts.Remove(DebuffType); 
-    }
-
-    OnDebuffRemoved.Broadcast(DebuffType);
+    iCurrentCnt = iMaxCnt;
+    OnDebuffCountChanged.Broadcast(DebuffType, iMaxCnt);
 }
 
 bool UBBBDebuffComponent::HasDebuff(EDebuffType DebuffType) const

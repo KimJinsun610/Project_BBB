@@ -33,9 +33,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	UWidgetComponent* EnemyInfoWidgetComponent;
 
-	int iDebuffCurrentCnt = 0;
-	int iDebuffMaxCnt = 3;
-
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void UpdateEnemyInfoWidget();
