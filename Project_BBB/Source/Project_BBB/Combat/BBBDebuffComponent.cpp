@@ -148,7 +148,7 @@ void UBBBDebuffComponent::RemoveDebuff(EDebuffType DebuffType)
 
     if (ResistCounts.Contains(DebuffType))
     {
-        ResistCounts.Remove(DebuffType); // 다음 ApplyDebuff 호출 시 재초기화
+        ResistCounts.Remove(DebuffType); 
     }
 
     OnDebuffRemoved.Broadcast(DebuffType);

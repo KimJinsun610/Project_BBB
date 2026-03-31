@@ -85,13 +85,4 @@ void UBBBPlayerAnimInstance::PlayShootingAnimation()
 void UBBBPlayerAnimInstance::SetAiming(bool bAiming)
 {
 	bIsAiming = bAiming;
-
-	if (bAiming)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Started Aiming"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Stopped Aiming"));
-	}
 }

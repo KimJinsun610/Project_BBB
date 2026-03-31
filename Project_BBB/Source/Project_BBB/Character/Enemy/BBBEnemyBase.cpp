@@ -41,6 +41,8 @@ void ABBBEnemyBase::BeginPlay()
         DebuffComponent->OnDebuffCountChanged.AddDynamic(this, &ABBBEnemyBase::OnDebuffChangeCallback);
     }
 
+    UpdateEnemyDebuff();
+
 }
 
 void ABBBEnemyBase::SetupCharacterMesh()
@@ -71,6 +73,16 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
         W->ProcessEvent(Func, &Params);
 
     }
+}
+
+void ABBBEnemyBase::UpdateEnemyDebuff()
+{
+    UUserWidget* W = EnemyInfoWidgetComponent->GetUserWidgetObject();
+    if (!W)
+    {
+        UE_LOG(LogTemp, Error, TEXT("EnemyInfoWidgetComponent is Null"));
+        return;
+    }
 
     UFunction* Func2 = W->FindFunction(FName("SetDebuffCnt"));
     if (Func2)
@@ -80,7 +92,8 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
             int Count;
         };
         FParams Params;
-        Params.Count = DebuffComponent->GetResistCount();
+        Params.Count = iDebuffCnt;
+
         W->ProcessEvent(Func2, &Params);
 
     }
@@ -104,7 +117,8 @@ void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
 
 void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count)
 {
-    UpdateEnemyInfoWidget();
+    iDebuffCnt = Count;
+    UpdateEnemyDebuff();
 }
 
 

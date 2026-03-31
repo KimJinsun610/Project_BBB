@@ -37,7 +37,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void UpdateEnemyInfoWidget();
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void UpdateEnemyDebuff();
+
 private:
+
+	int iDebuffCnt = 3;
+
 	// HP 변경 콜백
 	UFUNCTION()
 	void OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser);
