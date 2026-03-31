@@ -223,7 +223,7 @@ float ABBBEnemyBase::GetAIPatrolRadius()
 
 float ABBBEnemyBase::GetAIDetectRange()
 {
-    return 400.0f;
+    return 800.0f;
 }
 
 float ABBBEnemyBase::GetAIAttackRange()

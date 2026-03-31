@@ -15,6 +15,11 @@ UBBBDebuffComponent::UBBBDebuffComponent()
 }
 
 
+int32 UBBBDebuffComponent::GetResistCount(EDebuffType DebuffType) const
+{
+    return int32();
+}
+
 // Called when the game starts
 void UBBBDebuffComponent::BeginPlay()
 {
@@ -30,29 +35,41 @@ void UBBBDebuffComponent::BeginPlay()
 
 void UBBBDebuffComponent::ApplyDebuff(const FDebuffData& DebuffData)
 {
-    // 이미 같은 디버프가 있는 경우
-    if (ActiveDebuffs.Contains(DebuffData.DebuffType))
+    EDebuffType Type = DebuffData.DebuffType;
+
+    // 카운트가 없으면 초기화
+    if (!ResistCounts.Contains(Type))
     {
-        if (!DebuffData.bStackable)
-        {
-            // 시간만 갱신
-            DebuffTimers[DebuffData.DebuffType] = DebuffData.Duration;
-            return;
-        }
+        ResistCounts.Add(Type, DebuffData.MaxResistCount);
     }
 
-    // 새 디버프 추가
-    ActiveDebuffs.Add(DebuffData.DebuffType, DebuffData);
-    DebuffTimers.Add(DebuffData.DebuffType, DebuffData.Duration);
+    // 카운트 감소
+    ResistCounts[Type] = FMath::Max(0, ResistCounts[Type] - 1);
 
-    // 효과 적용
-    ApplyDebuffEffect(DebuffData);
+    // 카운트 변경 브로드캐스트
+    OnDebuffCountChanged.Broadcast(Type, ResistCounts[Type]);
 
-    // 델리게이트 브로드캐스트
-    OnDebuffApplied.Broadcast(DebuffData.DebuffType, DebuffData.Duration);
+    UE_LOG(LogTemp, Warning, TEXT("Debuff resist count: %d"), ResistCounts[Type]);
 
-    UE_LOG(LogTemp, Warning, TEXT("Debuff Applied: %d for %.1f seconds"),
-        (int32)DebuffData.DebuffType, DebuffData.Duration);
+    // 카운트가 0이 되면 디버프 적용
+    if (ResistCounts[Type] <= 0)
+    {
+        if (ActiveDebuffs.Contains(Type))
+        {
+            if (!DebuffData.bStackable)
+            {
+                DebuffTimers[Type] = DebuffData.Duration;
+                return;
+            }
+        }
+
+        ActiveDebuffs.Add(Type, DebuffData);
+        DebuffTimers.Add(Type, DebuffData.Duration);
+        ApplyDebuffEffect(DebuffData);
+        OnDebuffApplied.Broadcast(Type, DebuffData.Duration);
+
+        UE_LOG(LogTemp, Warning, TEXT("Debuff Applied: %d"), (int32)Type);
+    }
 }
 
 void UBBBDebuffComponent::ApplyDebuffEffect(const FDebuffData& DebuffData)
@@ -69,8 +86,7 @@ void UBBBDebuffComponent::ApplyDebuffEffect(const FDebuffData& DebuffData)
 
     case EDebuffType::Slow:
         // 이동속도 감소
-        Character->GetCharacterMovement()->MaxWalkSpeed =
-            OriginalMaxWalkSpeed * (1.0f - DebuffData.Magnitude);
+        Character->GetCharacterMovement()->MaxWalkSpeed = OriginalMaxWalkSpeed * (1.0f - DebuffData.Magnitude);
         break;
 
     case EDebuffType::Weaken:
@@ -79,7 +95,7 @@ void UBBBDebuffComponent::ApplyDebuffEffect(const FDebuffData& DebuffData)
         break;
 
     case EDebuffType::Blind:
-        // AI 시야 감소 (AI 구현 시)
+        // AI 시야 감소
         // !!!! 나중에 구현 !!!!
         break;
 
@@ -124,7 +140,12 @@ void UBBBDebuffComponent::RemoveDebuff(EDebuffType DebuffType)
     // 델리게이트
     OnDebuffRemoved.Broadcast(DebuffType);
 
-    UE_LOG(LogTemp, Warning, TEXT("Debuff Removed: %d"), (int32)DebuffType);
+    if (ResistCounts.Contains(DebuffType))
+    {
+        ResistCounts.Remove(DebuffType); // 다음 ApplyDebuff 호출 시 재초기화
+    }
+
+    OnDebuffRemoved.Broadcast(DebuffType);
 }
 
 bool UBBBDebuffComponent::HasDebuff(EDebuffType DebuffType) const
