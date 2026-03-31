@@ -33,11 +33,15 @@ struct FDebuffData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bStackable;         // 중첩 가능 여부
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 MaxResistCount;   // 디버프 카운트
+
     FDebuffData()
         : DebuffType(EDebuffType::None)
         , Duration(3.0f)
         , Magnitude(0.5f)
         , bStackable(false)
+        , MaxResistCount(3)
     {
     }
 };

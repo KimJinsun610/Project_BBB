@@ -12,6 +12,10 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 	// Mesh
 	SetupCharacterMesh();
 
+	//Debuff
+	iDebuffMaxCnt = 3;
+	iDebuffCurrentCnt = iDebuffMaxCnt;
+
 	//HP
 	if (StatComponent)
 	{

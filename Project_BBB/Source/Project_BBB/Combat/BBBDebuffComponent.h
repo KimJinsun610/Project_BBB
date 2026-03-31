@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDebuffApplied, EDebuffType, DebuffType, float, Duration);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDebuffRemoved, EDebuffType, DebuffType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDebuffCountChanged, EDebuffType, DebuffType, int32, CurrentCount);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_BBB_API UBBBDebuffComponent : public UActorComponent
@@ -44,6 +45,16 @@ public:
     UPROPERTY(BlueprintAssignable)
     FOnDebuffRemoved OnDebuffRemoved;
 
+    UPROPERTY(BlueprintAssignable)
+    FOnDebuffCountChanged OnDebuffCountChanged;
+
+    // 디버프 카운트
+    UFUNCTION(BlueprintPure, Category = "Debuff")
+    int32 GetResistCount() const;
+
+   
+
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -61,6 +72,10 @@ protected:
     // 원래 값 저장 (복원용)
     float OriginalMaxWalkSpeed;
     float OriginalDefenseMultiplier;
+
+    // 디버프 카운트 추적
+    UPROPERTY()
+    TMap<EDebuffType, int32> ResistCounts;
 
 public:	
 	// Called every frame

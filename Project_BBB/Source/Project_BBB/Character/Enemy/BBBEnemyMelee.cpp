@@ -15,6 +15,9 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 	Damage = 20.f;
 	AttackRange = 50.f;
 
+	iDebuffMaxCnt = 3;
+	iDebuffCurrentCnt = iDebuffMaxCnt;
+
 	if (StatComponent)
 	{
 		StatComponent->MaxHP = 20.0f;

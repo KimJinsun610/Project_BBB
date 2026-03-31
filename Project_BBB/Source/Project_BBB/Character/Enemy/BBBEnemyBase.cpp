@@ -21,6 +21,9 @@ ABBBEnemyBase::ABBBEnemyBase()
     Damage = 20.f;
     AttackRange = 50.f;
 
+    iDebuffMaxCnt = 3;
+    iDebuffCurrentCnt = iDebuffMaxCnt;
+
 }
 
 void ABBBEnemyBase::BeginPlay()
@@ -38,8 +41,15 @@ void ABBBEnemyBase::BeginPlay()
     {
         DebuffComponent->OnDebuffApplied.AddDynamic(this, &ABBBEnemyBase::OnDebuffAppliedCallback);
         DebuffComponent->OnDebuffRemoved.AddDynamic(this, &ABBBEnemyBase::OnDebuffRemovedCallback);
+        DebuffComponent->OnDebuffCountChanged.AddDynamic(this, &ABBBEnemyBase::OnDebuffChangeCallback);
     }
 
+    // 한 프레임 뒤로 미룸
+    GetWorldTimerManager().SetTimerForNextTick([this]()
+    {
+        UpdateEnemyInfoWidget();
+        UpdateEnemyDebuff();
+    });
 }
 
 void ABBBEnemyBase::SetupCharacterMesh()
@@ -72,6 +82,30 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
     }
 }
 
+void ABBBEnemyBase::UpdateEnemyDebuff()
+{
+    UUserWidget* W = EnemyInfoWidgetComponent->GetUserWidgetObject();
+    if (!W)
+    {
+        UE_LOG(LogTemp, Error, TEXT("EnemyInfoWidgetComponent is Null"));
+        return;
+    }
+
+    UFunction* Func2 = W->FindFunction(FName("SetDebuffCnt"));
+    if (Func2)
+    {
+        struct FParams
+        {
+            int Count;
+        };
+        FParams Params;
+        Params.Count = iDebuffCurrentCnt;
+
+        W->ProcessEvent(Func2, &Params);
+
+    }
+}
+
 
 void ABBBEnemyBase::OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser)
 {
@@ -86,6 +120,16 @@ void ABBBEnemyBase::OnDebuffAppliedCallback(EDebuffType DebuffType, float Durati
 void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
 {
     UpdateEnemyInfoWidget();
+
+    // 값 초기화
+    iDebuffCurrentCnt = iDebuffMaxCnt;
+    UpdateEnemyDebuff();
+}
+
+void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count)
+{
+    iDebuffCurrentCnt = Count;
+    UpdateEnemyDebuff();
 }
 
 
@@ -223,7 +267,7 @@ float ABBBEnemyBase::GetAIPatrolRadius()
 
 float ABBBEnemyBase::GetAIDetectRange()
 {
-    return 400.0f;
+    return 800.0f;
 }
 
 float ABBBEnemyBase::GetAIAttackRange()

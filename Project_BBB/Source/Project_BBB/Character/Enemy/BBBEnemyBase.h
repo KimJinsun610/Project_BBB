@@ -33,11 +33,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	UWidgetComponent* EnemyInfoWidgetComponent;
 
+	int iDebuffCurrentCnt = 0;
+	int iDebuffMaxCnt = 3;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void UpdateEnemyInfoWidget();
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void UpdateEnemyDebuff();
+
 private:
+
+
 	// HP 변경 콜백
 	UFUNCTION()
 	void OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser);
@@ -49,6 +57,10 @@ private:
 	// 디버프 제거 콜백
 	UFUNCTION()
 	void OnDebuffRemovedCallback(EDebuffType DebuffType);
+
+	// 디버프 변화 콜백
+	UFUNCTION()
+	void OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count);
 
 //======================================================
 // Attack Section
