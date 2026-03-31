@@ -21,6 +21,9 @@ ABBBEnemyBase::ABBBEnemyBase()
     Damage = 20.f;
     AttackRange = 50.f;
 
+    iDebuffMaxCnt = 3;
+    iDebuffCurrentCnt = iDebuffMaxCnt;
+
 }
 
 void ABBBEnemyBase::BeginPlay()
@@ -41,8 +44,12 @@ void ABBBEnemyBase::BeginPlay()
         DebuffComponent->OnDebuffCountChanged.AddDynamic(this, &ABBBEnemyBase::OnDebuffChangeCallback);
     }
 
-    UpdateEnemyDebuff();
-
+    // 한 프레임 뒤로 미룸
+    GetWorldTimerManager().SetTimerForNextTick([this]()
+    {
+        UpdateEnemyInfoWidget();
+        UpdateEnemyDebuff();
+    });
 }
 
 void ABBBEnemyBase::SetupCharacterMesh()
@@ -92,7 +99,7 @@ void ABBBEnemyBase::UpdateEnemyDebuff()
             int Count;
         };
         FParams Params;
-        Params.Count = iDebuffCnt;
+        Params.Count = iDebuffCurrentCnt;
 
         W->ProcessEvent(Func2, &Params);
 
@@ -113,11 +120,15 @@ void ABBBEnemyBase::OnDebuffAppliedCallback(EDebuffType DebuffType, float Durati
 void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
 {
     UpdateEnemyInfoWidget();
+
+    // 값 초기화
+    iDebuffCurrentCnt = iDebuffMaxCnt;
+    UpdateEnemyDebuff();
 }
 
 void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count)
 {
-    iDebuffCnt = Count;
+    iDebuffCurrentCnt = Count;
     UpdateEnemyDebuff();
 }
 
