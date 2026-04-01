@@ -121,7 +121,7 @@ void ABBBEnemyBase::OnDebuffRemovedCallback(EDebuffType DebuffType)
     UpdateEnemyDebuff();
 }
 
-void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count)
+void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType)
 {
     UpdateEnemyDebuff();
 }

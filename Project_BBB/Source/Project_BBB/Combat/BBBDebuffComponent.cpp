@@ -37,7 +37,7 @@ void UBBBDebuffComponent::ApplyDebuff(const FDebuffData& DebuffData)
     iCurrentCnt = FMath::Max(0, iCurrentCnt - 1);
 
     // 카운트 변경 브로드캐스트
-    OnDebuffCountChanged.Broadcast(Type, iCurrentCnt);
+    OnDebuffCountChanged.Broadcast(Type);
 
     // 카운트가 0이 되면 디버프 적용
     if (iCurrentCnt <= 0)
@@ -131,7 +131,7 @@ void UBBBDebuffComponent::RemoveDebuff(EDebuffType DebuffType)
     OnDebuffRemoved.Broadcast(DebuffType);
 
     iCurrentCnt = iMaxCnt;
-    OnDebuffCountChanged.Broadcast(DebuffType, iMaxCnt);
+    OnDebuffCountChanged.Broadcast(DebuffType);
 }
 
 bool UBBBDebuffComponent::HasDebuff(EDebuffType DebuffType) const

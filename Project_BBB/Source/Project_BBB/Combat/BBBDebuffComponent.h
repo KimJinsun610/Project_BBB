@@ -9,7 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDebuffApplied, EDebuffType, DebuffType, float, Duration);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDebuffRemoved, EDebuffType, DebuffType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDebuffCountChanged, EDebuffType, DebuffType, int32, CurrentCount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDebuffCountChanged, EDebuffType, DebuffType);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_BBB_API UBBBDebuffComponent : public UActorComponent

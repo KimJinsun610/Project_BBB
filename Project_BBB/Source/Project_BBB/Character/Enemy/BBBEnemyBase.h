@@ -57,7 +57,7 @@ private:
 
 	// 디버프 변화 콜백
 	UFUNCTION()
-	void OnDebuffChangeCallback(EDebuffType DebuffType, int32 Count);
+	void OnDebuffChangeCallback(EDebuffType DebuffType);
 
 //======================================================
 // Attack Section
