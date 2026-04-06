@@ -134,14 +134,14 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	}
 
 	// 원거리 
-	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/Characters/Wepones/BP_Gun.BP_Gun_C"));
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> RangedWeaponClassRef( TEXT("/Game/BBB/Actors/Wepones/BP_Gun.BP_Gun_C"));
 	if (RangedWeaponClassRef.Class)
 	{
 		RangedWeaponClass = RangedWeaponClassRef.Class;
 	}
 
 	//근거리
-	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/Characters/Wepones/BP_Sword.BP_Sword_C"));
+	static ConstructorHelpers::FClassFinder<ABBBWeaponBase> MeleeWeaponClassRef(TEXT("/Game/BBB/Actors/Wepones/BP_Sword.BP_Sword_C"));
 	if (MeleeWeaponClassRef.Class)
 	{
 
@@ -194,7 +194,7 @@ void ABBBCharacterPlayer::SetupCharacterMesh()
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/BBB/Characters/Player/ABP_Player2.ABP_Player2_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/BBB/Actors/Player/ABP_Player2.ABP_Player2_C"));
 	if (AnimInstanceClassRef.Class)
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
@@ -723,4 +723,17 @@ void ABBBCharacterPlayer::UpdatePlayerWidget()
 void ABBBCharacterPlayer::OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser)
 {
 	UpdatePlayerWidget();
+}
+
+void ABBBCharacterPlayer::AddGold(int32 Amount)
+{
+	Gold += Amount;
+	UE_LOG(LogTemp, Warning, TEXT("Gold: %d"), Gold);
+
+	// UI 업데이트
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		PC->SetGold(Gold);
+	}
 }

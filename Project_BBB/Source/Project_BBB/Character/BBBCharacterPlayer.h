@@ -185,4 +185,17 @@ private:
 	// HP 변경 콜백
 	UFUNCTION()
 	void OnHPChangedCallback(float CurrentHP, float MaxHP, AActor* DamageCauser);
+
+//================================================
+// Gold Section
+public:
+	UFUNCTION(BlueprintCallable, Category = "Gold")
+	void AddGold(int32 Amount);
+
+	UFUNCTION(BlueprintPure, Category = "Gold")
+	int32 GetGold() const { return Gold; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gold", Meta = (AllowPrivateAccess = "true"))
+	int32 Gold = 0;
 };

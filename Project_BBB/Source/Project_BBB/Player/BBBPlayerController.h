@@ -18,6 +18,12 @@ protected:
 	virtual void BeginPlay() override;
 
 //================================================
+// Item Section
+
+public:
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void SetGold(int32 InGold);
+//================================================
 // UI Section
 
 protected:

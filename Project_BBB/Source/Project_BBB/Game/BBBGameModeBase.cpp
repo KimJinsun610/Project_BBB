@@ -7,7 +7,7 @@
 ABBBGameModeBase::ABBBGameModeBase()
 {
 	//DefaultPawnClass
-	static ConstructorHelpers::FClassFinder<APawn> ThirdPersonClassRef(TEXT("/Game/BBB/Characters/Player/BP_Player.BP_Player_C"));
+	static ConstructorHelpers::FClassFinder<APawn> ThirdPersonClassRef(TEXT("/Game/BBB/Actors/Player/BP_Player.BP_Player_C"));
 	if (ThirdPersonClassRef.Class) {
 		DefaultPawnClass = ThirdPersonClassRef.Class;
 	}

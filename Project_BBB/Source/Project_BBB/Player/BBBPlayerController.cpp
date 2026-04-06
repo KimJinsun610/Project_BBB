@@ -36,6 +36,21 @@ void ABBBPlayerController::BeginPlay()
     }
 }
 
+void ABBBPlayerController::SetGold(int32 InGold)
+{
+    if (HUDWidget)
+    {
+        UFunction* Func = HUDWidget->FindFunction(FName("SetGold"));
+        if (Func)
+        {
+            struct FParams { int32 Gold; };
+            FParams Params;
+            Params.Gold = InGold;
+            HUDWidget->ProcessEvent(Func, &Params);
+        }
+    }
+}
+
 void ABBBPlayerController::ShowCrosshair(bool bShow)
 {
     if (HUDWidget)

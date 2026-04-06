@@ -7,7 +7,6 @@
 // Sets default values
 ABBBItemBase::ABBBItemBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
@@ -23,5 +22,10 @@ void ABBBItemBase::OnPickup_Implementation(AActor* Picker)
 
 void ABBBItemBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+    // 플레이어만 체크
+    if (OtherActor && OtherActor->ActorHasTag(TEXT("Player")))
+    {
+        OnPickup(OtherActor);
+    }
 }
 
