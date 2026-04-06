@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "Combat/BBBDebuffTypes.h"     
 #include "AI/BBBCharacterAIInterface.h"
+#include "Item/BBBItemDataAsset.h"
 
 #include "BBBEnemyBase.generated.h"
 
@@ -27,6 +28,7 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void SetupCharacterMesh() override;
+
 //======================================================
 //UI section
 protected:
@@ -89,4 +91,16 @@ protected:
 	virtual void AttackByAI() override;
 
 	FAICharacterAttackFinished OnAttackFinished;
+
+//======================================================
+//Item Section
+protected:
+	// 드롭 테이블
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
+	TArray<FItemDropData> DropTable;
+
+	void DropItems(); // 아이템 드롭 함수
+
+	UFUNCTION()
+	void OnEnemyDeath(AActor* Killed, AActor* Killer);
 };

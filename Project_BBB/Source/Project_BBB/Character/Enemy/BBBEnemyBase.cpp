@@ -8,6 +8,7 @@
 #include "Combat/BBBWeaponRanged.h"
 #include "Combat/BBBWeaponMelee.h"
 #include "Physics/BBBCollision.h"
+#include "Item/BBBItemBase.h"
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -28,10 +29,11 @@ void ABBBEnemyBase::BeginPlay()
     Super::BeginPlay();
 
 
-    // HP가 바뀔 때마다 UI 업데이트
+    // Stat관련 업데이트
     if (StatComponent)
     {
         StatComponent->OnHPChanged.AddDynamic(this, &ABBBEnemyBase::OnHPChangedCallback);
+        StatComponent->OnDeath.AddDynamic(this, &ABBBEnemyBase::OnEnemyDeath);
     }
 
     // 디버프가 추가/제거될 때마다 UI 업데이트
@@ -48,6 +50,7 @@ void ABBBEnemyBase::BeginPlay()
         UpdateEnemyInfoWidget();
         UpdateEnemyDebuff();
     });
+
 }
 
 void ABBBEnemyBase::SetupCharacterMesh()
@@ -287,4 +290,34 @@ void ABBBEnemyBase::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAt
 void ABBBEnemyBase::AttackByAI()
 {
     PerformAttack();
+}
+
+// Item
+void ABBBEnemyBase::DropItems()
+{
+    for (const FItemDropData& DropData : DropTable)
+    {
+        if (!DropData.ItemClass) continue;
+
+        // 수량 결정
+        int32 Amount = 1;
+
+        // 아이템 스폰
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+        FVector SpawnLocation = GetActorLocation() + FVector(FMath::RandRange(-50.f, 50.f), FMath::RandRange(-50.f, 50.f), 50.f);
+
+        ABBBItemBase* Item = GetWorld()->SpawnActor<ABBBItemBase>(DropData.ItemClass, SpawnLocation, FRotator::ZeroRotator, SpawnParams);
+
+        if (Item)
+        {
+            Item->SetAmount(Amount);
+        }
+    }
+}
+
+void ABBBEnemyBase::OnEnemyDeath(AActor* Killed, AActor* Killer)
+{
+    DropItems();
 }
