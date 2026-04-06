@@ -297,10 +297,15 @@ void ABBBEnemyBase::DropItems()
 {
     for (const FItemDropData& DropData : DropTable)
     {
+        // 확률 체크
+        float Rand = FMath::FRandRange(0.f, 1.f);
+        if (Rand > DropData.DropChance) continue;
+
         if (!DropData.ItemClass) continue;
 
         // 수량 결정
-        int32 Amount = 1;
+        int32 Amount = FMath::RandRange(DropData.MinAmount, DropData.MaxAmount);
+
 
         // 아이템 스폰
         FActorSpawnParameters SpawnParams;
