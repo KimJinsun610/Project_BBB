@@ -215,7 +215,7 @@ void ABBBEnemyBase::PerformMeleeAttack() {
 
 void ABBBEnemyBase::MeleeAttackBegin()
 {
-    if (!MeleeAttackMontage)
+    if (!AttackMontage)
     {
         UE_LOG(LogTemp, Error, TEXT("Missing data! - Enemy Melee Attack Mongtage Is Missing"));
         return;
@@ -228,9 +228,9 @@ void ABBBEnemyBase::MeleeAttackBegin()
     }
 
 
-    if (AnimInstance->Montage_IsPlaying(MeleeAttackMontage))
+    if (AnimInstance->Montage_IsPlaying(AttackMontage))
     {
-        AnimInstance->Montage_Stop(0.1f, MeleeAttackMontage);
+        AnimInstance->Montage_Stop(0.1f, AttackMontage);
     }
 
     GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
@@ -238,11 +238,11 @@ void ABBBEnemyBase::MeleeAttackBegin()
     //Animation Setting
     const float AttackSpeedRate = 1.0f;
 
-    AnimInstance->Montage_Play(MeleeAttackMontage, AttackSpeedRate);
+    AnimInstance->Montage_Play(AttackMontage, AttackSpeedRate);
 
     FOnMontageEnded EndDelegate;
     EndDelegate.BindUObject(this, &ABBBEnemyBase::MeleeAttackEnd);
-    AnimInstance->Montage_SetEndDelegate(EndDelegate, MeleeAttackMontage);
+    AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
 
 }
 

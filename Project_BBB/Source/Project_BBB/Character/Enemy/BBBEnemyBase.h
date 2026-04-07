@@ -65,7 +65,7 @@ private:
 // Attack Section
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
-	TObjectPtr<class UAnimMontage> MeleeAttackMontage;
+	TObjectPtr<class UAnimMontage> AttackMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Stats")
 	float Damage;

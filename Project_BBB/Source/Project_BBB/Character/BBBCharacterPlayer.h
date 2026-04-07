@@ -127,7 +127,7 @@ protected:
 protected: //근거리 공격
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
-	TObjectPtr<class UAnimMontage> MeleeAttackMontage;
+	TObjectPtr<class UAnimMontage> AttackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UBBBComboActionAsset> ComboActionData;

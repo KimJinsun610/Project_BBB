@@ -448,7 +448,7 @@ void ABBBCharacterPlayer::ProcessComboCommand()
 		UE_LOG(LogTemp, Warning, TEXT("ComboActionData is NULL - Skipping combo"));
 		return;
 	}
-	if (!MeleeAttackMontage)
+	if (!AttackMontage)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MeleeAttackMontage is NULL - Skipping combo"));
 		return;
@@ -473,7 +473,7 @@ void ABBBCharacterPlayer::ProcessComboCommand()
 
 void ABBBCharacterPlayer::ComboActionBegin()
 {
-	if (!ComboActionData || !MeleeAttackMontage)
+	if (!ComboActionData || !AttackMontage)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Missing data!"));
 		return;
@@ -487,9 +487,9 @@ void ABBBCharacterPlayer::ComboActionBegin()
 	}
 
 
-	if (AnimInstance->Montage_IsPlaying(MeleeAttackMontage))
+	if (AnimInstance->Montage_IsPlaying(AttackMontage))
 	{
-		AnimInstance->Montage_Stop(0.1f, MeleeAttackMontage);
+		AnimInstance->Montage_Stop(0.1f, AttackMontage);
 	}
 
 	CurrentCombo = 1;
@@ -498,11 +498,11 @@ void ABBBCharacterPlayer::ComboActionBegin()
 	//Animation Setting
 	const float AttackSpeedRate = 1.0f;
 
-	AnimInstance->Montage_Play(MeleeAttackMontage, AttackSpeedRate);
+	AnimInstance->Montage_Play(AttackMontage, AttackSpeedRate);
 
 	FOnMontageEnded EndDelegate;
 	EndDelegate.BindUObject(this, &ABBBCharacterPlayer::ComboActionEnd);
-	AnimInstance->Montage_SetEndDelegate(EndDelegate, MeleeAttackMontage);
+	AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
 
 	ComboTimerHandle.Invalidate();
 	SetComboCheckTimer();
@@ -552,7 +552,7 @@ void ABBBCharacterPlayer::ComboCheck()
 
 		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
 		FName NextSection = *FString::Printf(TEXT("%s%d"), *ComboActionData->MontageSectionNamePrefix, CurrentCombo);
-		AnimInstance->Montage_JumpToSection(NextSection, MeleeAttackMontage);
+		AnimInstance->Montage_JumpToSection(NextSection, AttackMontage);
 		SetComboCheckTimer();
 		HasNextComboCommand = false;
 	}
