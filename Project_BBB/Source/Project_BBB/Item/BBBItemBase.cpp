@@ -7,7 +7,7 @@
 // Sets default values
 ABBBItemBase::ABBBItemBase()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
     RootComponent = MeshComponent;
@@ -25,6 +25,27 @@ ABBBItemBase::ABBBItemBase()
 
 }
 
+
+void ABBBItemBase::BeginPlay()
+{
+    Super::BeginPlay();
+    InitialLocation = GetActorLocation();
+}
+
+void ABBBItemBase::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    
+    FloatTime += DeltaTime * FloatSpeed;
+
+    FVector NewLocation = InitialLocation;
+    NewLocation.Z += FMath::Sin(FloatTime) * FloatAmplitude;
+
+    SetActorLocation(NewLocation);
+    
+}
+
+
 void ABBBItemBase::OnPickup_Implementation(AActor* Picker)
 {
 }
@@ -38,4 +59,6 @@ void ABBBItemBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
         OnPickup(OtherActor);
     }
 }
+
+
 

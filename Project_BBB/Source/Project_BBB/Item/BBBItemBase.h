@@ -18,6 +18,10 @@ public:
     void OnPickup(AActor* Picker);
 
 protected:
+
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
+
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* MeshComponent;
 
@@ -36,4 +40,15 @@ protected:
 public:
     void SetAmount(int32 InAmount) { Amount = InAmount; }
 
+
+protected:
+    UPROPERTY(EditAnywhere, Category = "Item|Float")
+    float FloatAmplitude = 10.f;   
+
+    UPROPERTY(EditAnywhere, Category = "Item|Float")
+    float FloatSpeed = 2.f;        
+
+private:
+    FVector InitialLocation;
+    float FloatTime = 0.f;         
 };
