@@ -16,7 +16,7 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 	//HP
 	if (StatComponent)
 	{
-		StatComponent->MaxHP = 100.0f;
+		StatComponent->MaxHP = 20.0f;
 		StatComponent->CurrentHP = StatComponent->MaxHP;
 	}
 

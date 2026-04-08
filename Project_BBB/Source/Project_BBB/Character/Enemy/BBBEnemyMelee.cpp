@@ -43,7 +43,6 @@ void ABBBEnemyMelee::BeginPlay()
 	DebuffComponent->SetCurrentDebuffCount(3);
 	DebuffComponent->SetMaxDebuffCount(3);
 
-
 	EquipMeleeWeapon();
 
 	UpdateEnemyInfoWidget();

@@ -31,7 +31,7 @@ public:
     float AttackRadius;
 
     //Ã¼·Â
-    UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Health")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
     float MaxHP;
 
     UPROPERTY(Transient, BlueprintReadOnly, Category = "Health")
