@@ -727,13 +727,13 @@ void ABBBCharacterPlayer::OnHPChangedCallback(float CurrentHP, float MaxHP, AAct
 
 void ABBBCharacterPlayer::AddGold(int32 Amount)
 {
-	Gold += Amount;
-	UE_LOG(LogTemp, Warning, TEXT("Gold: %d"), Gold);
+	//Gold += Amount;
+	// 우선 얻는 양으로 설정
 
 	// UI 업데이트
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
-		PC->SetGold(Gold);
+		PC->SetGold(Amount);
 	}
 }
