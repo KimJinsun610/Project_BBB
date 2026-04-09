@@ -59,6 +59,10 @@ void ABBBEnemyBase::SetupCharacterMesh()
 
 void ABBBEnemyBase::UpdateEnemyInfoWidget()
 {
+
+    if (!EnemyInfoWidgetComponent) return; 
+    if (!StatComponent) return;            
+
     UUserWidget* W = EnemyInfoWidgetComponent->GetUserWidgetObject();
     if (!W)
     {
@@ -85,6 +89,9 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
 
 void ABBBEnemyBase::UpdateEnemyDebuff()
 {
+    if (!EnemyInfoWidgetComponent) return;  
+    if (!DebuffComponent) return;           
+
     UUserWidget* W = EnemyInfoWidgetComponent->GetUserWidgetObject();
     if (!W)
     {

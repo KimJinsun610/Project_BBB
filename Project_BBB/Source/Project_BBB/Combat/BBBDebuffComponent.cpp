@@ -25,7 +25,7 @@ void UBBBDebuffComponent::BeginPlay()
 		OriginalMaxWalkSpeed = Character->GetCharacterMovement()->MaxWalkSpeed;
 	}
 
-    iCurrentCnt = iMaxCnt;
+    CurrentCnt = MaxCnt;
 	
 }
 
@@ -34,13 +34,13 @@ void UBBBDebuffComponent::ApplyDebuff(const FDebuffData& DebuffData)
     EDebuffType Type = DebuffData.DebuffType;
 
     // 카운트 감소
-    iCurrentCnt = FMath::Max(0, iCurrentCnt - 1);
+    CurrentCnt = FMath::Max(0, CurrentCnt - 1);
 
     // 카운트 변경 브로드캐스트
     OnDebuffCountChanged.Broadcast(Type);
 
     // 카운트가 0이 되면 디버프 적용
-    if (iCurrentCnt <= 0)
+    if (CurrentCnt <= 0)
     {
         if (ActiveDebuffs.Contains(Type))
         {
@@ -130,7 +130,7 @@ void UBBBDebuffComponent::RemoveDebuff(EDebuffType DebuffType)
     // 델리게이트
     OnDebuffRemoved.Broadcast(DebuffType);
 
-    iCurrentCnt = iMaxCnt;
+    CurrentCnt = MaxCnt;
     OnDebuffCountChanged.Broadcast(DebuffType);
 }
 

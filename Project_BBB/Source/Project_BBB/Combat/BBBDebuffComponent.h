@@ -49,14 +49,17 @@ public:
     FOnDebuffCountChanged OnDebuffCountChanged;
 
 private:
-    int32 iCurrentCnt = 0;
-    int32 iMaxCnt = 3;
+    int32 CurrentCnt = 0;
 
 public:
-    FORCEINLINE int32 GetCurrentDebuffCount() const { return iCurrentCnt; }
-    FORCEINLINE int32 GetMaxDebuffCount() const { return iMaxCnt; }
-    FORCEINLINE void SetCurrentDebuffCount(int32 count) { iCurrentCnt = count; }
-    FORCEINLINE void SetMaxDebuffCount(int32 count) { iMaxCnt = count; }
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debuff")
+    int32 MaxCnt = 3;
+
+public:
+    FORCEINLINE int32 GetCurrentDebuffCount() const { return CurrentCnt; }
+    FORCEINLINE int32 GetMaxDebuffCount() const { return MaxCnt; }
+    FORCEINLINE void SetCurrentDebuffCount(int32 count) { CurrentCnt = count; }
+    FORCEINLINE void SetMaxDebuffCount(int32 count) { MaxCnt = count; }
 
 
 

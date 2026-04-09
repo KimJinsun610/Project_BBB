@@ -10,9 +10,6 @@
 ABBBEnemyRanged::ABBBEnemyRanged()
 {
 
-	// Mesh
-	SetupCharacterMesh();
-
 	//HP
 	if (StatComponent)
 	{
@@ -20,6 +17,8 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 		StatComponent->CurrentHP = StatComponent->MaxHP;
 	}
 
+	// Mesh
+	SetupCharacterMesh();
 
 	EnemyInfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyInfoWidget"));
 	EnemyInfoWidgetComponent->SetupAttachment(GetMesh(), FName("HeadUI")); // 머리 소켓에 붙이기
@@ -35,10 +34,10 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 void ABBBEnemyRanged::BeginPlay()
 {
 	Super::BeginPlay();
+	if (StatComponent) {
+		StatComponent->CurrentHP = StatComponent->MaxHP;
+	}
 
-	// 디버프 쉴드 초기화
-	DebuffComponent->SetCurrentDebuffCount(2);
-	DebuffComponent->SetMaxDebuffCount(2);
 
 	UpdateEnemyInfoWidget();
 }

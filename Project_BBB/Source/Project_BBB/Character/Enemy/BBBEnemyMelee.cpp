@@ -11,18 +11,22 @@
 
 ABBBEnemyMelee::ABBBEnemyMelee()
 {
-	// Mesh
-	SetupCharacterMesh();
-
 	RangedEnemy = false;
 	Damage = 20.f;
 	AttackRange = 50.f;
 
+	//HP
 	if (StatComponent)
 	{
 		StatComponent->MaxHP = 20.0f;
 		StatComponent->CurrentHP = StatComponent->MaxHP;
 	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT(" %s: No StatComponent"), *GetOwner()->GetName());
+	}
+
+	// Mesh
+	SetupCharacterMesh();
 
 	EnemyInfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyInfoWidget"));
 	EnemyInfoWidgetComponent->SetupAttachment(GetMesh(), FName("HeadUI")); // 머리 소켓에 붙이기
@@ -38,11 +42,14 @@ ABBBEnemyMelee::ABBBEnemyMelee()
 void ABBBEnemyMelee::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// 디버프 쉴드 초기화
-	DebuffComponent->SetCurrentDebuffCount(3);
-	DebuffComponent->SetMaxDebuffCount(3);
-
+	
+	if (StatComponent) {
+		StatComponent->CurrentHP = StatComponent->MaxHP;
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("%s BeginPlay : No StatComponent"), *GetOwner()->GetName());
+	}
+	
 	EquipMeleeWeapon();
 
 	UpdateEnemyInfoWidget();

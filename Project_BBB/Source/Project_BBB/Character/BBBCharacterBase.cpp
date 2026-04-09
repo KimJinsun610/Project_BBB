@@ -67,8 +67,8 @@ ABBBCharacterBase::ABBBCharacterBase()
 	// 디버프 컴포넌트 
 	DebuffComponent = CreateDefaultSubobject<UBBBDebuffComponent>(TEXT("DebuffComponent"));
 
-	// HP 컴포넌트
-	StatComponent = CreateDefaultSubobject<UBBBStatComponent>(TEXT("HPComponent"));
+	// Stat 컴포넌트
+	StatComponent = CreateDefaultSubobject<UBBBStatComponent>(TEXT("StatComponent"));
 
 	// 무기 초기값
 	bIsRangedMode = true;  // 원거리 모드
