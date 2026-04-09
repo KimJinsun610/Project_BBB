@@ -20,5 +20,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupCharacterMesh() override;
-	
+
+	virtual float GetAIAttackRange() override;
 };

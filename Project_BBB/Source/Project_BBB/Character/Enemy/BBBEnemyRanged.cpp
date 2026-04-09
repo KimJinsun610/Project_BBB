@@ -2,10 +2,13 @@
 
 
 #include "Character/Enemy/BBBEnemyRanged.h"
+
+#include "AI/BBBRangedAIController.h"
 #include "Combat/BBBDebuffComponent.h"
+#include "Combat/BBBWeaponRanged.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Character/BBBStatComponent.h"
-
 
 ABBBEnemyRanged::ABBBEnemyRanged()
 {
@@ -25,9 +28,11 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 	EnemyInfoWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 항상 카메라를 바라봄
 	EnemyInfoWidgetComponent->SetDrawSize(FVector2D(200.f, 50.f));
 
-	// AI 컨트롤러 자동 생성 (나중에 AI 추가 시)
-	AIControllerClass = nullptr; // 나중에 AI Controller 클래스 지정
+	// AI 컨트롤러 생성 
+	AIControllerClass = ABBBRangedAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	RangedEnemy = true;
 
 }
 
@@ -55,4 +60,9 @@ void ABBBEnemyRanged::SetupCharacterMesh()
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
+}
+
+float ABBBEnemyRanged::GetAIAttackRange()
+{
+	return 800.0f;
 }
