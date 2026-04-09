@@ -7,11 +7,15 @@
 #include "Combat/BBBDebuffComponent.h"
 #include "Combat/BBBWeaponRanged.h"
 #include "Combat/BBBWeaponMelee.h"
+#include "Combat/Projectile/BBBProjectileBase.h"
 #include "Physics/BBBCollision.h"
 #include "Item/BBBItemBase.h"
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 ABBBEnemyBase::ABBBEnemyBase()
@@ -59,6 +63,10 @@ void ABBBEnemyBase::SetupCharacterMesh()
 
 void ABBBEnemyBase::UpdateEnemyInfoWidget()
 {
+
+    if (!EnemyInfoWidgetComponent) return; 
+    if (!StatComponent) return;            
+
     UUserWidget* W = EnemyInfoWidgetComponent->GetUserWidgetObject();
     if (!W)
     {
@@ -85,6 +93,9 @@ void ABBBEnemyBase::UpdateEnemyInfoWidget()
 
 void ABBBEnemyBase::UpdateEnemyDebuff()
 {
+    if (!EnemyInfoWidgetComponent) return;  
+    if (!DebuffComponent) return;           
+
     UUserWidget* W = EnemyInfoWidgetComponent->GetUserWidgetObject();
     if (!W)
     {
@@ -134,10 +145,20 @@ void ABBBEnemyBase::OnDebuffChangeCallback(EDebuffType DebuffType)
 
 void ABBBEnemyBase::PerformAttack()
 {
+    if (!bCanAttack) return;
     if (DebuffComponent->HasAnyDebuff()) return;
+
+    GetWorldTimerManager().SetTimer(
+        AttackCooldownTimer,
+        [this]() { bCanAttack = true; },
+        AttackCooldown,
+        false
+    );
+
 
     if (RangedEnemy) {
 
+        FireProjectile();
 
     }
     else {
@@ -175,6 +196,7 @@ void ABBBEnemyBase::PerformMeleeAttack() {
         QueryParams
     );
 
+    /*
    DrawDebugSphere(
       GetWorld(),
       EndLocation,
@@ -184,7 +206,7 @@ void ABBBEnemyBase::PerformMeleeAttack() {
       false,
       1.0f
    );
-
+   */
 
     if (bHit)
     {
@@ -252,7 +274,44 @@ void ABBBEnemyBase::MeleeAttackEnd(UAnimMontage* TargetMontage, bool IsProperlyE
     OnAttackFinished.ExecuteIfBound();
 }
 
+void ABBBEnemyBase::FireProjectile()
+{
+    if (!ProjectileClass) return;
 
+    AAIController* AIC = Cast<AAIController>(GetController());
+    FVector TargetLocation;
+    if (AIC)
+    {
+        AActor* Target = Cast<AActor>(
+            AIC->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+
+        if (Target)
+        {
+            // Target 방향으로 회전
+            FVector Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+            TargetLocation = Target->GetActorLocation();
+            FRotator LookAt = Direction.Rotation();
+
+            FVector MuzzleLocation = GetActorLocation() + Direction * 50.f + FVector(0, 0, 50.f);
+
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = this;
+            SpawnParams.Instigator = GetInstigator();
+
+            GetWorld()->SpawnActor<ABBBProjectileBase>(
+                ProjectileClass,
+                MuzzleLocation,
+                LookAt,  // Target 방향으로 발사
+                SpawnParams
+            );
+
+            UE_LOG(LogTemp, Warning, TEXT("Enemy FireProjectile!"));
+        }
+    }
+
+    OnAttackFinished.ExecuteIfBound();
+
+}
 
 
 

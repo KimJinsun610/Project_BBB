@@ -22,6 +22,7 @@ ABBBMeleeAIController::ABBBMeleeAIController()
 	}
 }
 
+
 void ABBBMeleeAIController::RunAI()
 {
 	UBlackboardComponent* BlackboardPtr = Blackboard.Get();

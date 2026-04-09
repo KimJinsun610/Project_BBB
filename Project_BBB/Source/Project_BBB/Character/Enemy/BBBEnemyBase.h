@@ -75,10 +75,23 @@ protected:
 
 	void PerformAttack();
 
+protected:
 	void PerformMeleeAttack();
 	void MeleeAttackBegin();
 	void MeleeAttackEnd(UAnimMontage* TargetMontage, bool IsProperlyEnded);
 
+protected:
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<class ABBBProjectileBase> ProjectileClass;
+
+	void FireProjectile();
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float AttackCooldown = 2.0f;
+
+private:
+	FTimerHandle AttackCooldownTimer;
+	bool bCanAttack = true;
 //======================================================
 //AI section
 protected:

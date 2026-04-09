@@ -2,16 +2,16 @@
 
 
 #include "Character/Enemy/BBBEnemyRanged.h"
+
+#include "AI/BBBRangedAIController.h"
 #include "Combat/BBBDebuffComponent.h"
+#include "Combat/BBBWeaponRanged.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Character/BBBStatComponent.h"
 
-
 ABBBEnemyRanged::ABBBEnemyRanged()
 {
-
-	// Mesh
-	SetupCharacterMesh();
 
 	//HP
 	if (StatComponent)
@@ -20,25 +20,29 @@ ABBBEnemyRanged::ABBBEnemyRanged()
 		StatComponent->CurrentHP = StatComponent->MaxHP;
 	}
 
+	// Mesh
+	SetupCharacterMesh();
 
 	EnemyInfoWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyInfoWidget"));
 	EnemyInfoWidgetComponent->SetupAttachment(GetMesh(), FName("HeadUI")); // 머리 소켓에 붙이기
 	EnemyInfoWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); // 항상 카메라를 바라봄
 	EnemyInfoWidgetComponent->SetDrawSize(FVector2D(200.f, 50.f));
 
-	// AI 컨트롤러 자동 생성 (나중에 AI 추가 시)
-	AIControllerClass = nullptr; // 나중에 AI Controller 클래스 지정
+	// AI 컨트롤러 생성 
+	AIControllerClass = ABBBRangedAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	RangedEnemy = true;
 
 }
 
 void ABBBEnemyRanged::BeginPlay()
 {
 	Super::BeginPlay();
+	if (StatComponent) {
+		StatComponent->CurrentHP = StatComponent->MaxHP;
+	}
 
-	// 디버프 쉴드 초기화
-	DebuffComponent->SetCurrentDebuffCount(2);
-	DebuffComponent->SetMaxDebuffCount(2);
 
 	UpdateEnemyInfoWidget();
 }
@@ -56,4 +60,9 @@ void ABBBEnemyRanged::SetupCharacterMesh()
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
+}
+
+float ABBBEnemyRanged::GetAIAttackRange()
+{
+	return 800.0f;
 }
