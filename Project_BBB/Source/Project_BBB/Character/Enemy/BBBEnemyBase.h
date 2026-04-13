@@ -87,7 +87,7 @@ protected:
 	void FireProjectile();
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	float AttackCooldown = 2.0f;
+	float AttackCooldown = 0.5f;
 
 private:
 	FTimerHandle AttackCooldownTimer;

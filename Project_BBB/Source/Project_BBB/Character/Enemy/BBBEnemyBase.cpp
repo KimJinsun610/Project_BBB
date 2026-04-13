@@ -312,6 +312,11 @@ void ABBBEnemyBase::FireSingleProjectile()
     if (!Target) return;
 
     FVector Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+    FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+    LookAtRotation.Pitch = 0.f;
+    LookAtRotation.Roll = 0.f;
+    SetActorRotation(LookAtRotation);
+
     FVector MuzzleLocation = GetActorLocation() + Direction * 50.f + FVector(0, 0, 50.f);
     FRotator LookAt = Direction.Rotation();
 
@@ -319,8 +324,7 @@ void ABBBEnemyBase::FireSingleProjectile()
     SpawnParams.Owner = this;
     SpawnParams.Instigator = GetInstigator();
 
-    GetWorld()->SpawnActor<ABBBProjectileBase>(
-        ProjectileClass, MuzzleLocation, LookAt, SpawnParams);
+    GetWorld()->SpawnActor<ABBBProjectileBase>(ProjectileClass, MuzzleLocation, LookAt, SpawnParams);
 
     CurrentFireCount++;
     UE_LOG(LogTemp, Warning, TEXT("Enemy Fire! (%d/%d)"), CurrentFireCount, ProjectileCount);
