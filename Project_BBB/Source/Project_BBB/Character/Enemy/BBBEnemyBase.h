@@ -92,6 +92,21 @@ protected:
 private:
 	FTimerHandle AttackCooldownTimer;
 	bool bCanAttack = true;
+
+protected:
+	// 연속 발사 관련
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	int32 ProjectileCount = 2;      // 발사 횟수
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float ProjectileInterval = 0.3f; // 발사 간격 
+
+private:
+	int32 CurrentFireCount = 0;      // 현재까지 발사한 횟수
+	FTimerHandle FireIntervalTimer;  // 연속 발사 타이머
+
+	void FireSingleProjectile();     // 발사체 1개 발사
+	void OnFireIntervalTimer();      // 타이머 콜백
 //======================================================
 //AI section
 protected:

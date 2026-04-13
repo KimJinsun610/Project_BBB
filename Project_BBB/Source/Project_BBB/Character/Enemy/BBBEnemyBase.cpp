@@ -278,42 +278,66 @@ void ABBBEnemyBase::FireProjectile()
 {
     if (!ProjectileClass) return;
 
-    AAIController* AIC = Cast<AAIController>(GetController());
-    FVector TargetLocation;
-    if (AIC)
+    CurrentFireCount = 0;
+
+    FireSingleProjectile();
+
+
+    if (ProjectileCount > 1)
     {
-        AActor* Target = Cast<AActor>(
-            AIC->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
-
-        if (Target)
-        {
-            // Target 방향으로 회전
-            FVector Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-            TargetLocation = Target->GetActorLocation();
-            FRotator LookAt = Direction.Rotation();
-
-            FVector MuzzleLocation = GetActorLocation() + Direction * 50.f + FVector(0, 0, 50.f);
-
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Owner = this;
-            SpawnParams.Instigator = GetInstigator();
-
-            GetWorld()->SpawnActor<ABBBProjectileBase>(
-                ProjectileClass,
-                MuzzleLocation,
-                LookAt,  // Target 방향으로 발사
-                SpawnParams
-            );
-
-            UE_LOG(LogTemp, Warning, TEXT("Enemy FireProjectile!"));
-        }
+        GetWorldTimerManager().SetTimer(
+            FireIntervalTimer,
+            this,
+            &ABBBEnemyBase::OnFireIntervalTimer,
+            ProjectileInterval,
+            true
+        );
     }
-
-    OnAttackFinished.ExecuteIfBound();
+    else
+    {
+        OnAttackFinished.ExecuteIfBound();
+    }
 
 }
 
 
+
+void ABBBEnemyBase::FireSingleProjectile()
+{
+    AAIController* AIC = Cast<AAIController>(GetController());
+    if (!AIC) return;
+
+    AActor* Target = Cast<AActor>(
+        AIC->GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+    if (!Target) return;
+
+    FVector Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+    FVector MuzzleLocation = GetActorLocation() + Direction * 50.f + FVector(0, 0, 50.f);
+    FRotator LookAt = Direction.Rotation();
+
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.Owner = this;
+    SpawnParams.Instigator = GetInstigator();
+
+    GetWorld()->SpawnActor<ABBBProjectileBase>(
+        ProjectileClass, MuzzleLocation, LookAt, SpawnParams);
+
+    CurrentFireCount++;
+    UE_LOG(LogTemp, Warning, TEXT("Enemy Fire! (%d/%d)"), CurrentFireCount, ProjectileCount);
+}
+
+void ABBBEnemyBase::OnFireIntervalTimer()
+{
+    if (CurrentFireCount >= ProjectileCount)
+    {
+        // 모든 발사 완료
+        GetWorldTimerManager().ClearTimer(FireIntervalTimer);
+        OnAttackFinished.ExecuteIfBound();
+        return;
+    }
+
+    FireSingleProjectile();
+}
 
 // AI
 float ABBBEnemyBase::GetAIPatrolRadius()
