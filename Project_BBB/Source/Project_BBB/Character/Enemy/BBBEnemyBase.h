@@ -99,7 +99,7 @@ protected:
 	int32 ProjectileCount = 2;      // 발사 횟수
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	float ProjectileInterval = 0.3f; // 발사 간격 
+	float ProjectileInterval = 2.0f; // 발사 간격 
 
 private:
 	int32 CurrentFireCount = 0;      // 현재까지 발사한 횟수

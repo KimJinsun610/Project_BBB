@@ -14,5 +14,12 @@ UBTDecorator_RangedAttackRange::UBTDecorator_RangedAttackRange()
 void UBTDecorator_RangedAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
-    OwnerComp.RequestExecution(this);
+    bool bCurrentResult = CalculateRawConditionValue(OwnerComp, NodeMemory);
+
+    // 이전 조건값과 비교해서 변했을 때만 RequestExecution
+    if (bCurrentResult != bLastResult)
+    {
+        bLastResult = bCurrentResult;
+        OwnerComp.RequestExecution(this);
+    }
 }
