@@ -55,6 +55,9 @@ void ABBBEnemyBase::BeginPlay()
         UpdateEnemyDebuff();
     });
 
+    GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); 
+
 }
 
 void ABBBEnemyBase::SetupCharacterMesh()
