@@ -43,6 +43,13 @@ protected:
     float CollisionRadius;  // 충돌 반지름
 
 
+    UPROPERTY(EditAnywhere, Category = "Projectile Stats")
+    float Damage = 0.f; // 데미지
+
+    UPROPERTY(EditAnywhere, Category = "Projectile Stats")
+    bool bDamageOnHit = false; // true면 맞은 액터에 데미지
+
+
     // === 충돌 ===
 
     UFUNCTION()
@@ -50,6 +57,7 @@ protected:
 
     // 자식 클래스에서 오버라이드할 함수
     virtual void OnProjectileHit(AActor* HitActor, const FHitResult& Hit);
+
 
     // === 시각 효과 ===
 

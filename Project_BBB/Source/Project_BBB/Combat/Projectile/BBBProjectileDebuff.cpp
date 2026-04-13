@@ -25,6 +25,7 @@ void ABBBProjectileDebuff::Initialize(const FDebuffData& InDebuffData)
 
 void ABBBProjectileDebuff::OnProjectileHit(AActor* HitActor, const FHitResult& Hit)
 {
+
     // 디버프 컴포넌트 찾기
     UBBBDebuffComponent* DebuffComp = HitActor->FindComponentByClass<UBBBDebuffComponent>();
 
@@ -35,7 +36,7 @@ void ABBBProjectileDebuff::OnProjectileHit(AActor* HitActor, const FHitResult& H
 
 
         UE_LOG(LogTemp, Warning, TEXT("Debuff projectile hit %s! Applied: %d"), *HitActor->GetName(), (int32)DebuffData.DebuffType);
-    }
+    } 
 }
 
 void ABBBProjectileDebuff::SetProjectileColor()
