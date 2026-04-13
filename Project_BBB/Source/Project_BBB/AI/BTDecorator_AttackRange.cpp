@@ -14,7 +14,6 @@
 UBTDecorator_AttackRange::UBTDecorator_AttackRange()
 {
 	NodeName = TEXT("CanAttack");
-	bNotifyTick = true;
 }
 
 bool UBTDecorator_AttackRange::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
@@ -56,8 +55,3 @@ bool UBTDecorator_AttackRange::CalculateRawConditionValue(UBehaviorTreeComponent
 	return bResult;
 }
 
-void UBTDecorator_AttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
-{
-	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
-	OwnerComp.RequestExecution(this);
-}
