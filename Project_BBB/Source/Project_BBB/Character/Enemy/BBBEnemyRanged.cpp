@@ -66,3 +66,8 @@ float ABBBEnemyRanged::GetAIAttackRange()
 {
 	return 800.0f;
 }
+
+float ABBBEnemyRanged::GetAIDetectRange()
+{
+	return 1500.0f;
+}

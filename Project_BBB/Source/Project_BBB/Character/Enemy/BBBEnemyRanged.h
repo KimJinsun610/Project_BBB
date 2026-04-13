@@ -22,4 +22,5 @@ protected:
 	virtual void SetupCharacterMesh() override;
 
 	virtual float GetAIAttackRange() override;
+	virtual float GetAIDetectRange() override;
 };

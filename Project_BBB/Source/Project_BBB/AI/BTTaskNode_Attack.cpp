@@ -25,9 +25,16 @@ EBTNodeResult::Type UBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Owne
 		return EBTNodeResult::Failed;
 	}
 
+
+	AAIController* AIC = OwnerComp.GetAIOwner();
+	if (AIC)
+	{
+		AIC->StopMovement();
+	}
+
 	FAICharacterAttackFinished OnAttackFinished;
 	OnAttackFinished.BindLambda(
-		[&]()
+		[this, &OwnerComp]()
 		{
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		}

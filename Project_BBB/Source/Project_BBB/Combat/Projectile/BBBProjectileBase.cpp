@@ -6,7 +6,9 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystem.h"
+#include "Character/BBBStatComponent.h"
 #include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ABBBProjectileBase::ABBBProjectileBase()
@@ -103,7 +105,16 @@ void ABBBProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 
 void ABBBProjectileBase::OnProjectileHit(AActor* HitActor, const FHitResult& Hit)
 { 
-    // 자식 클래스에서 수행
+    if (!bDamageOnHit) return;
+    if (!HitActor) return;
+
+    // StatComponent 찾아서 데미지
+    UBBBStatComponent* StatComp = HitActor->FindComponentByClass<UBBBStatComponent>();
+    if (StatComp)
+    {
+        StatComp->TakeDamage(Damage, GetOwner());
+        UE_LOG(LogTemp, Warning, TEXT("Projectile Hit: %s, Damage: %.1f"), *HitActor->GetName(), Damage);
+    }
 }
 
 void ABBBProjectileBase::SpawnImpactEffect(const FVector& ImpactLocation)

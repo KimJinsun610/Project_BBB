@@ -9,6 +9,8 @@
 #include "BBBAI.h"
 #include "BBBCharacterAIInterface.h"
 
+#include "DrawDebugHelpers.h"
+
 UBTDecorator_AttackRange::UBTDecorator_AttackRange()
 {
 	NodeName = TEXT("CanAttack");
@@ -39,5 +41,17 @@ bool UBTDecorator_AttackRange::CalculateRawConditionValue(UBehaviorTreeComponent
 	float DistanceToTarget = ControllingPawn->GetDistanceTo(Target);
 	float AttackRangeWithRadius = AIPawn->GetAIAttackRange();
 	bResult = (DistanceToTarget <= AttackRangeWithRadius);
+
+	// 디버그 원
+	DrawDebugSphere(
+		ControllingPawn->GetWorld(),
+		ControllingPawn->GetActorLocation(),
+		AttackRangeWithRadius,
+		16,
+		bResult ? FColor::Yellow : FColor::Orange, // 범위 안 = 노랑, 밖 = 주황
+		false,
+		0.1f
+	);
 	return bResult;
 }
+
