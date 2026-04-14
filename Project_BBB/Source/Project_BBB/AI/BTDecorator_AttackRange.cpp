@@ -42,6 +42,7 @@ bool UBTDecorator_AttackRange::CalculateRawConditionValue(UBehaviorTreeComponent
 	float AttackRangeWithRadius = AIPawn->GetAIAttackRange();
 	bResult = (DistanceToTarget <= AttackRangeWithRadius);
 
+	/*
 	// 디버그 원
 	DrawDebugSphere(
 		ControllingPawn->GetWorld(),
@@ -52,6 +53,7 @@ bool UBTDecorator_AttackRange::CalculateRawConditionValue(UBehaviorTreeComponent
 		false,
 		0.1f
 	);
+	*/
 	return bResult;
 }
 
