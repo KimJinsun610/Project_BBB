@@ -108,6 +108,10 @@ void ABBBProjectileBase::OnProjectileHit(AActor* HitActor, const FHitResult& Hit
     if (!bDamageOnHit) return;
     if (!HitActor) return;
 
+    APawn* HitPawn = Cast<APawn>(HitActor);
+    if (!HitPawn) return;
+    if (!HitPawn->GetController() || !HitPawn->GetController()->IsPlayerController()) return;
+
     // StatComponent 찾아서 데미지
     UBBBStatComponent* StatComp = HitActor->FindComponentByClass<UBBBStatComponent>();
     if (StatComp)
