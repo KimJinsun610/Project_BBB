@@ -184,6 +184,17 @@ void ABBBCharacterPlayer::BeginPlay()
 
 		PC->SetHP(MaxHP, CurrentHP);
 	}
+
+	// 무기 장착 후 쿨다운 델리게이트 바인딩
+	if (RangedWeapon)
+	{
+		ABBBWeaponRanged* Ranged = Cast<ABBBWeaponRanged>(RangedWeapon);
+		if (Ranged)
+		{
+			Ranged->OnFireCooldownChanged.AddDynamic(
+				this, &ABBBCharacterPlayer::OnFireCooldownChanged);
+		}
+	}
 }
 
 void ABBBCharacterPlayer::SetupCharacterMesh()
@@ -653,6 +664,15 @@ void ABBBCharacterPlayer::PlayShootingAnimation()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is not UBBBPlayerAnimInstance!"));
+	}
+}
+
+void ABBBCharacterPlayer::OnFireCooldownChanged(float CooldownPercent)
+{
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		PC->SetFireCooldown(CooldownPercent);
 	}
 }
 

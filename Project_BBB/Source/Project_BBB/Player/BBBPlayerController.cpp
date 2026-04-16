@@ -122,3 +122,18 @@ void ABBBPlayerController::SetHP(int iMaxHP, int iCurrentHP)
 
     }
 }
+
+void ABBBPlayerController::SetFireCooldown(float Percent)
+{
+    if (HUDWidget)
+    {
+        UFunction* Func = HUDWidget->FindFunction(FName("SetFireCooldown"));
+        if (Func)
+        {
+            struct FParams { float Percent; };
+            FParams Params;
+            Params.Percent = Percent;
+            HUDWidget->ProcessEvent(Func, &Params);
+        }
+    }
+}

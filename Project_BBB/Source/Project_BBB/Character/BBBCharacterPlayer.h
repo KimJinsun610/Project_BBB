@@ -158,12 +158,14 @@ protected: // 원거리 공격
 
 	// 애니메이션 재생 함수
 	void PlayShootingAnimation();
-	
 
 public:
 	// Aim 상태
 	bool bIsAiming;
-
+	 
+private:
+	UFUNCTION()
+	void OnFireCooldownChanged(float CooldownPercent);
 //================================================
 // UI Section
 protected:

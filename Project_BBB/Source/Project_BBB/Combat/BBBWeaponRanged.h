@@ -7,6 +7,7 @@
 #include "BBBDebuffTypes.h"
 #include "BBBWeaponRanged.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFireCooldownChanged, float, CooldownPercent);
 
 class ABBBCharacterPlayer;
 
@@ -20,6 +21,9 @@ public:
 
 	virtual void Attack() override;
 	virtual void StopAttack() override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnFireCooldownChanged OnFireCooldownChanged;
 
 protected:
 	// πﬂªÁ√º
@@ -44,4 +48,5 @@ protected:
 	FTimerHandle FireTimerHandle;
 
 	void ResetFire();
+
 };

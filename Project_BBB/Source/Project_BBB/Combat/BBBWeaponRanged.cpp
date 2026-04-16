@@ -31,6 +31,9 @@ void ABBBWeaponRanged::Attack()
 
         // 연사 제한
         bCanFire = false;
+
+        OnFireCooldownChanged.Broadcast(FireDelay);
+
         GetWorld()->GetTimerManager().SetTimer(
             FireTimerHandle,
             this,
@@ -96,4 +99,5 @@ void ABBBWeaponRanged::FireProjectile()
 void ABBBWeaponRanged::ResetFire()
 {
     bCanFire = true;
+    OnFireCooldownChanged.Broadcast(0.0f);
 }
