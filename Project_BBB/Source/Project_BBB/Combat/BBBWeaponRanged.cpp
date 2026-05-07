@@ -99,5 +99,4 @@ void ABBBWeaponRanged::FireProjectile()
 void ABBBWeaponRanged::ResetFire()
 {
     bCanFire = true;
-    OnFireCooldownChanged.Broadcast(0.0f);
 }

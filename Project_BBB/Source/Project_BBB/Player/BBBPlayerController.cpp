@@ -123,16 +123,25 @@ void ABBBPlayerController::SetHP(int iMaxHP, int iCurrentHP)
     }
 }
 
-void ABBBPlayerController::SetFireCooldown(float Percent)
+void ABBBPlayerController::SetFireCooldown(float Duration)
 {
     if (HUDWidget)
     {
         UFunction* Func = HUDWidget->FindFunction(FName("SetFireCooldown"));
+
         if (Func)
         {
-            struct FParams { float Percent; };
-            FParams Params;
-            Params.Percent = Percent;
+            UE_LOG(LogTemp, Warning, TEXT("ParmsSize: %d"), Func->ParmsSize);
+
+            for (TFieldIterator<FProperty> It(Func); It && (It->PropertyFlags & CPF_Parm); ++It)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Param: %s | Offset: %d | Size: %d"),
+                    *It->GetName(), It->GetOffset_ForInternal(), It->GetSize());
+            }
+
+            struct FCooldownParams { double Duration; };
+            FCooldownParams Params;
+            Params.Duration = Duration;
             HUDWidget->ProcessEvent(Func, &Params);
         }
     }
