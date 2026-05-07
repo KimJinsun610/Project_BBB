@@ -45,5 +45,5 @@ public:
     void SetHP(int iMaxHP, int iCurrentHP);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void SetFireCooldown(float Percent);
+    void SetFireCooldown(float Duration);
 };

@@ -13,7 +13,7 @@ ABBBWeaponRanged::ABBBWeaponRanged()
 {
     WeaponType = EWeaponType::Ranged;
     MuzzleSocketName = TEXT("Muzzle");  // 총구 소켓 이름
-    FireDelay = 0.2f;  // 0.2초 간격
+    FireDelay = 0.2f;  // 2초 간격
     bCanFire = true;
 
     // 기본 디버프 설정 (Stun 3초)
@@ -99,5 +99,4 @@ void ABBBWeaponRanged::FireProjectile()
 void ABBBWeaponRanged::ResetFire()
 {
     bCanFire = true;
-    OnFireCooldownChanged.Broadcast(0.0f);
 }
