@@ -131,14 +131,6 @@ void ABBBPlayerController::SetFireCooldown(float Duration)
 
         if (Func)
         {
-            UE_LOG(LogTemp, Warning, TEXT("ParmsSize: %d"), Func->ParmsSize);
-
-            for (TFieldIterator<FProperty> It(Func); It && (It->PropertyFlags & CPF_Parm); ++It)
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Param: %s | Offset: %d | Size: %d"),
-                    *It->GetName(), It->GetOffset_ForInternal(), It->GetSize());
-            }
-
             struct FCooldownParams { double Duration; };
             FCooldownParams Params;
             Params.Duration = Duration;
