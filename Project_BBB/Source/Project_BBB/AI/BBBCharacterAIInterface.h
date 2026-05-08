@@ -23,7 +23,6 @@ class PROJECT_BBB_API IBBBCharacterAIInterface
 {
 	GENERATED_BODY()
 
-	
 public:
 	virtual float GetAIPatrolRadius() = 0;
 	virtual float GetAIDetectRange() = 0;

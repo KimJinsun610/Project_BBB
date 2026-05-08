@@ -24,7 +24,7 @@ EBTNodeResult::Type UBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Owne
 	{
 		return EBTNodeResult::Failed;
 	}
-
+	
 
 	AAIController* AIC = OwnerComp.GetAIOwner();
 	if (AIC)

@@ -22,6 +22,7 @@ class PROJECT_BBB_API ABBBWeaponBase : public AActor
 public:	
 	ABBBWeaponBase();
 
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     UStaticMeshComponent* WeaponMesh;
 

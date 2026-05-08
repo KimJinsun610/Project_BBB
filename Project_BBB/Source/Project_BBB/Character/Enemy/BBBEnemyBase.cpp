@@ -32,14 +32,14 @@ void ABBBEnemyBase::BeginPlay()
 {
     Super::BeginPlay();
 
-
-    // Stat관련 업데이트
-    if (StatComponent)
-    {
-        StatComponent->OnHPChanged.AddDynamic(this, &ABBBEnemyBase::OnHPChangedCallback);
-        StatComponent->OnDeath.AddDynamic(this, &ABBBEnemyBase::OnEnemyDeath);
-    }
-
+    
+     // Stat관련 업데이트
+     if (StatComponent)
+        {
+            StatComponent->OnHPChanged.AddDynamic(this, &ABBBEnemyBase::OnHPChangedCallback);
+            StatComponent->OnDeath.AddDynamic(this, &ABBBEnemyBase::OnEnemyDeath);
+        }
+    
     // 디버프가 추가/제거될 때마다 UI 업데이트
     if (DebuffComponent)
     {
@@ -162,7 +162,6 @@ void ABBBEnemyBase::PerformAttack()
     if (RangedEnemy) {
 
         FireProjectile();
-
     }
     else {
         PerformMeleeAttack();

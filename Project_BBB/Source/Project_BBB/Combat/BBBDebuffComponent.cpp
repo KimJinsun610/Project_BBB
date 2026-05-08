@@ -162,7 +162,6 @@ void UBBBDebuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
     for (auto& Pair : DebuffTimers)
     {
         Pair.Value -= DeltaTime;
-
         if (Pair.Value <= 0.0f)
         {
             ExpiredDebuffs.Add(Pair.Key);
