@@ -65,6 +65,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	bool bIsDead;
 
+public:
+	FORCEINLINE class UBBBStatComponent* GetStatComponent() const { return StatComponent; }
 
 //================================================
 // Wepone Section
