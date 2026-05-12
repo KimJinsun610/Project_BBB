@@ -3,7 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "BBBItemBase.h"
-#include "BBBItemDataAsset.generated.h" // ← 파일명과 반드시 일치해야 함
+#include "BBBItemDataAsset.generated.h"
 
 
 USTRUCT(BlueprintType)

@@ -2,10 +2,12 @@
 
 
 #include "Character/BBBCharacterPlayer.h"
+
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -19,10 +21,10 @@
 #include "Player/BBBPlayerAnimInstance.h"
 #include "Player/BBBPlayerController.h"
 
-
 #include "Animation/AnimMontage.h"
 #include "Physics/BBBCollision.h"
 
+#include "Player/BBBInventoryComponent.h" 
 
 
 ABBBCharacterPlayer::ABBBCharacterPlayer()
@@ -55,6 +57,10 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	{
 		StatComponent->MaxHP = 100.0f;
 	}
+
+
+	// Item
+	InventoryComponent = CreateDefaultSubobject<UBBBInventoryComponent>(TEXT("InventoryComponent"));
 
 	//================================================
 	// Input

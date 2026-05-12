@@ -200,4 +200,10 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gold", Meta = (AllowPrivateAccess = "true"))
 	int32 Gold = 0;
+
+//================================================
+// Inventory Section
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	TObjectPtr<class UBBBInventoryComponent> InventoryComponent;
 };
