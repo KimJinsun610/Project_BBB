@@ -115,3 +115,12 @@ void UBBBInventoryComponent::ApplyItemEffect(const FBBBItemData& ItemData)
         Owner->GetStatComponent()->Heal(ItemData.HealAmount);
     }
 }
+
+bool UBBBInventoryComponent::GetItemData(FName ItemID, FBBBItemData& OutData) const
+{
+    FBBBItemData* Data = FindItemData(ItemID);
+    if (!Data) return false;
+
+    OutData = *Data;
+    return true;
+}

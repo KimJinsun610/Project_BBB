@@ -346,6 +346,12 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	{
 		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseItem);
 	}
+
+	// 인벤토리 토글
+	if (ToggleInventoryAction) 
+	{
+		EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::ToggleInventoryInput);
+	}
 }
 
 
@@ -441,6 +447,15 @@ void ABBBCharacterPlayer::UseItem(const FInputActionValue& Value)
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("No consumable item in inventory"));
+}
+
+void ABBBCharacterPlayer::ToggleInventoryInput(const FInputActionValue& Value)
+{
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC)
+	{
+		PC->ToggleInventory();
+	}
 }
 
 void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
