@@ -138,3 +138,40 @@ void ABBBPlayerController::SetFireCooldown(float Duration)
         }
     }
 }
+
+void ABBBPlayerController::ToggleInventory()
+{
+    // 위젯 최초 생성
+    if (!InventoryWidget && InventoryWidgetClass)
+    {
+        InventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
+    }
+    if (!InventoryWidget) return;
+
+    bIsInventoryOpen = !bIsInventoryOpen;
+
+    if (bIsInventoryOpen)
+    {
+        InventoryWidget->AddToViewport();
+
+        UFunction* Func = InventoryWidget->FindFunction(FName("RefreshInventory"));
+        if (Func)
+        {
+            InventoryWidget->ProcessEvent(Func, nullptr);
+        }
+
+        // 마우스 커서 표시 + UI 입력 허용
+        bShowMouseCursor = true;
+        FInputModeGameAndUI InputMode;
+        InputMode.SetHideCursorDuringCapture(false);
+        SetInputMode(InputMode);
+    }
+    else
+    {
+        InventoryWidget->RemoveFromParent();
+
+        // 마우스 커서 숨김 + 게임 입력으로 복귀
+        bShowMouseCursor = false;
+        SetInputMode(FInputModeGameOnly());
+    }
+}

@@ -99,6 +99,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> CameraZoomAction;
 
+	// 아이템 사용
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> UseItemAction;
+
+	void UseItem(const FInputActionValue& Value);
+
+	// 인벤토리
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ToggleInventoryAction;
+
+	void ToggleInventoryInput(const FInputActionValue& Value);
 //================================================
 // Combat Section
 

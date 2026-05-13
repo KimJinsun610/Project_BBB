@@ -46,4 +46,19 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     void SetFireCooldown(float Duration);
+
+
+    //Inventory
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<class UUserWidget> InventoryWidgetClass;
+
+    UPROPERTY(BlueprintReadOnly, Category = "UI")
+    class UUserWidget* InventoryWidget;
+
+    bool bIsInventoryOpen = false;
+
+public:
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void ToggleInventory();
 };

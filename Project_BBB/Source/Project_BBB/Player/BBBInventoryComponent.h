@@ -62,7 +62,7 @@ public:
 
 //================================================
 // Utility Section
-private:
+public:
 	// DataTable에서 아이템 데이터 조회
 	FBBBItemData* FindItemData(FName ItemID) const;
 
@@ -71,4 +71,8 @@ private:
 
 	// 아이템 효과 실제 적용
 	void ApplyItemEffect(const FBBBItemData& ItemData);
+
+	//BP에서 아이템 조회
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	bool GetItemData(FName ItemID, FBBBItemData& OutData) const;
 };
