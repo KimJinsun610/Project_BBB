@@ -62,7 +62,7 @@ public:
 
 //================================================
 // Utility Section
-private:
+public:
 	// DataTable에서 아이템 데이터 조회
 	FBBBItemData* FindItemData(FName ItemID) const;
 

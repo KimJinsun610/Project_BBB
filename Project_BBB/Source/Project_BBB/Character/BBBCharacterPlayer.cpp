@@ -25,6 +25,7 @@
 #include "Physics/BBBCollision.h"
 
 #include "Player/BBBInventoryComponent.h" 
+#include "Item/BBBItemTypes.h"
 
 
 ABBBCharacterPlayer::ABBBCharacterPlayer()
@@ -112,6 +113,9 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 
 	// 현재 시점
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
+
+
+
 
 	//================================================
 	// Attack
@@ -336,6 +340,12 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::StartAim);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABBBCharacterPlayer::StopAim);
 	}
+
+	// 아이템 사용
+	if (UseItemAction) 
+	{
+		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseItem);
+	}
 }
 
 
@@ -410,6 +420,27 @@ void ABBBCharacterPlayer::FirstPersonLook(const FInputActionValue& Value)
 	// 마우스 입력으로 시점 회전
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
+}
+
+void ABBBCharacterPlayer::UseItem(const FInputActionValue& Value)
+{
+	if (!InventoryComponent) return;
+
+	// 인벤토리에서 첫 번째 Consumable 아이템을 찾아 사용
+	for (const FBBBInventorySlot& Slot : InventoryComponent->Slots)
+	{
+		if (!Slot.IsValid()) continue;
+
+		FBBBItemData* Data = InventoryComponent->FindItemData(Slot.ItemID);
+		if (Data && Data->ItemType == EBBBItemType::Consumable)
+		{
+			InventoryComponent->UseItem(Slot.ItemID);
+			UE_LOG(LogTemp, Warning, TEXT("Used item: %s"), *Slot.ItemID.ToString());
+			return;
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("No consumable item in inventory"));
 }
 
 void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
