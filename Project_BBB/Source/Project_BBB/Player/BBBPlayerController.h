@@ -61,4 +61,7 @@ protected:
 public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     void ToggleInventory();
+
+    UFUNCTION(BlueprintPure, Category = "UI")
+    bool IsInventoryOpen() const { return bIsInventoryOpen; }
 };

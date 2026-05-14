@@ -3,6 +3,7 @@
 
 #include "Combat/Projectile/BBBProjectileDebuff.h"
 #include "Combat/BBBDebuffComponent.h"
+#include "Character/Enemy/BBBHittableInterface.h"
 #include "GameFramework/ProjectileMovementComponent.h" 
 
 ABBBProjectileDebuff::ABBBProjectileDebuff()
@@ -37,6 +38,13 @@ void ABBBProjectileDebuff::OnProjectileHit(AActor* HitActor, const FHitResult& H
 
         UE_LOG(LogTemp, Warning, TEXT("Debuff projectile hit %s! Applied: %d"), *HitActor->GetName(), (int32)DebuffData.DebuffType);
     } 
+
+    // 상호작용 아이템 확인 (원거리 공격 가능)
+    IBBBHittableInterface* Hittable = Cast<IBBBHittableInterface>(HitActor);
+    if (Hittable)
+    {
+        Hittable->OnHitByProjectile(this);
+    }
 }
 
 void ABBBProjectileDebuff::SetProjectileColor()

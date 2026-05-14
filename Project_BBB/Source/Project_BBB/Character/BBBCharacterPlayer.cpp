@@ -473,6 +473,11 @@ void ABBBCharacterPlayer::SwitchWeaponMode(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::PerformAttack(const FInputActionValue& Value)
 {
+	//인벤토리 열려 있으면 공격 불가
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC && PC->IsInventoryOpen()) return;
+
+	// 추락 중에 공격 불가
 	if (GetCharacterMovement()->IsFalling())
 	{
 		return;
@@ -623,6 +628,9 @@ void ABBBCharacterPlayer::ComboCheck()
 
 void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 {
+	// 인벤토리 열려 있으면 조준 불가
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC && PC->IsInventoryOpen()) return;
 
 	if (!bIsRangedMode)
 	{
@@ -645,7 +653,6 @@ void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
 	// 크로스헤어 활성화
-	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
 	if (PC)
 	{
 		PC->ShowCrosshair(bShowCrosshair);
@@ -668,39 +675,7 @@ void ABBBCharacterPlayer::StartAim(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::StopAim(const FInputActionValue& Value)
 {
-	if (!bIsAiming)
-	{
-		return;
-	}
-
-
-	bIsAiming = false;
-	bShowCrosshair = false;
-
-	// 시점 변경
-	SwitchToThirdPersonView();
-
-	// 움직임 활성화
-	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-
-	//크로스헤어 비활성화
-	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
-	if (PC)
-	{
-		PC->ShowCrosshair(bShowCrosshair);
-	}
-
-
-	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(
-		GetMesh()->GetAnimInstance()
-	);
-
-	if (AnimInstance)
-	{
-		AnimInstance->SetAiming(false);
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Stop Aiming - Third Person View"));
+	ForceStopAim();
 }
 
 void ABBBCharacterPlayer::PlayShootingAnimation()
@@ -717,6 +692,23 @@ void ABBBCharacterPlayer::PlayShootingAnimation()
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is not UBBBPlayerAnimInstance!"));
 	}
+}
+
+void ABBBCharacterPlayer::ForceStopAim()
+{
+	if (!bIsAiming) return;
+
+	bIsAiming = false;
+	bShowCrosshair = false;
+
+	SwitchToThirdPersonView();
+	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
+	if (PC) PC->ShowCrosshair(false);
+
+	UBBBPlayerAnimInstance* AnimInstance = Cast<UBBBPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance) AnimInstance->SetAiming(false);
 }
 
 void ABBBCharacterPlayer::OnFireCooldownChanged(float CooldownPercent)

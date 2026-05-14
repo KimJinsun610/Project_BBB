@@ -2,6 +2,7 @@
 
 #include "Player/BBBPlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "Character/BBBCharacterPlayer.h"
 
 void ABBBPlayerController::BeginPlay()
 {
@@ -152,6 +153,10 @@ void ABBBPlayerController::ToggleInventory()
 
     if (bIsInventoryOpen)
     {
+       // 조준 중엔 인벤토리 사용 불가
+        ABBBCharacterPlayer* PlayerChar = Cast<ABBBCharacterPlayer>(GetPawn());
+        if (PlayerChar) PlayerChar->ForceStopAim();
+
         InventoryWidget->AddToViewport();
 
         UFunction* Func = InventoryWidget->FindFunction(FName("RefreshInventory"));
