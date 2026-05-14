@@ -127,6 +127,7 @@ protected:
 	void PerformAttack(const FInputActionValue& Value);
 	void StopAttack(const FInputActionValue& Value);
 
+
 protected:
 	// 무기 블루프린트 클래스
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -173,6 +174,9 @@ protected: // 원거리 공격
 public:
 	// Aim 상태
 	bool bIsAiming;
+
+	// 조준 강제 해제
+	void ForceStopAim();
 	 
 private:
 	UFUNCTION()
