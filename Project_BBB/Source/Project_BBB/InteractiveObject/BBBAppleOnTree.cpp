@@ -62,13 +62,13 @@ void ABBBAppleOnTree::StartFalling()
         AppleMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
         AppleMesh->SetSimulatePhysics(true);
 
+
         GetWorld()->GetTimerManager().SetTimer(
             LandingDetectTimer,
             [this]()
             {
                 if (AppleMesh && !bHasLanded)
-                    AppleMesh->OnComponentHit.AddDynamic(
-                        this, &ABBBAppleOnTree::OnAppleLanded);
+                    AppleMesh->OnComponentHit.AddDynamic(this, &ABBBAppleOnTree::OnAppleLanded);
             },
             0.1f, false
         );
