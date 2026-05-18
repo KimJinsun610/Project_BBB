@@ -50,6 +50,18 @@ void ABBBPlayerController::SetGold(int32 InGold)
             HUDWidget->ProcessEvent(Func, &Params);
         }
     }
+
+    if (bIsInventoryOpen && InventoryWidget)
+    {
+        UFunction* JemFunc = InventoryWidget->FindFunction(FName("UpdateJem"));
+        if (JemFunc)
+        {
+            struct FGoldParams { int32 JemAmount; };
+            FGoldParams Params;
+            Params.JemAmount = InGold;
+            InventoryWidget->ProcessEvent(JemFunc, &Params);
+        }
+    }
 }
 
 void ABBBPlayerController::ShowCrosshair(bool bShow)
@@ -164,6 +176,22 @@ void ABBBPlayerController::ToggleInventory()
         {
             InventoryWidget->ProcessEvent(Func, nullptr);
         }
+        
+        //재화 표시
+        if (PlayerChar)
+        {
+            UFunction* JemFunc = InventoryWidget->FindFunction(FName("UpdateJem"));
+            if (JemFunc)
+            {
+                struct FGoldParams { int32 JemAmount; };
+                FGoldParams Params;
+                Params.JemAmount = PlayerChar->GetGold();
+                InventoryWidget->ProcessEvent(JemFunc, &Params);
+            }
+        }
+
+        UE_LOG(LogTemp, Error, TEXT("Jem: %d"), PlayerChar->GetGold());
+
 
         // 마우스 커서 표시 + UI 입력 허용
         bShowMouseCursor = true;
