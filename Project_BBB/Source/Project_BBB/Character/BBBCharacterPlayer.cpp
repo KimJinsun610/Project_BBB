@@ -341,12 +341,7 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABBBCharacterPlayer::StopAim);
 	}
 
-	// 아이템 사용
-	if (UseItemAction) 
-	{
-		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseItem);
-	}
-
+	
 	// 인벤토리 토글
 	if (ToggleInventoryAction) 
 	{
