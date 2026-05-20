@@ -13,6 +13,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -413,5 +414,31 @@ void ABBBEnemyBase::DropItems()
 
 void ABBBEnemyBase::OnEnemyDeath(AActor* Killed, AActor* Killer)
 {
+    if (DeathMontage)
+    {
+        return;
+    }
+
+    FTimerHandle FallbackTimer;
+    GetWorldTimerManager().SetTimer(
+        FallbackTimer,
+        [this]() { OnDeathEffectNotify(); },
+        3.f,
+        false
+    );
+}
+
+void ABBBEnemyBase::OnDeathEffectNotify()
+{
+    if (ItemSpawnEffect)
+    {
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+            GetWorld(),
+            ItemSpawnEffect,
+            GetActorLocation(),
+            FRotator::ZeroRotator,
+            FVector(3.0f)
+        );
+    }
     DropItems();
 }

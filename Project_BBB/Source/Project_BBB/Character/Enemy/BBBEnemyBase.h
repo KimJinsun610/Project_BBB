@@ -10,6 +10,8 @@
 #include "AI/BBBCharacterAIInterface.h"
 #include "Item/BBBItemDataAsset.h"
 
+#include "NiagaraSystem.h"
+
 #include "BBBEnemyBase.generated.h"
 
 /**
@@ -131,4 +133,11 @@ protected:
 
 	UFUNCTION()
 	void OnEnemyDeath(AActor* Killed, AActor* Killer);
+
+	// ¿Ã∆—∆Æ
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> ItemSpawnEffect;
+
+public:
+	void OnDeathEffectNotify();
 };

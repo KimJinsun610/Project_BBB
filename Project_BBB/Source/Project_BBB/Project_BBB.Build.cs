@@ -10,7 +10,9 @@ public class Project_BBB : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[] { "Project_BBB" });
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "NavigationSystem", "AIModule", "GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", 
+															"UMG", "NavigationSystem", "AIModule", "GameplayTasks",
+                                                             "Niagara"});
 
 
         PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
