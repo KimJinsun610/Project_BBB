@@ -201,6 +201,12 @@ void ABBBPlayerController::ToggleInventory()
     }
     else
     {
+        UFunction* ClearFunc = InventoryWidget->FindFunction(FName("ClearSelection"));
+        if (ClearFunc)
+        {
+            InventoryWidget->ProcessEvent(ClearFunc, nullptr);
+        }
+
         InventoryWidget->RemoveFromParent();
 
         // 마우스 커서 숨김 + 게임 입력으로 복귀
