@@ -341,12 +341,7 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABBBCharacterPlayer::StopAim);
 	}
 
-	// 아이템 사용
-	if (UseItemAction) 
-	{
-		EnhancedInputComponent->BindAction(UseItemAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseItem);
-	}
-
+	
 	// 인벤토리 토글
 	if (ToggleInventoryAction) 
 	{
@@ -791,8 +786,7 @@ void ABBBCharacterPlayer::OnHPChangedCallback(float CurrentHP, float MaxHP, AAct
 
 void ABBBCharacterPlayer::AddGold(int32 Amount)
 {
-	//Gold += Amount;
-	// 우선 얻는 양으로 설정
+	Gold += Amount;
 
 	// UI 업데이트
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
