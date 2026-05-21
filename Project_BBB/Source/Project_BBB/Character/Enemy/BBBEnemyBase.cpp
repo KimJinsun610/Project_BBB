@@ -14,6 +14,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -430,6 +431,8 @@ void ABBBEnemyBase::OnEnemyDeath(AActor* Killed, AActor* Killer)
 
 void ABBBEnemyBase::OnDeathEffectNotify()
 {
+    GetMesh()->SetVisibility(false);
+
     if (ItemSpawnEffect)
     {
         UNiagaraFunctionLibrary::SpawnSystemAtLocation(
@@ -439,6 +442,17 @@ void ABBBEnemyBase::OnDeathEffectNotify()
             FRotator::ZeroRotator,
             FVector(3.0f)
         );
+
+        SetLifeSpan(0.f);
+        FTimerHandle DropTimer;
+        GetWorldTimerManager().SetTimer(DropTimer, [this]()
+            {
+                DropItems();
+                Destroy();
+            },
+            ItemDropDelay, false);
+        return;
     }
+
     DropItems();
 }

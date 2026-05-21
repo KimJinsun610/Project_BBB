@@ -43,7 +43,7 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere, Category = "Item|Float")
-    float FloatAmplitude = 10.f;   
+    float FloatAmplitude = 5.f;   
 
     UPROPERTY(EditAnywhere, Category = "Item|Float")
     float FloatSpeed = 2.f;        

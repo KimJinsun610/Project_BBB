@@ -95,8 +95,8 @@ void ABBBAppleOnTree::SpawnItemAndDestroy()
     if (AppleMesh)
     {
         SetActorLocation(AppleMesh->GetComponentLocation());
+        AppleMesh->SetVisibility(false);
     }
 
     OnDeathEffectNotify();
-    Destroy();
 }

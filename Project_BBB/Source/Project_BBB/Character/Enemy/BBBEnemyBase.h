@@ -140,4 +140,7 @@ protected:
 
 public:
 	void OnDeathEffectNotify();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	float ItemDropDelay = 1.0f;
 };
