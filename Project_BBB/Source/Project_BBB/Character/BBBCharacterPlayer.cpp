@@ -114,9 +114,6 @@ ABBBCharacterPlayer::ABBBCharacterPlayer()
 	// ÇöÀç ½ÃÁ¡
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
 
-
-
-
 	//================================================
 	// Attack
 	
@@ -347,6 +344,11 @@ void ABBBCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	{
 		EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Started, this, &ABBBCharacterPlayer::ToggleInventoryInput);
 	}
+
+	// Äü½½·Ô
+	if (QuickSlot1Action) EnhancedInputComponent->BindAction(QuickSlot1Action, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseQuickSlot1);
+	if (QuickSlot2Action) EnhancedInputComponent->BindAction(QuickSlot2Action, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseQuickSlot2);
+	if (QuickSlot3Action) EnhancedInputComponent->BindAction(QuickSlot3Action, ETriggerEvent::Started, this, &ABBBCharacterPlayer::UseQuickSlot3);
 }
 
 
@@ -794,4 +796,20 @@ void ABBBCharacterPlayer::AddGold(int32 Amount)
 	{
 		PC->SetGold(Amount);
 	}
+}
+
+
+void ABBBCharacterPlayer::UseQuickSlot1(const FInputActionValue& Value)
+{
+	if (InventoryComponent) InventoryComponent->UseQuickSlot(0);
+}
+
+void ABBBCharacterPlayer::UseQuickSlot2(const FInputActionValue& Value)
+{
+	if (InventoryComponent) InventoryComponent->UseQuickSlot(1);
+}
+
+void ABBBCharacterPlayer::UseQuickSlot3(const FInputActionValue& Value)
+{
+	if (InventoryComponent) InventoryComponent->UseQuickSlot(2);
 }

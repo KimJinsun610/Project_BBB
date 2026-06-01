@@ -14,7 +14,7 @@ UBBBInventoryComponent::UBBBInventoryComponent()
 void UBBBInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+    QuickSlots.SetNum(3);
 	
 }
 
@@ -54,6 +54,14 @@ bool UBBBInventoryComponent::RemoveItem(FName ItemID, int32 Count)
     if (Slots[SlotIndex].Count <= 0)
     {
         Slots.RemoveAt(SlotIndex);
+
+        for (FBBBQuickSlotData& QSlot : QuickSlots)
+        {
+            if (QSlot.ItemID == ItemID)
+            {
+                QSlot = FBBBQuickSlotData();
+            }
+        }
     }
 
     OnInventoryChanged.Broadcast();
@@ -123,4 +131,50 @@ bool UBBBInventoryComponent::GetItemData(FName ItemID, FBBBItemData& OutData) co
 
     OutData = *Data;
     return true;
+}
+
+bool UBBBInventoryComponent::RegisterQuickSlot(FName ItemID)
+{
+    if (!HasItem(ItemID, 1)) return false;
+
+    // 이미 등록된 슬롯이 있으면 갱신
+    for (int32 i = 0; i < QuickSlots.Num(); i++)
+    {
+        if (QuickSlots[i].ItemID == ItemID)
+        {
+            OnQuickSlotChanged.Broadcast();
+            return true;
+        }
+    }
+
+    // 우측(2)부터 빈 슬롯 탐색
+    for (int32 i = 0; i < QuickSlots.Num(); i++)
+    {
+        if (QuickSlots[i].IsEmpty())
+        {
+            QuickSlots[i] = FBBBQuickSlotData(ItemID);
+            OnQuickSlotChanged.Broadcast();
+            return true;
+        }
+    }
+
+    return false; // 모든 슬롯이 가득 참
+}
+
+void UBBBInventoryComponent::RegisterQuickSlotAt(FName ItemID, int32 SlotIndex)
+{
+    if (!QuickSlots.IsValidIndex(SlotIndex)) return;
+    if (!HasItem(ItemID, 1)) return;
+
+    QuickSlots[SlotIndex] = FBBBQuickSlotData(ItemID);
+    OnQuickSlotChanged.Broadcast();
+}
+
+bool UBBBInventoryComponent::UseQuickSlot(int32 SlotIndex)
+{
+    if (!QuickSlots.IsValidIndex(SlotIndex)) return false;
+    if (QuickSlots[SlotIndex].IsEmpty()) return false;
+
+    FName ItemID = QuickSlots[SlotIndex].ItemID;
+    return UseItem(ItemID); // UseItem 내부에서 OnInventoryChanged Broadcast
 }

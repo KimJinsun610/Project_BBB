@@ -12,6 +12,9 @@
 // 인벤토리 변경 시 UI 갱신용
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChangedSignature);
 
+// 퀵슬롯
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuickSlotChangedSignature);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_BBB_API UBBBInventoryComponent : public UActorComponent
 {
@@ -34,6 +37,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TArray<FBBBInventorySlot> Slots;
 		
+
+	// 퀵슬롯 3칸 고정 (index 0=좌, 1=중, 2=우)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "QuickSlot")
+	TArray<FBBBQuickSlotData> QuickSlots;
 //================================================
 // Event Section
 public:
@@ -60,6 +67,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	bool UseItem(FName ItemID);
 
+	// 퀵슬롯
+	UPROPERTY(BlueprintAssignable, Category = "QuickSlot")
+	FOnQuickSlotChangedSignature OnQuickSlotChanged;
+
 //================================================
 // Utility Section
 public:
@@ -75,4 +86,20 @@ public:
 	//BP에서 아이템 조회
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	bool GetItemData(FName ItemID, FBBBItemData& OutData) const;
+
+
+//================================================
+// QuickSlot Section
+public:
+	// 우측(2)부터 빈 슬롯 찾아 등록 ? 컨텍스트 메뉴 버튼용
+	UFUNCTION(BlueprintCallable, Category = "QuickSlot")
+	bool RegisterQuickSlot(FName ItemID);
+
+	// 지정 인덱스에 직접 등록 ? 드래그 앤 드롭용
+	UFUNCTION(BlueprintCallable, Category = "QuickSlot")
+	void RegisterQuickSlotAt(FName ItemID, int32 SlotIndex);
+
+	// 해당 슬롯 아이템 사용 (1/2/3 키 입력용)
+	UFUNCTION(BlueprintCallable, Category = "QuickSlot")
+	bool UseQuickSlot(int32 SlotIndex);
 };

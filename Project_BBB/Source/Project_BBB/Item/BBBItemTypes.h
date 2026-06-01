@@ -6,19 +6,19 @@
 #include "BBBItemTypes.generated.h"
 
 // =====================================================
-// ¾ÆÀÌÅÛ Å¸ÀÔ Enum
+// ì•„ì´í…œ íƒ€ì… Enum
 // =====================================================
 
 UENUM(BlueprintType)
 enum class EBBBItemType : uint8
 {
-    Currency    UMETA(DisplayName = "Currency"),    // ÀçÈ­
-    Consumable  UMETA(DisplayName = "Consumable"),  // ¼Òºñ ¾ÆÀÌÅÛ (»ç°ú µî)
+    Currency    UMETA(DisplayName = "Currency"),    // ì¬í™”
+    Consumable  UMETA(DisplayName = "Consumable"),  // ì†Œë¹„ ì•„ì´í…œ (ì‚¬ê³¼ ë“±)
 };
 
 // =====================================================
-// ¾ÆÀÌÅÛ µ¥ÀÌÅÍ (DataTable Çà)
-// Row Name = ItemID·Î »ç¿ë  ex) "Apple", "Coin"
+// ì•„ì´í…œ ë°ì´í„° (DataTable í–‰)
+// Row Name = ItemIDë¡œ ì‚¬ìš©  ex) "Apple", "Coin"
 // =====================================================
 
 USTRUCT(BlueprintType)
@@ -26,30 +26,29 @@ struct FBBBItemData : public FTableRowBase
 {
     GENERATED_BODY()
 
-    // Ç¥½Ã ÀÌ¸§
+    // í‘œì‹œ ì´ë¦„
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
     FText DisplayName;
 
-    // ¾ÆÀÌÅÛ Å¸ÀÔ
+    // ì•„ì´í…œ íƒ€ì…
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
     EBBBItemType ItemType = EBBBItemType::Consumable;
 
-    // ÀÎº¥Åä¸® ¾ÆÀÌÄÜ
+    // ì¸ë²¤í† ë¦¬ ì•„ì´ì½˜
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|UI")
     TObjectPtr<UTexture2D> Icon;
 
-    // ÃÖ´ë ÁßÃ¸ ¼ö·® (1ÀÌ¸é ÁßÃ¸ ºÒ°¡)
+    // ìµœëŒ€ ì¤‘ì²© ìˆ˜ëŸ‰ (1ì´ë©´ ì¤‘ì²© ë¶ˆê°€)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (ClampMin = "1"))
     int32 MaxStackCount = 10;
 
-    // [Consumable Àü¿ë] È¸º¹ HP ·®
+    // [Consumable ì „ìš©] íšŒë³µ HP ëŸ‰
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Consumable")
     float HealAmount = 0.f;
 };
 
 // =====================================================
-// ÀÎº¥Åä¸® ½½·Ô
-// Phase 2ÀÇ InventoryComponent¿¡¼­ TArray·Î »ç¿ë
+// ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯
 // =====================================================
 
 USTRUCT(BlueprintType)
@@ -57,11 +56,11 @@ struct FBBBInventorySlot
 {
     GENERATED_BODY()
 
-    // DataTable Row Name°ú ÀÏÄ¡ÇÏ´Â ¾ÆÀÌÅÛ ID
+    // DataTable Row Nameê³¼ ì¼ì¹˜í•˜ëŠ” ì•„ì´í…œ ID
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FName ItemID = NAME_None;
 
-    // º¸À¯ ¼ö·®
+    // ë³´ìœ  ìˆ˜ëŸ‰
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     int32 Count = 0;
 
@@ -71,4 +70,23 @@ struct FBBBInventorySlot
     }
 
     bool IsValid() const { return ItemID != NAME_None && Count > 0; }
+};
+
+
+// =====================================================
+// í€µ ìŠ¬ë¡¯
+// =====================================================
+
+USTRUCT(BlueprintType)
+struct FBBBQuickSlotData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "QuickSlot")
+    FName ItemID = NAME_None;
+
+    FBBBQuickSlotData() {}
+    FBBBQuickSlotData(FName InItemID) : ItemID(InItemID) {}
+
+    bool IsEmpty() const { return ItemID == NAME_None; }
 };

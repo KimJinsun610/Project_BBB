@@ -110,6 +110,20 @@ protected:
 	TObjectPtr<class UInputAction> ToggleInventoryAction;
 
 	void ToggleInventoryInput(const FInputActionValue& Value);
+
+	// Äü½½·Ô
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> QuickSlot1Action;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> QuickSlot2Action;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> QuickSlot3Action;
+
+	void UseQuickSlot1(const FInputActionValue& Value);
+	void UseQuickSlot2(const FInputActionValue& Value);
+	void UseQuickSlot3(const FInputActionValue& Value);
 //================================================
 // Combat Section
 
