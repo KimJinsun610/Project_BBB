@@ -71,6 +71,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "QuickSlot")
 	FOnQuickSlotChangedSignature OnQuickSlotChanged;
 
+	//아이템 개수
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	int32 GetItemCount(FName ItemID) const;
+
 //================================================
 // Utility Section
 public:

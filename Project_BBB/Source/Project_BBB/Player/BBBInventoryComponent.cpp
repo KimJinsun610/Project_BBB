@@ -20,10 +20,18 @@ void UBBBInventoryComponent::BeginPlay()
 
 bool UBBBInventoryComponent::AddItem(FName ItemID, int32 Count)
 {
-    if (ItemID == NAME_None || Count <= 0) return false;
+    if (ItemID == NAME_None || Count <= 0) {
+        UE_LOG(LogTemp, Warning, TEXT("[Inventory] AddItem failed - invalid ID or Count"));
+        return false;
+    }
 
     FBBBItemData* Data = FindItemData(ItemID);
-    if (!Data) return false;
+    if (!Data)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("[Inventory] AddItem failed - ItemData not found for: %s"), *ItemID.ToString());
+        return false;
+    }
+    UE_LOG(LogTemp, Warning, TEXT("[Inventory] AddItem called - ItemID: %s, Count: %d"), *ItemID.ToString(), Count);
 
     int32 SlotIndex = FindSlotIndex(ItemID);
 
@@ -87,10 +95,26 @@ bool UBBBInventoryComponent::UseItem(FName ItemID)
     FBBBItemData* Data = FindItemData(ItemID);
     if (!Data) return false;
 
+    if (Data->ItemType == EBBBItemType::Consumable && Data->HealAmount > 0.f)
+    {
+        ABBBCharacterBase* Owner = Cast<ABBBCharacterBase>(GetOwner());
+        if (Owner)
+        {
+            UBBBStatComponent* Stat = Owner->GetStatComponent();
+            if (Stat->CurrentHP >= Stat->MaxHP) return false;
+        }
+    }
+
     ApplyItemEffect(*Data);
     RemoveItem(ItemID, 1);  // RemoveItem 안에서 OnInventoryChanged 호출됨
 
     return true;
+}
+
+int32 UBBBInventoryComponent::GetItemCount(FName ItemID) const
+{
+    int32 Index = FindSlotIndex(ItemID);
+    return (Index != -1) ? Slots[Index].Count : 0;
 }
 
 // =====================================================
@@ -120,7 +144,9 @@ void UBBBInventoryComponent::ApplyItemEffect(const FBBBItemData& ItemData)
     // HealAmount가 있으면 체력 회복
     if (ItemData.HealAmount > 0.f)
     {
-        Owner->GetStatComponent()->Heal(ItemData.HealAmount);
+        UBBBStatComponent* Stat = Owner->GetStatComponent();
+        if (Stat->CurrentHP >= Stat->MaxHP) return;
+        Stat->Heal(ItemData.HealAmount);
     }
 }
 

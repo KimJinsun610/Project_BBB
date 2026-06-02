@@ -12,6 +12,7 @@ ABBBItemApple::ABBBItemApple()
 
 void ABBBItemApple::OnPickup_Implementation(AActor* Picker)
 {
+
     ABBBCharacterPlayer* Player = Cast<ABBBCharacterPlayer>(Picker);
     if (!Player) return;
 

@@ -801,6 +801,7 @@ void ABBBCharacterPlayer::AddGold(int32 Amount)
 
 void ABBBCharacterPlayer::UseQuickSlot1(const FInputActionValue& Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("[QuickSlot] Slot1 pressed"));
 	if (InventoryComponent) InventoryComponent->UseQuickSlot(0);
 }
 
