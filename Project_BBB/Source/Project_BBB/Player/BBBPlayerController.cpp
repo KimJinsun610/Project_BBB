@@ -165,7 +165,7 @@ void ABBBPlayerController::ToggleInventory()
 
     if (bIsInventoryOpen)
     {
-       // 조준 중엔 인벤토리 사용 불가
+        // 조준 중엔 인벤토리 사용 불가
         ABBBCharacterPlayer* PlayerChar = Cast<ABBBCharacterPlayer>(GetPawn());
         if (PlayerChar) PlayerChar->ForceStopAim();
 
@@ -176,8 +176,7 @@ void ABBBPlayerController::ToggleInventory()
         {
             InventoryWidget->ProcessEvent(Func, nullptr);
         }
-        
-        //재화 표시
+
         if (PlayerChar)
         {
             UFunction* JemFunc = InventoryWidget->FindFunction(FName("UpdateJem"));
@@ -188,29 +187,24 @@ void ABBBPlayerController::ToggleInventory()
                 Params.JemAmount = PlayerChar->GetGold();
                 InventoryWidget->ProcessEvent(JemFunc, &Params);
             }
+
+
+
+            // 마우스 커서 표시 + UI 입력 허용
+            bShowMouseCursor = true;
+            FInputModeGameAndUI InputMode;
+            InputMode.SetHideCursorDuringCapture(false);
+            SetInputMode(InputMode);
         }
-
-        UE_LOG(LogTemp, Error, TEXT("Jem: %d"), PlayerChar->GetGold());
-
-
-        // 마우스 커서 표시 + UI 입력 허용
-        bShowMouseCursor = true;
-        FInputModeGameAndUI InputMode;
-        InputMode.SetHideCursorDuringCapture(false);
-        SetInputMode(InputMode);
     }
     else
     {
         UFunction* ClearFunc = InventoryWidget->FindFunction(FName("ClearSelection"));
-        if (ClearFunc)
-        {
-            InventoryWidget->ProcessEvent(ClearFunc, nullptr);
-        }
+        if (ClearFunc) InventoryWidget->ProcessEvent(ClearFunc, nullptr);
 
         InventoryWidget->RemoveFromParent();
 
-        // 마우스 커서 숨김 + 게임 입력으로 복귀
         bShowMouseCursor = false;
         SetInputMode(FInputModeGameOnly());
     }
-}
+ }
