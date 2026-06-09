@@ -95,11 +95,11 @@ public:
 //================================================
 // QuickSlot Section
 public:
-	// 우측(2)부터 빈 슬롯 찾아 등록 ? 컨텍스트 메뉴 버튼용
+	// 우측(2)부터 빈 슬롯 찾아 등록,  컨텍스트 메뉴 버튼용
 	UFUNCTION(BlueprintCallable, Category = "QuickSlot")
 	bool RegisterQuickSlot(FName ItemID);
 
-	// 지정 인덱스에 직접 등록 ? 드래그 앤 드롭용
+	// 지정 인덱스에 직접 등록, 드래그 앤 드롭용
 	UFUNCTION(BlueprintCallable, Category = "QuickSlot")
 	void RegisterQuickSlotAt(FName ItemID, int32 SlotIndex);
 
