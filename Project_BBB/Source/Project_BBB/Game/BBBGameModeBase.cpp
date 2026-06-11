@@ -2,7 +2,9 @@
 
 
 #include "Game/BBBGameModeBase.h"
+
 #include "Player/BBBPlayerController.h"
+
 
 ABBBGameModeBase::ABBBGameModeBase()
 {
@@ -21,4 +23,13 @@ ABBBGameModeBase::ABBBGameModeBase()
 		PlayerControllerClass = PlayerControllerClassRef.Class;
 	}
 
+
+	AudioManager = CreateDefaultSubobject<UBBBAudioManager>(TEXT("AudioManager"));
+}
+
+// BeginPlay
+void ABBBGameModeBase::BeginPlay()
+{
+    Super::BeginPlay();
+    AudioManager->PlayBGM(AudioManager->LevelBGM);
 }

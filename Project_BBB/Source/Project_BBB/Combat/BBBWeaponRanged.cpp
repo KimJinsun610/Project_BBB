@@ -75,6 +75,13 @@ void ABBBWeaponRanged::FireProjectile()
     
     }
 
+    // 발사 사운드 플레이
+    if (ShootSFX)
+    {
+        UGameplayStatics::PlaySound2D(GetWorld(), ShootSFX);
+    }
+
+
     // 발사체 생성
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = GetOwner();

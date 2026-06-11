@@ -1,8 +1,12 @@
 
 #include "Player/BBBInventoryComponent.h"
+
 #include "Character/BBBCharacterBase.h"
 #include "Character/BBBStatComponent.h"
+
 #include "Engine/DataTable.h"
+
+#include "Kismet/GameplayStatics.h"
 
 UBBBInventoryComponent::UBBBInventoryComponent()
 {
@@ -147,6 +151,11 @@ void UBBBInventoryComponent::ApplyItemEffect(const FBBBItemData& ItemData)
         UBBBStatComponent* Stat = Owner->GetStatComponent();
         if (Stat->CurrentHP >= Stat->MaxHP) return;
         Stat->Heal(ItemData.HealAmount);
+
+        if (UseItemSFX)
+        {
+            UGameplayStatics::PlaySound2D(GetWorld(), UseItemSFX, 0.4f);
+        }
     }
 }
 

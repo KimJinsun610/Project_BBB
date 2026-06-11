@@ -5,6 +5,7 @@
 #include "Combat/BBBDebuffComponent.h"
 #include "Character/Enemy/BBBHittableInterface.h"
 #include "GameFramework/ProjectileMovementComponent.h" 
+#include "Kismet/GameplayStatics.h"
 
 ABBBProjectileDebuff::ABBBProjectileDebuff()
     :Super()
@@ -35,7 +36,6 @@ void ABBBProjectileDebuff::OnProjectileHit(AActor* HitActor, const FHitResult& H
         // 디버프 적용
         DebuffComp->ApplyDebuff(DebuffData);
 
-
         UE_LOG(LogTemp, Warning, TEXT("Debuff projectile hit %s! Applied: %d"), *HitActor->GetName(), (int32)DebuffData.DebuffType);
     } 
 
@@ -44,6 +44,11 @@ void ABBBProjectileDebuff::OnProjectileHit(AActor* HitActor, const FHitResult& H
     if (Hittable)
     {
         Hittable->OnHitByProjectile(this);
+    }
+
+    if (HitSFX)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, HitSFX, GetActorLocation());
     }
 }
 

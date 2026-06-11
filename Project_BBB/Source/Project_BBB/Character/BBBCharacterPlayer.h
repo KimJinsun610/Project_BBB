@@ -158,6 +158,10 @@ protected: //근거리 공격
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UBBBComboActionAsset> ComboActionData;
 
+	// 공격 사운드
+	UPROPERTY(EditDefaultsOnly, Category = "SFX")
+	TObjectPtr<USoundBase> SwingSFX;
+
 	void ProcessComboCommand();
 
 	void ComboActionBegin();
