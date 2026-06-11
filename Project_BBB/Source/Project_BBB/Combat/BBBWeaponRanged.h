@@ -49,4 +49,9 @@ protected:
 
 	void ResetFire();
 
+
+	// 발사 사운드
+	UPROPERTY(EditDefaultsOnly, Category = "SFX")
+	TObjectPtr<USoundBase> ShootSFX;
+
 };

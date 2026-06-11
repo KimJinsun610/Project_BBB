@@ -64,4 +64,12 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "UI")
     bool IsInventoryOpen() const { return bIsInventoryOpen; }
+
+protected:
+    //인벤토리 사운드
+    UPROPERTY(EditDefaultsOnly, Category = "SFX")
+    TObjectPtr<USoundBase> InventoryOpenSFX;
+
+    UPROPERTY(EditDefaultsOnly, Category = "SFX")
+    TObjectPtr<USoundBase> InventoryCloseSFX;
 };

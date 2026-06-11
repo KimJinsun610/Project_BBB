@@ -21,6 +21,7 @@ ABBBWeaponMelee::ABBBWeaponMelee()
 
 void ABBBWeaponMelee::Attack()
 {
+
     PerformMeleeAttack();
 }
 

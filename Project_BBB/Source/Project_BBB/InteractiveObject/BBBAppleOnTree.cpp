@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 
+#include "Kismet/GameplayStatics.h"
 
 FTimerHandle LandingDetectTimer;
 
@@ -83,10 +84,17 @@ void ABBBAppleOnTree::StartFalling()
 
 void ABBBAppleOnTree::OnAppleLanded(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+
     if (bHasLanded) return;
     bHasLanded = true;
 
+    if (LandSFX)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, LandSFX, GetActorLocation());
+    }
+
     GetWorld()->GetTimerManager().ClearTimer(FallSafetyTimer);
+    
     SpawnItemAndDestroy();
 }
 

@@ -3,6 +3,7 @@
 #include "Player/BBBPlayerController.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/BBBCharacterPlayer.h"
+#include "Kismet/GameplayStatics.h"
 
 void ABBBPlayerController::BeginPlay()
 {
@@ -188,7 +189,10 @@ void ABBBPlayerController::ToggleInventory()
                 InventoryWidget->ProcessEvent(JemFunc, &Params);
             }
 
-
+            if (InventoryOpenSFX)
+            {
+                UGameplayStatics::PlaySound2D(GetWorld(), InventoryOpenSFX, 0.5f, 1.3f);
+            }
 
             // 마우스 커서 표시 + UI 입력 허용
             bShowMouseCursor = true;
@@ -203,6 +207,11 @@ void ABBBPlayerController::ToggleInventory()
         if (ClearFunc) InventoryWidget->ProcessEvent(ClearFunc, nullptr);
 
         InventoryWidget->RemoveFromParent();
+
+        if (InventoryCloseSFX)
+        {
+            UGameplayStatics::PlaySound2D(GetWorld(), InventoryCloseSFX, 0.5f, 1.3f);
+        }
 
         bShowMouseCursor = false;
         SetInputMode(FInputModeGameOnly());

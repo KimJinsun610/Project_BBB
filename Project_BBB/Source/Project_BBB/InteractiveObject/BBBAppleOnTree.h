@@ -24,8 +24,12 @@ protected:
     UPROPERTY(VisibleAnywhere, Category = "Apple")
     TObjectPtr<UStaticMeshComponent> AppleMesh;
 
+    // 땅에 떨어지는 사운드
+    UPROPERTY(EditDefaultsOnly, Category = "SFX")
+    TObjectPtr<USoundBase> LandSFX;
+
 public:
-    // IBBBHittableObject ����
+    // IBBBHittableObject 
     virtual void OnHitByProjectile(AActor* Projectile) override;
 
 private:

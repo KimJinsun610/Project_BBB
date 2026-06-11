@@ -26,7 +26,7 @@
 
 #include "Player/BBBInventoryComponent.h" 
 #include "Item/BBBItemTypes.h"
-
+#include "Kismet/GameplayStatics.h"
 
 ABBBCharacterPlayer::ABBBCharacterPlayer()
 {
@@ -508,6 +508,7 @@ void ABBBCharacterPlayer::StopAttack(const FInputActionValue& Value)
 
 void ABBBCharacterPlayer::ProcessComboCommand()
 {
+
 	if (!ComboActionData)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ComboActionData is NULL - Skipping combo"));
@@ -560,10 +561,18 @@ void ABBBCharacterPlayer::ComboActionBegin()
 	CurrentCombo = 1;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 
+	if (SwingSFX)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SwingSFX);
+	}
+
+
 	//Animation Setting
 	const float AttackSpeedRate = 1.0f;
+	const float StartTime = 0.6f;
 
-	AnimInstance->Montage_Play(AttackMontage, AttackSpeedRate);
+	AnimInstance->Montage_Play(AttackMontage, AttackSpeedRate, EMontagePlayReturnType::MontageLength, StartTime);
+
 
 	FOnMontageEnded EndDelegate;
 	EndDelegate.BindUObject(this, &ABBBCharacterPlayer::ComboActionEnd);
@@ -613,6 +622,11 @@ void ABBBCharacterPlayer::ComboCheck()
 	ComboTimerHandle.Invalidate();
 	if (HasNextComboCommand)
 	{
+		// 콤보 기능 비활성화
+		HasNextComboCommand = false;
+		return;
+		
+		/*
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
 		CurrentCombo = FMath::Clamp(CurrentCombo + 1, 1, ComboActionData->MaxComboCount);
@@ -620,6 +634,7 @@ void ABBBCharacterPlayer::ComboCheck()
 		AnimInstance->Montage_JumpToSection(NextSection, AttackMontage);
 		SetComboCheckTimer();
 		HasNextComboCommand = false;
+		*/
 	}
 }
 

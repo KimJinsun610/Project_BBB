@@ -28,4 +28,8 @@ protected:
 
     // 디버프 타입별 색상
     void SetProjectileColor();
+
+    // hit 사운드
+    UPROPERTY(EditDefaultsOnly, Category = "SFX")
+    TObjectPtr<USoundBase> HitSFX;
 };

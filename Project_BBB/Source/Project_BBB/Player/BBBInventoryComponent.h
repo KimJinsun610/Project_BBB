@@ -92,6 +92,10 @@ public:
 	bool GetItemData(FName ItemID, FBBBItemData& OutData) const;
 
 
+	// 아이템 섭취 사운드
+	UPROPERTY(EditDefaultsOnly, Category = "SFX")
+	TObjectPtr<USoundBase> UseItemSFX;
+
 //================================================
 // QuickSlot Section
 public:

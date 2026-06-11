@@ -15,6 +15,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -415,6 +416,7 @@ void ABBBEnemyBase::DropItems()
 
 void ABBBEnemyBase::OnEnemyDeath(AActor* Killed, AActor* Killer)
 {
+
     if (DeathMontage)
     {
         return;
@@ -435,6 +437,12 @@ void ABBBEnemyBase::OnDeathEffectNotify()
 
     if (ItemSpawnEffect)
     {
+        
+        if (ItemDropSFX)
+        {
+            UGameplayStatics::PlaySoundAtLocation(this, ItemDropSFX, GetActorLocation(),1.5f);
+        }
+        
         UNiagaraFunctionLibrary::SpawnSystemAtLocation(
             GetWorld(),
             ItemSpawnEffect,
@@ -451,8 +459,11 @@ void ABBBEnemyBase::OnDeathEffectNotify()
                 Destroy();
             },
             ItemDropDelay, false);
+
         return;
     }
+
+  
 
     DropItems();
 }

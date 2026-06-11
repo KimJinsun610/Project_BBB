@@ -143,4 +143,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	float ItemDropDelay = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SFX")
+	TObjectPtr<USoundBase> ItemDropSFX;
 };
