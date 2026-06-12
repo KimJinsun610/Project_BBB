@@ -13,6 +13,8 @@ ABBBItemApple::ABBBItemApple()
 void ABBBItemApple::OnPickup_Implementation(AActor* Picker)
 {
 
+    Super::OnPickup_Implementation(Picker);
+
     ABBBCharacterPlayer* Player = Cast<ABBBCharacterPlayer>(Picker);
     if (!Player) return;
 
@@ -20,8 +22,9 @@ void ABBBItemApple::OnPickup_Implementation(AActor* Picker)
     if (!Inventory) return;
 
     bool bAdded = Inventory->AddItem(FName("Apple"), Amount);
-
-    UE_LOG(LogTemp, Warning, TEXT("Apple picked up! Added: %s"), bAdded ? TEXT("true") : TEXT("false"));
-
-    Destroy();
+    
+    if (bAdded)
+    {
+        Destroy();
+    }
 }

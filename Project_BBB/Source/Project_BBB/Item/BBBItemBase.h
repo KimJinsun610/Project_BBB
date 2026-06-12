@@ -37,6 +37,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
     int32 Amount;
 
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "SFX")
+    TObjectPtr<USoundBase> PickupSFX;
+
 public:
     void SetAmount(int32 InAmount) { Amount = InAmount; }
 

@@ -11,6 +11,8 @@ ABBBItemCoin::ABBBItemCoin()
 
 void ABBBItemCoin::OnPickup_Implementation(AActor* Picker)
 {
+    Super::OnPickup_Implementation(Picker);
+
     ABBBCharacterPlayer* Player = Cast<ABBBCharacterPlayer>(Picker);
     if (!Player) return;
 

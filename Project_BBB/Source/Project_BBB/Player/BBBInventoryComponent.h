@@ -51,6 +51,9 @@ public:
 //================================================
 // Inventory Section
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
+	int32 MaxSlotCount = 12;
+
 	// 아이템 추가 (스택 처리 포함)
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	bool AddItem(FName ItemID, int32 Count = 1);
