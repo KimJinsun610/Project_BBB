@@ -41,13 +41,27 @@ bool UBBBInventoryComponent::AddItem(FName ItemID, int32 Count)
 
     if (SlotIndex != -1)
     {
-        // 기존 슬롯에 수량 추가 (MaxStackCount 초과 방지)
         int32 NewCount = FMath::Min(Slots[SlotIndex].Count + Count, Data->MaxStackCount);
+        int32 Remainder = (Slots[SlotIndex].Count + Count) - NewCount; // 초과분
         Slots[SlotIndex].Count = NewCount;
+
+        // 초과분 있으면 새 슬롯에 추가
+        if (Remainder > 0)
+        {
+            if (Slots.Num() >= MaxSlotCount)
+            {
+                OnInventoryChanged.Broadcast();
+                return false; // 슬롯 꽉 참
+            }
+            Slots.Add(FBBBInventorySlot(ItemID, Remainder));
+        }
     }
     else
     {
-        // 새 슬롯 추가
+        if (Slots.Num() >= MaxSlotCount)
+        {
+            return false;
+        }
         int32 ClampedCount = FMath::Min(Count, Data->MaxStackCount);
         Slots.Add(FBBBInventorySlot(ItemID, ClampedCount));
     }

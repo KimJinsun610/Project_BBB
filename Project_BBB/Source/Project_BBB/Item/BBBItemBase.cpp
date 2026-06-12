@@ -31,6 +31,7 @@ void ABBBItemBase::BeginPlay()
 {
     Super::BeginPlay();
     InitialLocation = GetActorLocation();
+    SetLifeSpan(180.0f);
 }
 
 void ABBBItemBase::Tick(float DeltaTime)
