@@ -3,6 +3,7 @@
 
 #include "Item/BBBItemBase.h"
 #include "Components/SphereComponent.h"     
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABBBItemBase::ABBBItemBase()
@@ -48,6 +49,10 @@ void ABBBItemBase::Tick(float DeltaTime)
 
 void ABBBItemBase::OnPickup_Implementation(AActor* Picker)
 {
+    if (PickupSFX)
+    {
+        UGameplayStatics::PlaySound2D(GetWorld(), PickupSFX, 0.15f, 1.5f);
+    }
 }
 
 void ABBBItemBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
