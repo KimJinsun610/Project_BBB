@@ -71,7 +71,7 @@ void ABBBAppleOnTree::StartFalling()
                 if (AppleMesh && !bHasLanded)
                     AppleMesh->OnComponentHit.AddDynamic(this, &ABBBAppleOnTree::OnAppleLanded);
             },
-            0.1f, false
+            0.05f, false
         );
     }
 

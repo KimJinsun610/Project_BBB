@@ -2,7 +2,11 @@
 
 
 #include "AI/BTDecorator_RangedAttackRange.h"
-#include "BTDecorator_RangedAttackRange.h"
+#include "AIController.h"    
+#include "Character/Enemy/BBBEnemyBase.h"
+#include "Combat/BBBDebuffComponent.h"
+#include "Character/BBBStatComponent.h"
+
 
 UBTDecorator_RangedAttackRange::UBTDecorator_RangedAttackRange()
 {
@@ -22,4 +26,36 @@ void UBTDecorator_RangedAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp,
         bLastResult = bCurrentResult;
         OwnerComp.RequestExecution(this);
     }
+}
+
+bool UBTDecorator_RangedAttackRange::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+{
+    // 거리 조건은 부모에서 그대로 사용
+    if (!Super::CalculateRawConditionValue(OwnerComp, NodeMemory))
+    {
+        return false;
+    }
+
+    APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
+    ABBBEnemyBase* Enemy = Cast<ABBBEnemyBase>(ControllingPawn);
+    if (!Enemy)
+    {
+        return false;
+    }
+
+    // HP 0 체크
+    UBBBStatComponent* Stat = Enemy->GetStatComponent();
+    if (Stat && Stat->CurrentHP <= 0.0f)
+    {
+        return false;
+    }
+
+    // 디버프 체크
+    UBBBDebuffComponent* Debuff = Enemy->FindComponentByClass<UBBBDebuffComponent>();
+    if (Debuff && Debuff->HasAnyDebuff())
+    {
+        return false;
+    }
+
+    return true;
 }

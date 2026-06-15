@@ -337,9 +337,21 @@ void ABBBEnemyBase::FireSingleProjectile()
 
 void ABBBEnemyBase::OnFireIntervalTimer()
 {
+    if (StatComponent && StatComponent->CurrentHP <= 0.0f)
+    {
+        GetWorldTimerManager().ClearTimer(FireIntervalTimer);
+        OnAttackFinished.ExecuteIfBound();
+        return;
+    }
+    if (DebuffComponent && DebuffComponent->HasAnyDebuff())
+    {
+        GetWorldTimerManager().ClearTimer(FireIntervalTimer);
+        OnAttackFinished.ExecuteIfBound();
+        return;
+    }
+
     if (CurrentFireCount >= ProjectileCount)
     {
-        // 모든 발사 완료
         GetWorldTimerManager().ClearTimer(FireIntervalTimer);
         OnAttackFinished.ExecuteIfBound();
         return;
