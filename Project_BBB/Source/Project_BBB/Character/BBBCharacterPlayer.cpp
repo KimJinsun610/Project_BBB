@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "Game/BBBGameModeBase.h"  
+
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -166,6 +168,7 @@ void ABBBCharacterPlayer::BeginPlay()
 	if (StatComponent)
 	{
 		StatComponent->OnHPChanged.AddDynamic(this, &ABBBCharacterPlayer::OnHPChangedCallback);
+		StatComponent->OnDeath.AddDynamic(this, &ABBBCharacterPlayer::OnPlayerDeath);
 	}
 
 	// 무기 생성
@@ -811,6 +814,23 @@ void ABBBCharacterPlayer::AddGold(int32 Amount)
 	{
 		PC->SetGold(Amount);
 	}
+}
+
+void ABBBCharacterPlayer::OnPlayerDeath(AActor* Killed, AActor* Killer)
+{
+	GetWorld()->GetTimerManager().SetTimer(
+		DeathUITimerHandle,
+		[this]()
+		{
+			ABBBGameModeBase* GM = Cast<ABBBGameModeBase>(GetWorld()->GetAuthGameMode());
+			if (GM)
+			{
+				GM->OnPlayerDead();
+			}
+		},
+		2.0f,
+		false
+	);
 }
 
 

@@ -153,6 +153,21 @@ void ABBBPlayerController::SetFireCooldown(float Duration)
     }
 }
 
+void ABBBPlayerController::ShowGameOverUI()
+{
+    if (!GameOverWidgetClass) return;
+
+    UUserWidget* GameOverWidget = CreateWidget<UUserWidget>(this, GameOverWidgetClass);
+    if (GameOverWidget)
+    {
+        GameOverWidget->AddToViewport(10); // HUD보다 위에 표시
+
+        bShowMouseCursor = true;
+        FInputModeUIOnly InputMode;
+        SetInputMode(InputMode);
+    }
+}
+
 void ABBBPlayerController::ToggleInventory()
 {
     // 위젯 최초 생성

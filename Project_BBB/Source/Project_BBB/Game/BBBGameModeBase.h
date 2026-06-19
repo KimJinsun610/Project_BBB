@@ -24,6 +24,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Audio")
 	UBBBAudioManager* GetAudioManager() const { return AudioManager; }
 
+	// 플레이어 사망 처리
+	UFUNCTION()
+	void OnPlayerDead();
+
 protected:
 	virtual void BeginPlay() override;
 	

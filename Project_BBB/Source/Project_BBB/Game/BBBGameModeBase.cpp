@@ -4,7 +4,7 @@
 #include "Game/BBBGameModeBase.h"
 
 #include "Player/BBBPlayerController.h"
-
+#include "Kismet/GameplayStatics.h" 
 
 ABBBGameModeBase::ABBBGameModeBase()
 {
@@ -25,6 +25,16 @@ ABBBGameModeBase::ABBBGameModeBase()
 
 
 	AudioManager = CreateDefaultSubobject<UBBBAudioManager>(TEXT("AudioManager"));
+}
+
+void ABBBGameModeBase::OnPlayerDead()
+{
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	if (PC)
+	{
+		PC->ShowGameOverUI();
+	}
 }
 
 // BeginPlay
