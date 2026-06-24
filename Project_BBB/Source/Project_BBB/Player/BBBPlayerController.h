@@ -23,6 +23,7 @@ protected:
 public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     void SetGold(int32 InGold);
+
 //================================================
 // UI Section
 
@@ -33,6 +34,10 @@ protected:
 
     UPROPERTY(BlueprintReadOnly, Category = "UI")
     class UUserWidget* HUDWidget;
+
+    //GameOver
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<class UUserWidget> GameOverWidgetClass;
 
 public:
     UFUNCTION(BlueprintCallable, Category = "UI")
@@ -47,8 +52,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     void SetFireCooldown(float Duration);
 
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void ShowGameOverUI(float SurvivalTime);
 
-    //Inventory
+    
+//================================================
+//Inventory
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<class UUserWidget> InventoryWidgetClass;
@@ -65,6 +74,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "UI")
     bool IsInventoryOpen() const { return bIsInventoryOpen; }
 
+
+//================================================
+//Sounds
 protected:
     //인벤토리 사운드
     UPROPERTY(EditDefaultsOnly, Category = "SFX")
@@ -72,4 +84,5 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "SFX")
     TObjectPtr<USoundBase> InventoryCloseSFX;
+
 };

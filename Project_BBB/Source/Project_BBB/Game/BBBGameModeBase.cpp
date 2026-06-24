@@ -4,7 +4,7 @@
 #include "Game/BBBGameModeBase.h"
 
 #include "Player/BBBPlayerController.h"
-
+#include "Kismet/GameplayStatics.h" 
 
 ABBBGameModeBase::ABBBGameModeBase()
 {
@@ -27,9 +27,26 @@ ABBBGameModeBase::ABBBGameModeBase()
 	AudioManager = CreateDefaultSubobject<UBBBAudioManager>(TEXT("AudioManager"));
 }
 
+void ABBBGameModeBase::OnPlayerDead()
+{
+	ABBBPlayerController* PC = Cast<ABBBPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	if (PC)
+	{
+		PC->ShowGameOverUI(GetSurvivalTime());
+	}
+}
+
 // BeginPlay
 void ABBBGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
     AudioManager->PlayBGM(AudioManager->LevelBGM);
+
+	GameStartTime = GetWorld()->GetTimeSeconds();
+}
+
+float ABBBGameModeBase::GetSurvivalTime() const
+{
+	return GetWorld()->GetTimeSeconds() - GameStartTime;
 }

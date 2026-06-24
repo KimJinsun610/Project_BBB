@@ -239,4 +239,13 @@ private:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TObjectPtr<class UBBBInventoryComponent> InventoryComponent;
+
+
+//================================================
+// Evevt Section
+private:
+	UFUNCTION()
+	void OnPlayerDeath(AActor* Killed, AActor* Killer);
+
+	FTimerHandle DeathUITimerHandle;
 };

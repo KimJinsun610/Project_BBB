@@ -24,10 +24,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Audio")
 	UBBBAudioManager* GetAudioManager() const { return AudioManager; }
 
+	// 플레이어 사망 처리
+	UFUNCTION()
+	void OnPlayerDead();
+
+	UFUNCTION(BlueprintPure, Category = "Game")
+	float GetSurvivalTime() const;
+
 protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Audio")
 	TObjectPtr<UBBBAudioManager> AudioManager;
 
+	float GameStartTime = 0.0f;
 };
