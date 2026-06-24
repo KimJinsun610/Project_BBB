@@ -53,7 +53,7 @@ public:
     void SetFireCooldown(float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void ShowGameOverUI();
+    void ShowGameOverUI(float SurvivalTime);
 
     
 //================================================

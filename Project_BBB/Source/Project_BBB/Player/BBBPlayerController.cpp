@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/BBBCharacterPlayer.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/BBBInventoryComponent.h"
 
 void ABBBPlayerController::BeginPlay()
 {
@@ -153,7 +154,7 @@ void ABBBPlayerController::SetFireCooldown(float Duration)
     }
 }
 
-void ABBBPlayerController::ShowGameOverUI()
+void ABBBPlayerController::ShowGameOverUI(float SurvivalTime)
 {
     if (!GameOverWidgetClass) return;
 
@@ -161,6 +162,23 @@ void ABBBPlayerController::ShowGameOverUI()
     if (GameOverWidget)
     {
         GameOverWidget->AddToViewport(10); // HUD보다 위에 표시
+
+        ABBBCharacterPlayer* ownPlayer = Cast<ABBBCharacterPlayer>(GetPawn());
+        UBBBInventoryComponent* InvComp = ownPlayer ? ownPlayer->InventoryComponent : nullptr;
+
+        UFunction* Func = GameOverWidget->FindFunction(FName("InitGameOverUI"));
+        if (Func)
+        {
+            struct FParams
+            {
+                double SurvivalTime;
+                UBBBInventoryComponent* InventoryComponent;
+            };
+            FParams Params;
+            Params.SurvivalTime = SurvivalTime;
+            Params.InventoryComponent = InvComp;
+            GameOverWidget->ProcessEvent(Func, &Params);
+        }
 
         bShowMouseCursor = true;
         FInputModeUIOnly InputMode;

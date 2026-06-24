@@ -33,7 +33,7 @@ void ABBBGameModeBase::OnPlayerDead()
 
 	if (PC)
 	{
-		PC->ShowGameOverUI();
+		PC->ShowGameOverUI(GetSurvivalTime());
 	}
 }
 
@@ -42,4 +42,11 @@ void ABBBGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
     AudioManager->PlayBGM(AudioManager->LevelBGM);
+
+	GameStartTime = GetWorld()->GetTimeSeconds();
+}
+
+float ABBBGameModeBase::GetSurvivalTime() const
+{
+	return GetWorld()->GetTimeSeconds() - GameStartTime;
 }

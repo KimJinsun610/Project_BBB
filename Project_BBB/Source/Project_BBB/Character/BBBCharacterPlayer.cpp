@@ -818,6 +818,8 @@ void ABBBCharacterPlayer::AddGold(int32 Amount)
 
 void ABBBCharacterPlayer::OnPlayerDeath(AActor* Killed, AActor* Killer)
 {
+	if (DeathUITimerHandle.IsValid()) return;
+
 	GetWorld()->GetTimerManager().SetTimer(
 		DeathUITimerHandle,
 		[this]()
