@@ -41,6 +41,10 @@ public:
 	// 퀵슬롯 3칸 고정 (index 0=좌, 1=중, 2=우)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "QuickSlot")
 	TArray<FBBBQuickSlotData> QuickSlots;
+
+	// 아이템 총 개수 확인용
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	TArray<FBBBInventorySlot> GetMergedSlots() const;
 //================================================
 // Event Section
 public:
@@ -77,6 +81,9 @@ public:
 	//아이템 개수
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	int32 GetItemCount(FName ItemID) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	bool UseItemAt(int32 SlotIndex);
 
 //================================================
 // Utility Section
