@@ -16,7 +16,7 @@ ABBBProjectileDebuff::ABBBProjectileDebuff()
 void ABBBProjectileDebuff::Initialize(const FDebuffData& InDebuffData)
 {
     DebuffData = InDebuffData;
-    SetProjectileColor();
+    SetProjectileColor();  
     if (ProjectileMovement)
     {
         ProjectileMovement->Velocity = GetActorForwardVector() * Speed;
