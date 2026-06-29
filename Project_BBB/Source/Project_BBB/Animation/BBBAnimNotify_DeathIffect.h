@@ -14,5 +14,5 @@ class PROJECT_BBB_API UBBBAnimNotify_DeathIffect : public UAnimNotify
 {
 	GENERATED_BODY()
 	
-	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
+	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 };
