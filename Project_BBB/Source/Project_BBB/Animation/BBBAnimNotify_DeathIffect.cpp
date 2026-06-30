@@ -5,7 +5,7 @@
 
 #include "Character/Enemy/BBBEnemyBase.h"
 
-void UBBBAnimNotify_DeathIffect::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UBBBAnimNotify_DeathIffect::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
     ABBBEnemyBase* Enemy = Cast<ABBBEnemyBase>(MeshComp->GetOwner());
     if (Enemy)
