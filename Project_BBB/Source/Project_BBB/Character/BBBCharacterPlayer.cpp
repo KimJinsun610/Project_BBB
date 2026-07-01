@@ -172,6 +172,14 @@ void ABBBCharacterPlayer::BeginPlay()
 		StatComponent->OnDeath.AddDynamic(this, &ABBBCharacterPlayer::OnPlayerDeath);
 	}
 
+	// 골드 내용 갱신
+	UBBBGameInstance* GI = Cast<UBBBGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		Gold = GI->Gold;
+		UpdatePlayerWidget();
+	}
+
 	// 무기 생성
 	
 	if (RangedWeaponClass)
@@ -826,7 +834,10 @@ void ABBBCharacterPlayer::OnPlayerDeath(AActor* Killed, AActor* Killer)
 	if (InventoryComponent)	CachedSlots = InventoryComponent->GetMergedSlots();
 
 	UBBBGameInstance* GI = Cast<UBBBGameInstance>(GetGameInstance());
-	if (GI)	GI->MergeInventory(CachedSlots);
+	if (GI) {
+		GI->MergeInventory(CachedSlots);
+		GI->Gold += Gold;
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(
 		DeathUITimerHandle,
