@@ -13,6 +13,7 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Game/BBBGameInstance.h"
 
 #include "Combat/BBBWeaponRanged.h"
 #include "Combat/BBBWeaponMelee.h"
@@ -169,6 +170,14 @@ void ABBBCharacterPlayer::BeginPlay()
 	{
 		StatComponent->OnHPChanged.AddDynamic(this, &ABBBCharacterPlayer::OnHPChangedCallback);
 		StatComponent->OnDeath.AddDynamic(this, &ABBBCharacterPlayer::OnPlayerDeath);
+	}
+
+	// 골드 내용 갱신
+	UBBBGameInstance* GI = Cast<UBBBGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		Gold = GI->Gold;
+		UpdatePlayerWidget();
 	}
 
 	// 무기 생성
@@ -819,6 +828,16 @@ void ABBBCharacterPlayer::AddGold(int32 Amount)
 void ABBBCharacterPlayer::OnPlayerDeath(AActor* Killed, AActor* Killer)
 {
 	if (DeathUITimerHandle.IsValid()) return;
+
+	// 사망 전 아이템 소지 내역 복사
+	TArray<FBBBInventorySlot> CachedSlots;
+	if (InventoryComponent)	CachedSlots = InventoryComponent->GetMergedSlots();
+
+	UBBBGameInstance* GI = Cast<UBBBGameInstance>(GetGameInstance());
+	if (GI) {
+		GI->MergeInventory(CachedSlots);
+		GI->Gold += Gold;
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(
 		DeathUITimerHandle,

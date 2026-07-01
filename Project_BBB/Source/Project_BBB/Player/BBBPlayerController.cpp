@@ -188,6 +188,10 @@ void ABBBPlayerController::ShowGameOverUI(float SurvivalTime)
 
 void ABBBPlayerController::ToggleInventory()
 {
+    FString CurrentLevel = GetWorld()->GetMapName();
+    if (CurrentLevel.Contains(TEXT("BBB_Lob")))  return;
+
+
     // 위젯 최초 생성
     if (!InventoryWidget && InventoryWidgetClass)
     {

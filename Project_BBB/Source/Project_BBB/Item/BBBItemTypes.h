@@ -14,6 +14,7 @@ enum class EBBBItemType : uint8
 {
     Currency    UMETA(DisplayName = "Currency"),    // 재화
     Consumable  UMETA(DisplayName = "Consumable"),  // 소비 아이템 (사과 등)
+    Material    UMETA(DisplayName = "Material"),    // 일반 아이템 (사용 불가, 판매가능)
 };
 
 // =====================================================
@@ -45,6 +46,10 @@ struct FBBBItemData : public FTableRowBase
     // [Consumable 전용] 회복 HP 량
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Consumable")
     float HealAmount = 0.f;
+
+    // 판매가
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Shop")
+    int32 SellPrice = 0;
 };
 
 // =====================================================
