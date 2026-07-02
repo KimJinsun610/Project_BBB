@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 
 #include "GameFramework/GameModeBase.h"
-
 #include "BBBAudioManager.h"
+#include "Item/BBBItemTypes.h" 
 
 #include "BBBGameModeBase.generated.h"
 
@@ -26,7 +26,11 @@ public:
 
 	// 플레이어 사망 처리
 	UFUNCTION()
-	void OnPlayerDead();
+	void OnPlayerDead(const TArray<FBBBInventorySlot>& EarnedSlots, int32 EarnedGold);
+
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void ConfirmReturnToLobby(const TArray<FBBBInventorySlot>& EarnedSlots, int32 EarnedGold);
 
 	UFUNCTION(BlueprintPure, Category = "Game")
 	float GetSurvivalTime() const;

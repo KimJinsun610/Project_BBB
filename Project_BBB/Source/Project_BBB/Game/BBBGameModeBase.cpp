@@ -4,6 +4,7 @@
 #include "Game/BBBGameModeBase.h"
 
 #include "Player/BBBPlayerController.h"
+#include "Game/BBBGameInstance.h"   
 #include "Kismet/GameplayStatics.h" 
 
 ABBBGameModeBase::ABBBGameModeBase()
@@ -27,13 +28,22 @@ ABBBGameModeBase::ABBBGameModeBase()
 	AudioManager = CreateDefaultSubobject<UBBBAudioManager>(TEXT("AudioManager"));
 }
 
-void ABBBGameModeBase::OnPlayerDead()
+void ABBBGameModeBase::OnPlayerDead(const TArray<FBBBInventorySlot>& EarnedSlots, int32 EarnedGold)
 {
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-
 	if (PC)
 	{
-		PC->ShowGameOverUI(GetSurvivalTime());
+		PC->ShowGameOverUI(GetSurvivalTime(), EarnedSlots, EarnedGold);
+	}
+}
+
+void ABBBGameModeBase::ConfirmReturnToLobby(const TArray<FBBBInventorySlot>& EarnedSlots, int32 EarnedGold)
+{
+	UBBBGameInstance* GI = Cast<UBBBGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		GI->MergeInventory(EarnedSlots);
+		GI->AddGold(EarnedGold);
 	}
 }
 

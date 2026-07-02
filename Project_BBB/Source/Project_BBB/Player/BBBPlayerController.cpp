@@ -4,7 +4,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/BBBCharacterPlayer.h"
 #include "Kismet/GameplayStatics.h"
-#include "Player/BBBInventoryComponent.h"
 
 void ABBBPlayerController::BeginPlay()
 {
@@ -41,18 +40,6 @@ void ABBBPlayerController::BeginPlay()
 
 void ABBBPlayerController::SetGold(int32 InGold)
 {
-    if (HUDWidget)
-    {
-        UFunction* Func = HUDWidget->FindFunction(FName("SetGold"));
-        if (Func)
-        {
-            struct FParams { int32 Gold; };
-            FParams Params;
-            Params.Gold = InGold;
-            HUDWidget->ProcessEvent(Func, &Params);
-        }
-    }
-
     if (bIsInventoryOpen && InventoryWidget)
     {
         UFunction* JemFunc = InventoryWidget->FindFunction(FName("UpdateJem"));
@@ -154,17 +141,14 @@ void ABBBPlayerController::SetFireCooldown(float Duration)
     }
 }
 
-void ABBBPlayerController::ShowGameOverUI(float SurvivalTime)
+void ABBBPlayerController::ShowGameOverUI(float SurvivalTime, const TArray<FBBBInventorySlot>& EarnedSlots, int32 EarnedGold)
 {
     if (!GameOverWidgetClass) return;
 
     UUserWidget* GameOverWidget = CreateWidget<UUserWidget>(this, GameOverWidgetClass);
     if (GameOverWidget)
     {
-        GameOverWidget->AddToViewport(10); // HUD보다 위에 표시
-
-        ABBBCharacterPlayer* ownPlayer = Cast<ABBBCharacterPlayer>(GetPawn());
-        UBBBInventoryComponent* InvComp = ownPlayer ? ownPlayer->InventoryComponent : nullptr;
+        GameOverWidget->AddToViewport(10);
 
         UFunction* Func = GameOverWidget->FindFunction(FName("InitGameOverUI"));
         if (Func)
@@ -172,11 +156,13 @@ void ABBBPlayerController::ShowGameOverUI(float SurvivalTime)
             struct FParams
             {
                 double SurvivalTime;
-                UBBBInventoryComponent* InventoryComponent;
+                TArray<FBBBInventorySlot> Slots;
+                int32 EarnedGold;
             };
             FParams Params;
             Params.SurvivalTime = SurvivalTime;
-            Params.InventoryComponent = InvComp;
+            Params.Slots = EarnedSlots;
+            Params.EarnedGold = EarnedGold;
             GameOverWidget->ProcessEvent(Func, &Params);
         }
 
@@ -222,7 +208,7 @@ void ABBBPlayerController::ToggleInventory()
             {
                 struct FGoldParams { int32 JemAmount; };
                 FGoldParams Params;
-                Params.JemAmount = PlayerChar->GetGold();
+                Params.JemAmount = PlayerChar->GetRoundEarnedGold();
                 InventoryWidget->ProcessEvent(JemFunc, &Params);
             }
 

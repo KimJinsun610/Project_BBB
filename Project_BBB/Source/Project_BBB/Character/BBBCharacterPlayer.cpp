@@ -816,6 +816,7 @@ void ABBBCharacterPlayer::OnHPChangedCallback(float CurrentHP, float MaxHP, AAct
 void ABBBCharacterPlayer::AddGold(int32 Amount)
 {
 	Gold += Amount;
+	RoundEarnedGold += Amount;
 
 	// UI 업데이트
 	ABBBPlayerController* PC = Cast<ABBBPlayerController>(GetController());
@@ -829,24 +830,19 @@ void ABBBCharacterPlayer::OnPlayerDeath(AActor* Killed, AActor* Killer)
 {
 	if (DeathUITimerHandle.IsValid()) return;
 
-	// 사망 전 아이템 소지 내역 복사
 	TArray<FBBBInventorySlot> CachedSlots;
-	if (InventoryComponent)	CachedSlots = InventoryComponent->GetMergedSlots();
-
-	UBBBGameInstance* GI = Cast<UBBBGameInstance>(GetGameInstance());
-	if (GI) {
-		GI->MergeInventory(CachedSlots);
-		GI->Gold += Gold;
-	}
+	if (InventoryComponent) CachedSlots = InventoryComponent->GetMergedSlots();
+	
+	int32 CachedGold = RoundEarnedGold;
 
 	GetWorld()->GetTimerManager().SetTimer(
 		DeathUITimerHandle,
-		[this]()
+		[this, CachedSlots, CachedGold]()
 		{
 			ABBBGameModeBase* GM = Cast<ABBBGameModeBase>(GetWorld()->GetAuthGameMode());
 			if (GM)
 			{
-				GM->OnPlayerDead();
+				GM->OnPlayerDead(CachedSlots, CachedGold);
 			}
 		},
 		2.0f,

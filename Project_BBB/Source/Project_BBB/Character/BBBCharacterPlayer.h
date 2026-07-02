@@ -230,9 +230,16 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Gold")
 	int32 GetGold() const { return Gold; }
 
+
+	UFUNCTION(BlueprintPure, Category = "RoundEarnedGold")
+	int32 GetRoundEarnedGold() const { return RoundEarnedGold; }
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gold", Meta = (AllowPrivateAccess = "true"))
 	int32 Gold = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gold", Meta = (AllowPrivateAccess = "true"))
+	int32 RoundEarnedGold = 0;
 
 //================================================
 // Inventory Section
