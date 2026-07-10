@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Item/BBBItemTypes.h"    
 #include "BBBPlayerController.generated.h"
 
 /**
@@ -53,7 +54,7 @@ public:
     void SetFireCooldown(float Duration);
 
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void ShowGameOverUI(float SurvivalTime);
+    void ShowGameOverUI(float SurvivalTime, const TArray<FBBBInventorySlot>& EarnedSlots, int32 EarnedGold);
 
     
 //================================================
